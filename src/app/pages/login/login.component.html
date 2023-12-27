@@ -1,0 +1,16 @@
+<p>login works!</p>
+
+<div  >
+    <form [formGroup]="loginForm" (submit)="onSubmit()">    
+        <label>Email
+        <input type="email" name="email" autocomplete="off" formControlName="email"></label>
+        <label>Password
+        <input type="password" name="password" autocomplete="off"  formControlName="password"></label>
+        <button type="submit">Login</button>
+        
+    </form>
+    <a routerLink="/signup">Go to signup</a>
+</div >
+
+
+

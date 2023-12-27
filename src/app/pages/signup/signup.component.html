@@ -1,0 +1,19 @@
+<p>signup works!</p>
+
+<div  >
+    <form [formGroup]="form" (submit)="onSubmit()">
+
+        <label>Nombre
+        <input type="text" name="name" autocomplete="off" formControlName="name"></label>
+        <label>Email
+        <input type="email" name="email" autocomplete="off" formControlName="email"></label>
+        <label>Password
+        <input type="password" name="password" autocomplete="off"  formControlName="password"></label>
+        <button type="submit" [disabled]="form.invalid">Signup</button>
+    </form>
+    <a routerLink="/login">Go to login</a>
+
+</div >
+
+
+

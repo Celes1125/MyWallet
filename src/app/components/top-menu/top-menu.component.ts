@@ -1,12 +1,28 @@
 import { Component } from '@angular/core';
-
+import {MatToolbarModule} from '@angular/material/toolbar'; 
+import { RouterModule, Router } from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon'; 
 @Component({
   selector: 'app-top-menu',
   standalone: true,
-  imports: [],
+  imports: [MatToolbarModule, RouterModule, MatButtonModule, MatIconModule],
   templateUrl: './top-menu.component.html',
   styleUrl: './top-menu.component.css'
 })
 export class TopMenuComponent {
+  router:Router
+
+  constructor (
+    private _route : Router
+  ){
+    this.router = this._route
+  }
+
+  logout(){
+    localStorage.removeItem('token')
+    alert('See you later!')
+    this.router.navigateByUrl('login')
+  }
 
 }

@@ -5,6 +5,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { UserService } from './services/user.service';
+import { PocketService } from './services/pocket.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,6 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     UserService,
+    PocketService,
     provideHttpClient(withFetch()),   
     importProvidersFrom(HttpClientModule)
   ],

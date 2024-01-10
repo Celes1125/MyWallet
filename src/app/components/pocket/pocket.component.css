@@ -1,0 +1,56 @@
+.container {    
+    margin: auto;
+    width: 120px;
+    height: 60px; 
+    place-content: center;           
+    background-color: whitesmoke;
+    display: grid;
+    grid-template: 
+        "name name name edit"
+        "currency amount amount delete";   
+    justify-content: stretch; 
+      
+
+    .name {
+        grid-area: name;        
+        border: 1px solid black;
+        padding: 3px;
+
+    }
+    .currency {
+        grid-area: currency;        
+        border: 1px solid black;
+        padding: 3px;
+    }
+    .amount {
+        grid-area: amount;        
+        border: 1px solid black;
+        padding: 3px;
+    }
+    .edit {
+        grid-area:edit;
+        border: 1px solid black;
+        display: flex;
+        justify-self: center;
+        
+    }
+    .delete{
+        grid-area: delete;
+        border: 1px solid black;
+        display: flex;
+        justify-self: center;
+    }
+    mat-icon {
+        display: flex;
+        background-color: rgb(0, 140, 255);
+        font-size: small;
+        align-items: center;
+        justify-content: center;
+        
+        
+               
+       
+    }
+   
+
+}

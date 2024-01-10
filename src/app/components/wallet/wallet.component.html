@@ -1,0 +1,14 @@
+<div class="pockets" *ngIf="pockets$ | async as pockets ; else message" >
+    <p class="title"> {{walletName$}}is your active wallet</p>
+    
+    @for (pocket of pockets; track pocket._id) {    
+    <app-pocket class="pocket" [pocket]="pocket"></app-pocket>
+    }
+    <button class="addNewPocket" (click)="createPocket()">Add new pocket</button>
+    
+</div>
+
+<ng-template #message>
+    <p>This wallet has not any pocket yet, you must to add it</p>
+    <p>Add your pockets <a>here</a></p>
+</ng-template>

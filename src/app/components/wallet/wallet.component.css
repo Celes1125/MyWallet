@@ -1,0 +1,21 @@
+.pockets{
+    display: grid;    
+    gap:2px;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows:  20px repeat(2, 1fr);
+    ;   
+     
+    .title{
+        grid-column: 1/-1;
+        grid-row: 1/2
+    }
+    .pocket{
+        grid-column: auto;
+        grid-row: auto;
+    }
+    
+}
+.addNewPocket{
+    display:block;
+    justify-content: end;
+}

@@ -10,8 +10,8 @@
   }
   .main {
       
-  width: 80%;
-  height: 80vh;
+  width: 100%;
+  min-height: 150vh;
   background: hsla(86, 82%, 53%, 0.555);
   border-radius: 5px;
   box-shadow: 5px 20px 50px black;
@@ -20,14 +20,13 @@
   
   }
 
-.home {
+.common-container {
   display: flex;
   place-content:center;
-  width: 100%;
+  width: 75%;
   margin: auto;
   height: 80%;
   border-radius: 5px; 
-  box-shadow: 5px 20px 50px blue;
  
  
 

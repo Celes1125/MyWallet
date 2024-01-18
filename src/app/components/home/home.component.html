@@ -1,10 +1,15 @@
-<div >
-    
-   <app-wallet class="wallet"></app-wallet>    
-   <p class="subtitle">Add new</p>
-   <div class="buttons">
-       <button class="expense">Expense</button>
-       <button class="income">Income</button>
-   </div>
-</div>
+@if (activeWallet) {
+    <h1>your active wallet is {{activeWallet.name}}</h1>
+    <app-wallet [wallet]="activeWallet"></app-wallet>
+}
+@else {
+    <p>There's no active wallets yet, go to create one</p>
+}
 
+
+
+
+
+
+
+    

@@ -3,8 +3,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guardians/auth.guard';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { WalletsPageComponent } from './pages/wallets-page/wallets-page.component';
-import { ReportsPageComponent } from './pages/reports-page/reports-page.component';
+
 
 export const routes: Routes = [
     

@@ -1,14 +1,42 @@
-<div class="pockets" *ngIf="pockets$ | async as pockets ; else message" >
-    <p class="title"> {{walletName$}}is your active wallet</p>
-    
-    @for (pocket of pockets; track pocket._id) {    
-    <app-pocket class="pocket" [pocket]="pocket"></app-pocket>
-    }
-    <button class="addNewPocket" (click)="createPocket()">Add new pocket</button>
-    
-</div>
-
-<ng-template #message>
-    <p>This wallet has not any pocket yet, you must to add it</p>
-    <p>Add your pockets <a>here</a></p>
-</ng-template>
+<mat-form-field>
+    <mat-label>Search pockets in {{wallet.name}}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" #input>
+  </mat-form-field>
+ 
+  <button (click)="addPocketDialog()">+ Add pocket</button>
+  
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+    <!-- Pocket Column -->
+    <ng-container matColumnDef="pocket">
+      <th mat-header-cell *matHeaderCellDef> Pocket </th>
+      <td mat-cell *matCellDef="let pocket"> {{pocket.name}} </td>
+    </ng-container>
+  
+    <!-- Currency Column -->
+    <ng-container matColumnDef="currency">
+      <th mat-header-cell *matHeaderCellDef> Currency </th>
+      <td mat-cell *matCellDef="let pocket"> {{pocket.currency}} </td>
+    </ng-container>
+  
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let pocket"> {{pocket.amount}} </td>
+    </ng-container>
+  
+    <!-- Select Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef> select </th>
+      <td mat-cell *matCellDef="let pocket"> x</td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
+  </table>
+  

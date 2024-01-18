@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PocketComponent } from './pocket.component';
+import { AddPocketComponent } from './add-pocket.component';
 
-describe('PocketComponent', () => {
-  let component: PocketComponent;
-  let fixture: ComponentFixture<PocketComponent>;
+describe('AddPocketComponent', () => {
+  let component: AddPocketComponent;
+  let fixture: ComponentFixture<AddPocketComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PocketComponent]
+      imports: [AddPocketComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PocketComponent);
+    fixture = TestBed.createComponent(AddPocketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

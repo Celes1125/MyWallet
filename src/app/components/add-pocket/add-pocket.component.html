@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Add new pocket</h2>
+<form [formGroup]="pocketForm" (ngSubmit)="addPocket()">
+  <mat-dialog-content class="mat-typography">
+    <input type="text" autocomplete="off" placeholder="name" name="name" formControlName="name">
+    <input type="text" autocomplete="off" placeholder="euro" name="currency" formControlName="currency">
+    <input type="number" autocomplete="off" placeholder="amount" name="amount" formControlName="amount">    
+    <select type="text" autocomplete="off" placeholder="wallet" name="wallet" formControlName="wallet">
+      <option *ngFor="let wallet of wallets" [value]="wallet._id">{{wallet.name}}</option>
+    </select>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" [mat-dialog-close]="true" cdkFocusInitial>Save changes</button>
+  </mat-dialog-actions>
+</form>
+
+     

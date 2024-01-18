@@ -1,91 +1,89 @@
-import { Component, OnInit } from '@angular/core';
+import { AddPocketComponent } from './../add-pocket/add-pocket.component';
+import { Component, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PocketComponent } from "../pocket/pocket.component";
-import { WalletService } from './../../services/wallet.service';
-import { Observable, catchError, finalize, of, tap } from 'rxjs';
-import { AddEditPocketComponent } from '../add-edit-pocket/add-edit-pocket.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MaterialDesignModule } from '../../material-design.module';
-import { FormsModule } from '@angular/forms';
-
-
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { WalletService } from '../../services/wallet.service';
+import { MatButtonModule } from '@angular/material/button';
+import { 
+    MatDialogModule,
+    MatDialog,
+    MAT_DIALOG_DATA,
+    MatDialogRef,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+  } from '@angular/material/dialog';
+import { Wallet } from '../../interfaces/wallet';
 @Component({
     selector: 'app-wallet',
     standalone: true,
     templateUrl: './wallet.component.html',
     styleUrls: ['./wallet.component.css'],
-    imports: [FormsModule, PocketComponent, CommonModule, MaterialDesignModule]
+    imports: [CommonModule, MatTableModule, MatInputModule, 
+        MatFormFieldModule, MatButtonModule, MatDialogModule, AddPocketComponent]
 })
-export class WalletComponent  {
+export class WalletComponent implements OnInit {
 
-    pockets$!: Observable<any>
-    walletName$!: string
-    walletId$!: string
-    hasError: boolean = false
-    activeWallet$: Observable<any>
-    pockets: any[] = []
-   
+    @Input()
+    wallet!:any  
+    pockets!:any
+    dataSource!:any
 
     constructor(
         private walletService: WalletService,
-        public addDialog:MatDialog
-    ) {
-
-        //GETTING DE ACTIVE WALLET
-
-        this.activeWallet$ = this.walletService.getAll().pipe(
-            tap((response: any) => {
-                if (response) {
-                    const activeWallets = response.filter((wallet: any) => wallet.activated);
-                    // Si hay alguna wallet con activated=true, devolvemos su _id
-                    if (activeWallets.length > 0) {
-
-                        const activeWallet = activeWallets[0]
-                        this.walletName$ = activeWallet.name
-                        this.walletId$ = activeWallet._id
-                        console.log('RESPONSE: ', activeWallets[0])
-                        console.log('NAME: ', this.walletName$)
-                        console.log('ID: ', this.walletId$)
+        public dialog : MatDialog
+    ) {        
+        
+     }
 
 
-                        // Acá suscribo al observable de bolsillos
-                        this.pockets$ = this.walletService.getPocketsOfWallet(this.walletId$).pipe(
-                            tap((response: any) => {
-                                this.pockets = response
-                            })
-                        )
-                        return this.activeWallet$ = activeWallet
-                    } else {
-                        // Si no hay ninguna wallet con activated=true, devolvemos null;
-                        return null;
-                    }
-                };
-            }),
-            catchError((error) => {
-                alert('ERROR: ' + error);
-                this.hasError = true;
-                // Devuelve un observable vacío o un observable de valor predeterminado en caso de error
-                return of(null);
-            }),
-            finalize(() => {
-                console.log('La suscripción se ha completado');
-            })
-
-        )
-        this.activeWallet$.subscribe()
+    ngOnInit(): void {
+        this.getPocketsOfWallet()
+        
+    }   
+    
+    getPocketsOfWallet(){
+        if(this.wallet !== undefined){
+            const id = this.wallet._id
+            this.walletService.getPocketsOfWallet(id).subscribe(
+                response => {
+                    this.pockets = response  
+                    this.dataSource = this.pockets  
+                }        
+            )
+        }       
 
     }
 
-    createPocket(id?:string){        
-            const dialog = this.addDialog.open(AddEditPocketComponent, {
-              width: '550px',
-              disableClose: true,
-              data: { id: id }
-              
-            });
-          }
-
+    displayedColumns: string[] = ['pocket', 'currency', 'amount', 'select'];
+    
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
+    addPocketDialog(){
+        const dialogRef = this.dialog.open(AddPocketComponent, {
+           //data: {name: this.name, animal: this.animal},
+          });
+      
+          /*dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            this.animal = result;
+          });
+        }*/
+    }
+}
+
+    
+
+
+
+
+
 
 
 

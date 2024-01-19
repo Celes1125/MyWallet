@@ -1,62 +1,57 @@
+import { DeletePocketComponent } from './../delete-pocket/delete-pocket.component';
 import { AddPocketComponent } from './../add-pocket/add-pocket.component';
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { WalletService } from '../../services/wallet.service';
 import { MatButtonModule } from '@angular/material/button';
-import { 
+import {
     MatDialogModule,
-    MatDialog,
-    MAT_DIALOG_DATA,
-    MatDialogRef,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-  } from '@angular/material/dialog';
-import { Wallet } from '../../interfaces/wallet';
+    MatDialog    
+} from '@angular/material/dialog';
+import { Router, RouterModule } from '@angular/router';
 @Component({
     selector: 'app-wallet',
     standalone: true,
     templateUrl: './wallet.component.html',
     styleUrls: ['./wallet.component.css'],
-    imports: [CommonModule, MatTableModule, MatInputModule, 
+    imports: [CommonModule, MatTableModule, MatInputModule, RouterModule,
         MatFormFieldModule, MatButtonModule, MatDialogModule, AddPocketComponent]
 })
 export class WalletComponent implements OnInit {
-
     @Input()
-    wallet!:any  
-    pockets!:any
-    dataSource!:any
+    wallet!: any
+    pockets!: any
+    dataSource!: any
+    router: Router = new Router;
 
     constructor(
         private walletService: WalletService,
-        public dialog : MatDialog
-    ) {        
+        public dialog: MatDialog
+    ) {
         
-     }
-
+    }
 
     ngOnInit(): void {
         this.getPocketsOfWallet()
-        
-    }   
-    
-    getPocketsOfWallet(){
-        if(this.wallet !== undefined){
+    }
+
+    getPocketsOfWallet() {
+        if (this.wallet !== undefined) {
             const id = this.wallet._id
             this.walletService.getPocketsOfWallet(id).subscribe(
                 response => {
-                    this.pockets = response  
-                    this.dataSource = this.pockets  
-                }        
+                    this.pockets = response
+                    this.dataSource = new MatTableDataSource(this.pockets);
+                }
             )
-        }       
+        }
 
     }
+    
+  
 
     displayedColumns: string[] = ['pocket', 'currency', 'amount', 'select'];
     
@@ -65,20 +60,36 @@ export class WalletComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    addPocketDialog(){
+    addPocketDialog() {
         const dialogRef = this.dialog.open(AddPocketComponent, {
-           //data: {name: this.name, animal: this.animal},
-          });
-      
-          /*dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-            this.animal = result;
-          });
-        }*/
+            //data: {name: this.name, animal: this.animal},
+        });
     }
+
+    openDeletePocketDialog(id: string) {
+        const dialogRef = this.dialog.open(DeletePocketComponent, {
+            data: { id: id }
+        });
+
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if(response){
+                    
+                    alert("pocked deleted ok")
+                    this.router.navigateByUrl('/dashboard');
+                }
+               
+            }
+        );
+           }
+
 }
 
-    
+
+
+
+
+
 
 
 

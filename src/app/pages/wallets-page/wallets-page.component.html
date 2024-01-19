@@ -1,1 +1,4 @@
-<p>wallets-page works!</p>
+@for (wallet of wallets; track wallet._id) {
+    <app-wallet [wallet]="wallet"></app-wallet>
+    <br>
+}

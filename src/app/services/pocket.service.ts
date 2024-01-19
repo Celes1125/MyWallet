@@ -2,7 +2,7 @@ import { Observable, catchError, finalize, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { error } from 'console';
-
+import { Pocket } from '../interfaces/pocket';
 
 
 @Injectable({
@@ -19,9 +19,13 @@ export class PocketService {
     return this.http.get(this.url)
   }
 
-  delete (id:string) : Observable <void> {
+  delete (id:string)  {
     const url = this.url+id
-    return this.http.delete<void>(url)
+    return this.http.delete(url).pipe(
+      tap((response) => console.log(url, id)),
+      catchError(async (error) => console.log(error)),
+      finalize( ()=> console.log("deletePocket subscription ended")),
+    )
     
   }
 

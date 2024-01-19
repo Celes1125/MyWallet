@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Delete Pocket</h2>
+
+    <mat-dialog-content class="mat-typography">
+        <p>Are you sure about delete it?</p>
+        <input type="hidden" matInput [(ngModel)]="id">
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+          <button mat-button mat-dialog-close>Cancel</button>
+          <button type="submit" (click)="deletePocket()" [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+        </mat-dialog-actions>
+
+
+
+
+     

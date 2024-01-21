@@ -1,11 +1,11 @@
-import { Wallet } from './../../interfaces/wallet';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { WalletComponent } from "../wallet/wallet.component";
 import { WalletService } from '../../services/wallet.service';
+//Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
-import { subscribe } from 'diagnostics_channel';
+
 @Component({
     selector: 'app-home',
     standalone: true,

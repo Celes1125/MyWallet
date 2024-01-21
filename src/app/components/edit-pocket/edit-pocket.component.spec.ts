@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEditPocketComponent } from './add-edit-pocket.component';
+import { EditPocketComponent } from './edit-pocket.component';
 
-describe('AddEditPocketComponent', () => {
-  let component: AddEditPocketComponent;
-  let fixture: ComponentFixture<AddEditPocketComponent>;
+describe('EditPocketComponent', () => {
+  let component: EditPocketComponent;
+  let fixture: ComponentFixture<EditPocketComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddEditPocketComponent]
+      imports: [EditPocketComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AddEditPocketComponent);
+    fixture = TestBed.createComponent(EditPocketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

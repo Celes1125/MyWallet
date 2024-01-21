@@ -7,4 +7,9 @@ table {
     font-size: 14px;
     width: 100%;
   }
+
+  td {
+    border: 1px black solid;
+     
+  }
   

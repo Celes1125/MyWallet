@@ -18,8 +18,6 @@ constructor (private walletService:WalletService){
     this.getAllWallets()
   }
 
-
-
 getAllWallets(){
   this.walletService.getAll().subscribe(
     response => this.wallets = response

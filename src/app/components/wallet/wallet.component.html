@@ -3,14 +3,15 @@
     <input matInput (keyup)="applyFilter($event)" #input>
   </mat-form-field>
  
-  <button (click)="addPocketDialog()">+ Add pocket</button>
+  <button (click)="openAddPocketDialog()">+ Add pocket</button>
   
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   
     <!-- Pocket Column -->
     <ng-container matColumnDef="pocket">
       <th mat-header-cell *matHeaderCellDef> Pocket </th>
-      <td mat-cell *matCellDef="let pocket"> {{pocket.name}} </td>
+      <td mat-cell *matCellDef="let pocket"> 
+        {{pocket.name}} </td>
     </ng-container>
   
     <!-- Currency Column -->
@@ -25,9 +26,15 @@
       <td mat-cell *matCellDef="let pocket"> {{pocket.amount}} </td>
     </ng-container>
   
-    <!-- Select Column -->
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef></th>
+    <!-- Edit Column -->
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef>Edit</th>
+      <td mat-cell *matCellDef="let pocket"> <button value={{pocket._id}} (click)="openEditPocketDialog(pocket._id)">e</button></td>
+    </ng-container>
+
+     <!-- Delete Column -->
+     <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef>Delete</th>
       <td mat-cell *matCellDef="let pocket"> <button value={{pocket._id}} (click)="openDeletePocketDialog(pocket._id)">x</button></td>
     </ng-container>
   

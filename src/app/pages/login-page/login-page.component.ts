@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, tap, catchError, of, finalize } from 'rxjs';
-import { RouterModule, Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 
+//Material Design imports
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login-page',
@@ -15,27 +15,24 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
-export class LoginPageComponent {
 
-  //ATRIBUTES
+export class LoginPageComponent {  
   form: FormGroup;
-  snackbar: MatSnackBar
-  newUser$!: Observable<any>
-  hasError: boolean = false
+  snackbar: MatSnackBar    
   router: Router = new Router;
   loginForm!: FormGroup
-  loginUser$!: Observable<any>
   hasLoginError = false
   token: any
-
-  //CONSTRUCTOR
-
+  
   constructor(
     private _formBuilder: FormBuilder,
     private _snackbar: MatSnackBar,
     private userService: UserService,
     private authenticationService: AuthenticationService,
   ) {
+
+    //sign up form builder
+
     this.form = this._formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(4)]],
       email: ["", [Validators.required, Validators.email]],
@@ -43,15 +40,18 @@ export class LoginPageComponent {
 
     })
 
+    // sign in form builder
+
     this.loginForm = this._formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}/)]]
     })
 
+    // snackbar listeners
 
     this.snackbar = this._snackbar
 
-    // Agrego un oyente al formControlName="name"
+    // listening formControlName="name"
     this.form.get('name')?.valueChanges.subscribe(value => {
 
       if (this.form.get('name')?.errors) {
@@ -59,28 +59,28 @@ export class LoginPageComponent {
       }
     })
 
-    // Agrego un oyente al formControlName="email"
+    // listening formControlName="email"
     this.form.get('email')?.valueChanges.subscribe(value => {
       if (this.form.get('email')?.errors) {
         this.openSnackBar("Debe proporcionar un correo electrónico válido y que no haya sido ya registrado previamente en esta aplicación")
       }
     })
 
-    // Agrego un oyente al formControlName="password"
+    // listening formControlName="password"
     this.form.get('password')?.valueChanges.subscribe(value => {
       if (this.form.get('password')?.errors) {
         this.openSnackBar("La contraseña debe poseer una longitud de entre 6 y 12 caracteres, y contener números y al menos una letra, una minúscula y una mayúscula")
       }
     })
 
-    // Agrego un oyente al formControlName="email" del loginForm
+    // listening sign in form formControlName="email" 
     this.loginForm.get('email')?.valueChanges.subscribe(value => {
       if (this.loginForm.get('email')?.errors) {
         this.openSnackBar("Debe proporcionar un correo electrónico válido")
       }
     })
 
-    // Agrego un oyente al formControlName="password" del LoginForm
+    // listening sign in form formControlName="password" 
     this.loginForm.get('password')?.valueChanges.subscribe(value => {
       if (this.loginForm.get('password')?.errors) {
         this.openSnackBar("La contraseña debe poseer una longitud de entre 6 y 12 caracteres, y contener números y al menos una letra, una minúscula y una mayúscula")
@@ -88,73 +88,31 @@ export class LoginPageComponent {
     })
   }
 
-  //OTHERS 
+  //------------------end of constructor-------------------------//
 
-
+  //signup method
   signup() {
-
     const user = this.form.value;
-    this.newUser$ = this.userService.create(user).pipe(
-      tap(response => {
-        alert('Signup Successful! Now go to login');
-
-        // Puedes realizar acciones adicionales después del éxito si es necesario
-
-      }),
-      catchError(error => {
-        alert('EROOR: ' + error.error.message);
-        console.log('ERROR: ', error)
-        this.hasError = true;
-        // Devuelve un observable vacío o un observable de valor predeterminado en caso de error
-        return of(null);
-      }),
-      finalize(() => {
-        // Acciones que se ejecutarán siempre, ya sea éxito o error
-        // Puedes realizar la limpieza u otras acciones aquí
-        console.log('La suscripción se ha completado');
-        // Realiza alguna acción adicional después de que la suscripción se complete
-        // Por ejemplo, puedes restablecer el formulario o navegar a otra página
-        this.form.reset()
-
-      })
-    );
-    this.newUser$.subscribe()
-
+    this.userService.create(user).subscribe(
+      response => {if(response){
+        alert('sign up successfull, now yo can login')
+      }})
+    this.form.reset()
+    this.router.navigateByUrl('/dashboard');
   }
+  //signin method
   login() {
 
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
-    this.loginUser$ = this.authenticationService.login(email, password).pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          console.log('Inicio de sesión exitoso');
-          this.token = response.token;
-          // Almacena el token en el localStorage
-          localStorage.setItem('token', this.token);
-          this.router.navigateByUrl('/dashboard');
-
-        } else {
-          console.error('Formato de respuesta no válido');
-        }
-      }),
-      catchError(error => {
-        alert('EROOR: ' + error);
-        this.hasLoginError = true;
-        // Devuelve un observable vacío o un observable de valor predeterminado en caso de error
-        return of(null);
-
-      }),
-      finalize(() => {
-        console.log('La suscripción se ha completado');
-        this.loginForm.reset()
-
-      })
-    );
-    this.loginUser$.subscribe()
-
+    this.authenticationService.login(email, password).subscribe(
+      response => {if(response){
+        this.router.navigateByUrl('/dashboard');
+      }}
+    )
   }
 
+  //snackbar method message configuration
   openSnackBar(message: string) {
     this.snackbar.open(message, '', {
       horizontalPosition: "center",
@@ -162,7 +120,4 @@ export class LoginPageComponent {
       duration: 1000
     })
   }
-
-
-
 }

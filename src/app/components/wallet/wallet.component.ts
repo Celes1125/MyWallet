@@ -1,17 +1,17 @@
-import { DeletePocketComponent } from './../delete-pocket/delete-pocket.component';
-import { AddPocketComponent } from './../add-pocket/add-pocket.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { WalletService } from '../../services/wallet.service';
+import { DeletePocketComponent } from './../delete-pocket/delete-pocket.component';
+import { AddPocketComponent } from './../add-pocket/add-pocket.component';
+import { EditPocketComponent } from '../edit-pocket/edit-pocket.component';
+//Material Design
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { WalletService } from '../../services/wallet.service';
-import { MatButtonModule } from '@angular/material/button';
-import {
-    MatDialogModule,
-    MatDialog    
-} from '@angular/material/dialog';
-import { Router, RouterModule } from '@angular/router';
+
 @Component({
     selector: 'app-wallet',
     standalone: true,
@@ -21,17 +21,19 @@ import { Router, RouterModule } from '@angular/router';
         MatFormFieldModule, MatButtonModule, MatDialogModule, AddPocketComponent]
 })
 export class WalletComponent implements OnInit {
+
     @Input()
     wallet!: any
     pockets!: any
     dataSource!: any
     router: Router = new Router;
 
+
     constructor(
         private walletService: WalletService,
         public dialog: MatDialog
     ) {
-        
+
     }
 
     ngOnInit(): void {
@@ -50,40 +52,67 @@ export class WalletComponent implements OnInit {
         }
 
     }
-    
-  
 
-    displayedColumns: string[] = ['pocket', 'currency', 'amount', 'select'];
-    
+
+
+    displayedColumns: string[] = ['pocket', 'currency', 'amount', 'edit', 'delete'];
+
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    addPocketDialog() {
+    openAddPocketDialog() {
         const dialogRef = this.dialog.open(AddPocketComponent, {
-            //data: {name: this.name, animal: this.animal},
+            data: {}
+
         });
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if (response) {
+                    alert("pocked added ok")
+                    this.router.navigateByUrl('/dashboard');
+                }
+            });
     }
 
     openDeletePocketDialog(id: string) {
         const dialogRef = this.dialog.open(DeletePocketComponent, {
             data: { id: id }
         });
-
         dialogRef.afterClosed().subscribe(
             response => {
-                if(response){
-                    
+                if (response) {
                     alert("pocked deleted ok")
                     this.router.navigateByUrl('/dashboard');
                 }
-               
-            }
-        );
-           }
+            });
+    }
 
+    openEditPocketDialog(id: string) {
+        const dialogRef = this.dialog.open(EditPocketComponent, {
+            data: {
+                id: id,               
+            }
+        })
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if (response) {
+                    alert("pocked edit ok")
+                    this.router.navigateByUrl('/dashboard');
+                }
+            });
+    }
+
+    
+   
 }
+
+
+
+
+
+
 
 
 

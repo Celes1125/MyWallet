@@ -1,7 +1,10 @@
 import { PocketService } from './../../services/pocket.service';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+
+//Material Design
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-delete-pocket',
   standalone: true,

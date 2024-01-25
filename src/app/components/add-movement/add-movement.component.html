@@ -1,0 +1,25 @@
+@if (income) {
+  <h2 mat-dialog-title>Add new income</h2>
+}@else {
+  <h2 mat-dialog-title>Add new expense</h2>
+}
+<form [formGroup]="form" (ngSubmit)="addMovement()">
+  <mat-dialog-content class="mat-typography">
+
+    <select type="text" autocomplete="on" placeholder="choose category" name="category" formControlName="category">
+      <option *ngFor="let category of categories" [value]=category._id>{{category.name}}</option>
+    </select>
+    <select type="text" autocomplete="off" placeholder="vendor" name="vendor" formControlName="vendor">
+      <option *ngFor="let vendor of vendors" [value]="vendor._id">{{vendor.name}}</option>
+    </select>
+    <select type="text" autocomplete="off" placeholder="pocket" name="pocket" formControlName="pocket">
+      <option *ngFor="let pocket of pockets" [value]="pocket._id">{{pocket.name}}</option>
+    </select>
+    <input type="number" autocomplete="off" placeholder="insert amount" name="amount" formControlName="amount">
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" [mat-dialog-close]="true" cdkFocusInitial>Save changes</button>
+  </mat-dialog-actions>
+</form>

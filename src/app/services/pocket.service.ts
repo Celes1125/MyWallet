@@ -1,6 +1,8 @@
 import { Observable, catchError, finalize, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Pocket } from '../interfaces/pocket';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,8 +26,8 @@ export class PocketService {
 
   }
 
-  edit(id: string, pocket: any): Observable<any> {
-    const url = this.url + id
+  edit(pocket: Pocket): Observable<any> {
+    const url = this.url + pocket._id
     return this.http.put<any>(url, pocket)
   }
 

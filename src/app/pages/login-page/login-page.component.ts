@@ -20,9 +20,8 @@ export class LoginPageComponent {
   form: FormGroup;
   snackbar: MatSnackBar    
   router: Router = new Router;
-  loginForm!: FormGroup
-  hasLoginError = false
-  token: any
+  loginForm!: FormGroup 
+  
   
   constructor(
     private _formBuilder: FormBuilder,

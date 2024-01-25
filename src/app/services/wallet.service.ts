@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, finalize, map, tap } from 'rxjs';
+import { Pocket } from '../interfaces/pocket';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +23,10 @@ export class WalletService {
     )
   }
 
-  getPocketsOfWallet(id: string): Observable<any> {
+  getPocketsOfWallet(id: string): Observable<any>{
     return this.http.get(this.url + 'pockets/' + id).pipe(
       tap(console.log),
-      catchError(async (error) => console.log(error)),
+      catchError(error=> error),
       finalize(() => console.log("getPocketsOfWallet subscription ended")),
     )
 

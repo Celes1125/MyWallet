@@ -2,11 +2,13 @@
 import { Component, Inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { WalletService } from './../../services/wallet.service';
 import { PocketService } from './../../services/pocket.service';
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Wallet } from '../../interfaces/wallet';
+import { CurrencyType } from '../../enums/currency-type';
 
 @Component({
   selector: 'app-edit-pocket',
@@ -17,7 +19,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditPocketComponent {
   pocketForm: FormGroup
-  wallets:any
+  wallets: Wallet[]=[]
   router: Router = new Router;
   pocketId: any;
 
@@ -30,7 +32,7 @@ export class EditPocketComponent {
 
     this.pocketForm = this.formBuilder.group({
       name: ["", [Validators.required]],
-      currency: ["", [Validators.required]],
+      currency: [CurrencyType, [Validators.required]],
       amount: ["", [Validators.required]],
       wallet: ["", [Validators.required]],
     })
@@ -60,13 +62,16 @@ getPocket(id:string) {
 
 editPocket() {  
   const pocket = {
+    _id: this.pocketId,
     name: this.pocketForm.value.name,
     currency: this.pocketForm.value.currency,
     amount: this.pocketForm.value.amount,
-    wallet: this.pocketForm.value.wallet
+    wallet: this.pocketForm.value.wallet,
+    creationDate: new Date(),
+    lastModified: new Date()
   }
 
-  return this.pocketService.edit(this.pocketId, pocket).subscribe(
+  return this.pocketService.edit(pocket).subscribe(
     response => response
   )
 

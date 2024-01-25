@@ -4,9 +4,12 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from './../../services/wallet.service';
 import { PocketService } from './../../services/pocket.service';
+import { Wallet } from '../../interfaces/wallet';
+import { CurrencyType } from '../../enums/currency-type';
 //Material Design
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+
 
 
 @Component({
@@ -18,7 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 export class AddPocketComponent {
   pocketForm: FormGroup  
-  wallets: any;
+  wallets: Wallet[] = [];
   router: Router = new Router;
 
   constructor
@@ -29,7 +32,7 @@ export class AddPocketComponent {
 
     this.pocketForm = this.formBuilder.group({
       name: ["", [Validators.required]],
-      currency: ["", [Validators.required]],
+      currency: [CurrencyType, [Validators.required]],
       amount: ["", [Validators.required]],
       wallet: ["", [Validators.required]],
     })

@@ -1,17 +1,13 @@
+import { CurrencyType } from "../enums/currency-type";
+import { Wallet } from "./wallet";
+
 export interface Pocket {
     _id: string,
     name: string,
     amount: number,
-    currency: string,
-    creationDate: Date,
+    currency: CurrencyType,
+    creationDate: Date | null | undefined,
     lastModified: Date | null | undefined,
-    wallet: {
-        _id: string,
-        name: string,
-        creationDate: Date,
-        lastModified: Date | null | undefined
-        activated: boolean,
-        creator: string | null | undefined
-    }
+    wallet: Wallet
 
 }

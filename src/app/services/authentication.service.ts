@@ -12,7 +12,7 @@ export class AuthenticationService {
   constructor(private httpClient: HttpClient,
     private userService: UserService) { }
 
-  login(email: any, password: any): Observable<{ response: any }> {
+  login(email: string, password: string): Observable<{ response: any }> {
     return this.userService.login(email, password).pipe(
       tap((response: any) => {
         if (response && response.token) {

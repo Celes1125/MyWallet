@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { WalletService } from '../../services/wallet.service';
-import { DeletePocketComponent } from './../delete-pocket/delete-pocket.component';
-import { AddPocketComponent } from './../add-pocket/add-pocket.component';
-import { EditPocketComponent } from '../edit-pocket/edit-pocket.component';
+import { WalletService } from '../../../services/wallet.service';
+import { DeletePocketComponent } from '../../dialogs/delete-pocket/delete-pocket.component';
+import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
+import { EditPocketComponent } from '../../dialogs/edit-pocket/edit-pocket.component';
 //Material Design
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,8 +22,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class WalletComponent implements OnInit {
 
-    @Input()
-    wallet!: any
+    @Input() wallet!: any
+    @Input() showAddPocketButton:boolean = true
     pockets!: any
     dataSource!: any
     router: Router = new Router;

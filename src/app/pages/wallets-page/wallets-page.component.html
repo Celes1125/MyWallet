@@ -1,4 +1,20 @@
-@for (wallet of wallets; track wallet._id) {
-    <app-wallet [wallet]="wallet"></app-wallet>
-    <br>
+
+@if(activeWallet){
+    <h1>your active wallet is {{activeWallet.name}}</h1>
+    <app-wallet [wallet]="activeWallet"></app-wallet>    
+
+<div>
+        <p>Add new</p>        
+        <button (click)="openAddPocketDialog()">Add pocket</button>
+        <button (click)="openEditWalletDialog(activeWallet)">Edit Wallet</button>
+        <button (click)="openAddWalletDialog()">Create new</button>
+        <button (click)="openArchive()">Archive</button>
+</div>
+}@else{
+    <p><a (click)="openArchive()">
+        go to create your first active wallet
+    </a>
+</p>
 }
+
+

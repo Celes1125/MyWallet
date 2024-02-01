@@ -1,4 +1,4 @@
-import { PocketService } from './../../services/pocket.service';
+import { PocketService } from '../../../services/pocket.service';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 

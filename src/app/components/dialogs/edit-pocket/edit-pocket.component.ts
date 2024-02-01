@@ -3,12 +3,12 @@ import { Component, Inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { WalletService } from './../../services/wallet.service';
-import { PocketService } from './../../services/pocket.service';
+import { WalletService } from '../../../services/wallet.service';
+import { PocketService } from '../../../services/pocket.service';
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Wallet } from '../../interfaces/wallet';
-import { CurrencyType } from '../../enums/currency-type';
+import { Wallet } from '../../../interfaces/wallet';
+import { CurrencyType } from '../../../enums/currency-type';
 
 @Component({
   selector: 'app-edit-pocket',

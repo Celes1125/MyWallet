@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     UserService,
-    PocketService,
+    PocketService,                                                   
     provideHttpClient(withFetch()),   
     importProvidersFrom(HttpClientModule)
   ],

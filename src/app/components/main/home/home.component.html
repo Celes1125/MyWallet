@@ -1,6 +1,6 @@
 @if (activeWallet) {
     <h1>your active wallet is {{activeWallet.name}}</h1>
-    <app-wallet [wallet]="activeWallet"></app-wallet>
+    <app-wallet [showAddPocketButton]="showAddPocketButton" [wallet]="activeWallet"></app-wallet>
     <div>
         <p>Add new</p>
         <button (click)="openAddMovementDialog(activeWallet._id, !income)">Expense</button>

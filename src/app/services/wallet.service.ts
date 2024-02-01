@@ -46,5 +46,34 @@ export class WalletService {
     );
   }
 
+  edit(wallet:any){
+    const id = wallet._id
+    const url = this.url+id
+    return this.http.put( url, wallet).pipe(
+      tap( (modifiedWallet)=> modifiedWallet),
+      catchError( error=> error),
+      finalize( ()=>console.log('edit wallet subscription ended'))
+    )
+  }
+
+  delete(id:string){
+    const url = this.url+id
+    return this.http.delete(url).pipe(
+      tap( (response)=> response),
+      catchError( error=> error),
+      finalize( ()=>console.log('delete wallet subscription ended'))
+    )
+  }
+
+  create(wallet:any){
+  return this.http.post(this.url, wallet).pipe(
+    tap( (response)=> response),
+      catchError( error=> error),
+      finalize( ()=>console.log('create wallet subscription ended'))
+    )
+  
+  }
+
+  
 
 }

@@ -2,10 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { WalletService } from './../../services/wallet.service';
-import { PocketService } from './../../services/pocket.service';
-import { Wallet } from '../../interfaces/wallet';
-import { CurrencyType } from '../../enums/currency-type';
+import { WalletService } from '../../../services/wallet.service';
+import { PocketService } from '../../../services/pocket.service';
+import { Wallet } from '../../../interfaces/wallet';
+import { CurrencyType } from '../../../enums/currency-type';
 //Material Design
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';

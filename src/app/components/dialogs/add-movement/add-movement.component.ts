@@ -2,19 +2,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Category } from '../../interfaces/category';
-import { CategoryService } from '../../services/category.service';
+import { Category } from '../../../interfaces/category';
+import { CategoryService } from '../../../services/category.service';
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
-import { VendorService } from '../../services/vendor.service';
-import { Vendor } from '../../interfaces/vendor';
-import { WalletService } from '../../services/wallet.service';
-import { Pocket } from '../../interfaces/pocket';
-import { MovementService } from '../../services/movement.service';
+import { VendorService } from '../../../services/vendor.service';
+import { Vendor } from '../../../interfaces/vendor';
+import { WalletService } from '../../../services/wallet.service';
+import { Pocket } from '../../../interfaces/pocket';
+import { MovementService } from '../../../services/movement.service';
 
 @Component({
   selector: 'app-add-movement',

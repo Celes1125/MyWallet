@@ -1,8 +1,8 @@
 
 import { Component, OnInit } from '@angular/core';
-import { TopMenuComponent } from "../../components/top-menu/top-menu.component";
-import { BottomMenuComponent } from "../../components/bottom-menu/bottom-menu.component";
-import { HomeComponent } from "../../components/home/home.component";
+import { TopMenuComponent } from "../../components/menu/top-menu/top-menu.component";
+import { BottomMenuComponent } from "../../components/menu/bottom-menu/bottom-menu.component";
+import { HomeComponent } from "../../components/main/home/home.component";
 import { WalletsPageComponent } from "../wallets-page/wallets-page.component";
 import { ReportsPageComponent } from "../reports-page/reports-page.component";
 import { CommonModule } from '@angular/common';

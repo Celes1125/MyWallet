@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
-import { WalletService } from '../../services/wallet.service';
-import { AddMovementComponent } from '../add-movement/add-movement.component';
+import { WalletService } from '../../../services/wallet.service';
+import { AddMovementComponent } from '../../dialogs/add-movement/add-movement.component';
 //Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { AddCategoryComponent } from '../add-category/add-category.component';
-import { AddVendorComponent } from '../add-vendor/add-vendor.component';
+import { AddCategoryComponent } from '../../dialogs/add-category/add-category.component';
+import { AddVendorComponent } from '../../dialogs/add-vendor/add-vendor.component';
 
 
 @Component({
@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
     activeWallet: any
     router : Router = new Router()
     income: boolean = true
+    showAddPocketButton : boolean = true
 
     constructor(
         private walletService: WalletService,

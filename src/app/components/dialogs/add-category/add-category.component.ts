@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CategoryService } from '../../services/category.service';
-import { Category } from '../../interfaces/category';
+import { CategoryService } from '../../../services/category.service';
+import { Category } from '../../../interfaces/category';
 
 @Component({
   selector: 'app-add-category',

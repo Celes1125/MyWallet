@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { VendorService } from '../../services/vendor.service';
+import { VendorService } from '../../../services/vendor.service';
 import { Observable } from 'rxjs';
-import { Vendor } from '../../interfaces/vendor';
+import { Vendor } from '../../../interfaces/vendor';
 
 @Component({
   selector: 'app-add-vendor',

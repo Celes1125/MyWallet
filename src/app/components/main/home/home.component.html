@@ -1,26 +1,22 @@
-@if (activeWallet) {
-    <h1>your active wallet is {{activeWallet.name}}</h1>
-    <app-wallet [showAddPocketButton]="showAddPocketButton" [wallet]="activeWallet"></app-wallet>
-    <div>
-        <p>Add new</p>
-        <button (click)="openAddMovementDialog(activeWallet._id, !income)">Expense</button>
-        <button (click)="openAddMovementDialog(activeWallet._id, income)">Income</button>
-        <button (click)="openAddCategoryDialog()">Category</button>
-        <button (click)="openAddVendorDialog()">Vendor</button>
-    </div>
-}
-@else {
-    <p>There's no active wallets yet, go to create one</p>
-}
+@if(wallets){
 
-<br>
-
-
-
-
-
-
-
-
-
+    @if(wallets.length === 0){
+        
+        <button (click)="openAddWalletDialog()">Go to create a wallet to use</button>
+    }@else if (wallets.length !==0 && !activeWallet) {
+        <button (click)="openActiveWalletDialog()">Active one wallet to use</button>
+    }@else if (activeWallet) {
+        <h1>your active wallet is {{activeWallet.name}}</h1>
+        <app-wallet [wallet]="activeWallet"></app-wallet>
+        <div>
+            <p>Add new</p>
+            <button (click)="openAddMovementDialog(activeWallet._id, !income)">Expense</button>
+            <button (click)="openAddMovementDialog(activeWallet._id, income)">Income</button>
+            <button (click)="openAddCategoryDialog()">Category</button>
+            <button (click)="openAddVendorDialog()">Vendor</button>
+        </div>
+    }
+ 
     
+}
+

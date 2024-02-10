@@ -3,9 +3,10 @@
 
 <form [formGroup]="form" (ngSubmit)="addVendor()">
   <mat-dialog-content class="mat-typography">
-
-      <input type="text" autocomplete="off" placeholder="insert a name for you new vendor" name="name" formControlName="name">
-
+    <label>Insert a name for your new vendor/provider
+    
+      <input type="text" autocomplete="off" placeholder="vendor name" name="name" formControlName="name">
+    </label>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

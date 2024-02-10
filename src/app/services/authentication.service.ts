@@ -19,12 +19,13 @@ export class AuthenticationService {
           console.log('Inicio de sesión exitoso');
           //sending token to local storage
           localStorage.setItem('token', response.token);
+
         } else {
           console.error('non valid format: ');
         }
       }),
       catchError(error => {
-        alert('EROOR: ' + error);
+        alert('ERROR: ' + error);
         return of(null);
       }),
       finalize(() => {
@@ -36,5 +37,26 @@ export class AuthenticationService {
   isLogged() {
     return !!localStorage.getItem('token')
   }
+
+  getUserId(){
+    const token = localStorage.getItem('token');    
+    return this.httpClient.get('http://localhost:3000/users/token/'+token).pipe(
+      tap((response: any) => {
+        console.log('userId: ', response);
+        console.log('http://localhost:3000/users/token/'+token)
+        return response
+      }),
+      catchError(error => {
+        alert('ERROR: ' + error);
+        return of(null);
+      }),
+      finalize(() => {
+        console.log('getUserId subscription ended');
+      })
+    );
+
+  }
+
+  
 
 }

@@ -11,7 +11,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { AddPocketComponent } from '../../components/dialogs/add-pocket/add-pocket.component';
 import { EditWalletComponent } from '../../components/dialogs/edit-wallet/edit-wallet.component';
 import { AddWalletComponent } from '../../components/dialogs/add-wallet/add-wallet.component';
-import { ArchivePageComponent } from '../archive-page/archive-page.component';
+import { ManageWalletComponent } from '../../components/dialogs/manage-wallet/manage-wallet.component';
+import { Wallet } from '../../interfaces/wallet';
 
 @Component({
     selector: 'app-wallets-page',
@@ -37,15 +38,17 @@ export class WalletsPageComponent {
 
     getActiveWallet(){
         this.walletService.getActiveWallet().subscribe(
-            activeWallet => {
+            (activeWallet: Wallet) => {
                 this.activeWallet = activeWallet
                 console.log('wallet: ', activeWallet)}
         )
     }
 
-    openAddPocketDialog() {
+    openAddPocketDialog(wallet:any) {
         const dialogRef = this.dialog.open(AddPocketComponent, {
-            data: {}
+            data: {
+                wallet:wallet
+            }
 
         });
         dialogRef.afterClosed().subscribe(
@@ -85,6 +88,13 @@ export class WalletsPageComponent {
         )
       }
       openArchive(){
-        const dialogRef = this.dialog.open(ArchivePageComponent, {})
+        const dialogRef = this.dialog.open(ManageWalletComponent, {})
+        dialogRef.afterClosed().subscribe(
+            response => {
+            if (response){
+                alert("wallets changes saved ok")
+            }
+        }
+    )
       }
 }

@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Wallet } from '../../../interfaces/wallet';
 
 @Component({
     selector: 'app-wallet',
@@ -62,15 +63,16 @@ export class WalletComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    openAddPocketDialog() {
+    openAddPocketDialog(wallet:Wallet) {
         const dialogRef = this.dialog.open(AddPocketComponent, {
-            data: {}
+            data: {
+                wallet:wallet
+            }
 
         });
         dialogRef.afterClosed().subscribe(
             response => {
-                if (response) {
-                    alert("pocked added ok")
+                if (response) {                   
                     this.router.navigateByUrl('/dashboard');
                 }
             });
@@ -83,7 +85,7 @@ export class WalletComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-                    alert("pocked deleted ok")
+                    
                     this.router.navigateByUrl('/dashboard');
                 }
             });
@@ -98,7 +100,7 @@ export class WalletComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-                    alert("pocked edit ok")
+                    
                     this.router.navigateByUrl('/dashboard');
                 }
             });

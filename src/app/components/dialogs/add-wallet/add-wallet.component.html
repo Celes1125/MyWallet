@@ -1,9 +1,10 @@
 <h2 mat-dialog-title>Add new wallet</h2>
 <form [formGroup]="walletForm" (ngSubmit)="addWallet()">
   <mat-dialog-content class="mat-typography">
-    <label>Enter a name for your new wallet</label>
+    <label>Enter a name for your new wallet
+    
     <input type="text" autocomplete="off" placeholder="name" name="name" formControlName="name">
-  
+  </label>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>

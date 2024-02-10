@@ -30,7 +30,7 @@ export class DeleteWalletComponent {
       this._walletService.delete(id).subscribe(
         response => console.log(response)
       )
-      this.router.navigateByUrl("/archive")
+      this.router.navigateByUrl("/dashboard")
   } 
 
 }

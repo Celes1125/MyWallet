@@ -5,14 +5,15 @@
 
 <div>
         <p>Add new</p>        
-        <button (click)="openAddPocketDialog()">Add pocket</button>
+        <button (click)="openAddPocketDialog(activeWallet)">Add pocket</button>
         <button (click)="openEditWalletDialog(activeWallet)">Edit Wallet</button>
         <button (click)="openAddWalletDialog()">Create new</button>
         <button (click)="openArchive()">Archive</button>
 </div>
 }@else{
     <p><a (click)="openArchive()">
-        go to create your first active wallet
+        You need to active one of your created wallets.
+
     </a>
 </p>
 }

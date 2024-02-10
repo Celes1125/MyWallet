@@ -10,7 +10,7 @@ export interface Movement {
     date: Date,
     amount: number,
     currency: CurrencyType,
-    user: string | null | undefined,
+    user: any,
     vendor: Vendor,
     category: Category,
     pocket: Pocket

@@ -65,7 +65,6 @@ editPocket() {
     _id: this.pocketId,
     name: this.pocketForm.value.name,
     currency: this.pocketForm.value.currency,
-    amount: this.pocketForm.value.amount,
     wallet: this.pocketForm.value.wallet,
     creationDate: new Date(),
     lastModified: new Date()

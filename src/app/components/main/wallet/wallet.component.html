@@ -3,7 +3,8 @@
   <input matInput (keyup)="applyFilter($event)" #input>
 </mat-form-field>
 
-<button (click)="openAddPocketDialog()">Add pocket</button>
+<button (click)="openAddPocketDialog(wallet)">Add pocket</button>
+
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

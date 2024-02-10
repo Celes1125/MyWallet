@@ -1,7 +1,7 @@
 import { PocketService } from '../../../services/pocket.service';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { MovementService } from '../../../services/movement.service';
 //Material Design
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
@@ -17,12 +17,19 @@ export class DeletePocketComponent {
   
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private pocketService: PocketService
+    private pocketService: PocketService,
+    private movementService:MovementService
   ) { 
     this.id = this.data.id
   }
 
-  deletePocket(){          
+  deletePocket(){    
+    this.movementService.deleteMovementsByPocket(this.id).subscribe(
+      response => {
+        console.log('response')
+      }
+    )   
+
       this.pocketService.delete(this.id).subscribe(
         response => {
           console.log('delete pocket response: ', response)

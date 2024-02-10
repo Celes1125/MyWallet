@@ -6,15 +6,24 @@
 <form [formGroup]="form" (ngSubmit)="addMovement()">
   <mat-dialog-content class="mat-typography">
 
-    <select type="text" autocomplete="on" placeholder="choose category" name="category" formControlName="category">
+    <select type="text" autocomplete="off" placeholder="choose category" name="category" formControlName="category">
+      <option value="" disabled selected>Choose category</option>
       <option *ngFor="let category of categories" [value]=category._id>{{category.name}}</option>
     </select>
+    <br>
+
     <select type="text" autocomplete="off" placeholder="vendor" name="vendor" formControlName="vendor">
+      <option value="" disabled selected>Choose vendor</option>
       <option *ngFor="let vendor of vendors" [value]="vendor._id">{{vendor.name}}</option>
     </select>
+    <br>
+
     <select type="text" autocomplete="off" placeholder="pocket" name="pocket" formControlName="pocket">
+      <option value="" disabled selected>Choose pocket</option>
       <option *ngFor="let pocket of pockets" [value]="pocket._id">{{pocket.name}}</option>
     </select>
+    <br>
+
     <input type="number" autocomplete="off" placeholder="insert amount" name="amount" formControlName="amount">
   </mat-dialog-content>
 

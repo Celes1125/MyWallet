@@ -32,11 +32,11 @@ export class WalletService {
 
   }
 
-  getById(id: string) {
+  getById(id: string): any{
     return this.http.get(this.url + id)
   }
 
-  getActiveWallet() {
+  getActiveWallet() : any {
     return this.getAll().pipe(
       map((wallets) => wallets.filter((wallet: any) => wallet.activated === true)),
       map((filteredWallets) => filteredWallets.length > 0 ? filteredWallets[0] : null),

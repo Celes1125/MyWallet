@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { WalletComponent } from "../../components/main/wallet/wallet.component";
 import { WalletService } from '../../services/wallet.service';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +26,8 @@ import { DeleteWalletComponent } from '../../components/dialogs/delete-wallet/de
   styleUrl: './archive-page.component.css',
   imports: [WalletComponent, MatTableModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule, FormsModule, MatDialogModule, RouterModule]
 })
-export class ArchivePageComponent {
+export class ArchivePageComponent  {
+ 
   wallets: any[] = []
   dataSource: any = []
   selection = new SelectionModel<any>(false, [])
@@ -38,6 +39,7 @@ export class ArchivePageComponent {
     public dialog: MatDialog) {
     this.getAllWallets()
   }
+
 
   getAllWallets() {
     this.walletService.getAll().subscribe(
@@ -94,8 +96,8 @@ export class ArchivePageComponent {
         this.walletService.edit(nw).subscribe(
           response => console.log(response)
         )
-      })
-
+      }) 
+        
 
   }
 

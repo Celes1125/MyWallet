@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Edit new pocket</h2>
+<h2 mat-dialog-title>Edit pocket</h2>
 <form [formGroup]="pocketForm" (ngSubmit)="editPocket()">
   <mat-dialog-content class="mat-typography">
     <input type="text" autocomplete="off"  name="name" formControlName="name">
@@ -7,7 +7,7 @@
       <option value="dolar">$usd</option>
       <option value ="peso">$ar</option>
     </select>  
-    <input type="number" autocomplete="off" name="amount" formControlName="amount">
+    
     <select type="text" autocomplete="off" name="wallet" formControlName="wallet">
       <option *ngFor="let wallet of wallets" [value]="wallet._id">{{wallet.name}}</option>
     </select>

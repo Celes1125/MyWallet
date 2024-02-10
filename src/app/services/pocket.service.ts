@@ -26,7 +26,7 @@ export class PocketService {
 
   }
 
-  edit(pocket: Pocket): Observable<any> {
+  edit(pocket: any): Observable<any> {
     const url = this.url + pocket._id
     return this.http.put<any>(url, pocket)
   }
@@ -40,8 +40,18 @@ export class PocketService {
     )
   }
 
-  create(pocket: any): Observable<any> {
-    return this.http.post(this.url, pocket)
+  create(pocket: any) : Observable <Pocket> | any {
+    return this.http.post(this.url, pocket).pipe(
+      tap(response => console.log(" create pocket response: ", response)),
+      catchError(error => error),
+      finalize(() => console.log("create pocket subscription ended")))
+  }
+
+  deleteAll(){
+    return this.http.delete(this.url).pipe(
+      tap(response => console.log(" create pocket response: ", response)),
+      catchError(error => error),
+      finalize(() => console.log("create pocket subscription ended")))
   }
 
 }

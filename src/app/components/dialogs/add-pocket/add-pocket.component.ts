@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 
 
+
 @Component({
   selector: 'app-add-pocket',
   standalone: true,
@@ -23,6 +24,8 @@ export class AddPocketComponent {
   pocketForm: FormGroup  
   wallets: Wallet[] = [];
   router: Router = new Router;
+  walletOnReception! : any
+  defaultWalletValue: string;
 
   constructor
     (private formBuilder: FormBuilder,
@@ -30,27 +33,32 @@ export class AddPocketComponent {
       private walletService: WalletService,
       @Inject(MAT_DIALOG_DATA) public data: any,) {
 
+    this.getWallets()
+
+    this.walletOnReception = this.data.wallet
+
+    this.defaultWalletValue = this.walletOnReception._id
+   
+
     this.pocketForm = this.formBuilder.group({
       name: ["", [Validators.required]],
-      currency: [CurrencyType, [Validators.required]],
-      amount: ["", [Validators.required]],
-      wallet: ["", [Validators.required]],
-    })
-
-    this.getWallets()
+      currency:["euro", [Validators.required]],      
+      wallet: [this.defaultWalletValue, [Validators.required]],
+    })   
 
 }
 
 addPocket() {  
   const pocket = {
-    name: this.pocketForm.value.name,
+    name: this.pocketForm.value.name,    
+    amount:0,
     currency: this.pocketForm.value.currency,
-    amount: this.pocketForm.value.amount,
-    wallet: this.pocketForm.value.wallet
+    wallet: this.pocketForm.value.wallet,
+    
   }
   
     this.pocketService.create(pocket).subscribe(
-      response => console.log(response)
+      (response:any) => console.log(response)
       
     )     
     
@@ -59,7 +67,7 @@ addPocket() {
 
 getWallets(){
   return this.walletService.getAll().subscribe(
-    response => this.wallets = response
+    (response:Wallet[]) => this.wallets = response
     
   )
     

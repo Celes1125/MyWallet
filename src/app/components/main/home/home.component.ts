@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
 import { WalletService } from '../../../services/wallet.service';
-import { AddMovementComponent } from '../../dialogs/add-movement/add-movement.component';
+import { AddMovementComponent } from '../../dialogs/add-pocket/add-movement/add-movement.component';
 
 //Material Design
 import { MatButtonModule } from '@angular/material/button';

@@ -12,6 +12,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Wallet } from '../../../interfaces/wallet';
+import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wallet-name.component';
 
 @Component({
     selector: 'app-wallet',
@@ -104,6 +105,24 @@ export class WalletComponent implements OnInit {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
+    }
+
+    openEditWalletName(wallet: any){
+        const dialogRef = this.dialog.open (EditWalletNameComponent, {
+            data: {
+                wallet : wallet
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if (response) {                    
+                    this.router.navigateByUrl('/dashboard');
+                }
+            });
+
+
+
     }
 
     

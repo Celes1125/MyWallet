@@ -1,11 +1,14 @@
 <mat-form-field>
+  
   <mat-label>Search pockets in {{wallet.name}}</mat-label>
+  
   <input matInput (keyup)="applyFilter($event)" #input>
 </mat-form-field>
 
 <button (click)="openAddPocketDialog(wallet)">Add pocket</button>
+<button (click)="openEditWalletName(wallet)">edit wallet name</button>
 
-
+<br>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!-- Pocket Column -->

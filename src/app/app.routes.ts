@@ -3,7 +3,6 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guardians/auth.guard';
 import { NotFoundComponent } from './components/main/not-found/not-found.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { ArchivePageComponent } from './pages/archive-page/archive-page.component';
 
 
 export const routes: Routes = [

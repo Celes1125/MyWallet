@@ -6,14 +6,13 @@
     }@else if (wallets.length !==0 && !activeWallet) {
         <button (click)="openActiveWalletDialog()">Active one wallet to use</button>
     }@else if (activeWallet) {
-        <h1>your active wallet is {{activeWallet.name}}</h1>
+        <h1>your active wallet is {{activeWallet.name}}</h1>        
         <app-wallet [wallet]="activeWallet"></app-wallet>
         <div>
             <p>Add new</p>
             <button (click)="openAddMovementDialog(activeWallet._id, !income)">Expense</button>
             <button (click)="openAddMovementDialog(activeWallet._id, income)">Income</button>
-            <button (click)="openAddCategoryDialog()">Category</button>
-            <button (click)="openAddVendorDialog()">Vendor</button>
+            
         </div>
     }
  

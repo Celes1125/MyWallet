@@ -1,20 +1,20 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
 import { WalletService } from '../../../services/wallet.service';
-import { AddMovementComponent } from '../../dialogs/add-pocket/add-movement/add-movement.component';
+import { AddMovementComponent } from '../../dialogs/add-movement/add-movement.component';
+import { AddCategoryComponent } from '../../dialogs/add-category/add-category.component';
+import { AddVendorComponent } from '../../dialogs/add-vendor/add-vendor.component';
+import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
+import { Wallet } from '../../../interfaces/wallet';
 
+import { WalletsPageComponent } from '../../../pages/wallets-page/wallets-page.component';
 //Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { AddCategoryComponent } from '../../dialogs/add-category/add-category.component';
-import { AddVendorComponent } from '../../dialogs/add-vendor/add-vendor.component';
-import { ArchivePageComponent } from '../../../pages/archive-page/archive-page.component';
-import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
-import { Wallet } from '../../../interfaces/wallet';
-import { ManageWalletComponent } from '../../dialogs/manage-wallet/manage-wallet.component';
 
 
 @Component({
@@ -22,7 +22,7 @@ import { ManageWalletComponent } from '../../dialogs/manage-wallet/manage-wallet
     standalone: true,
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    imports: [CommonModule, WalletComponent, MatButtonModule, MatIconModule, MatDialogModule, RouterModule, AddWalletComponent, ArchivePageComponent]
+    imports: [CommonModule, WalletComponent, MatButtonModule, MatIconModule, MatDialogModule, RouterModule, AddWalletComponent, WalletsPageComponent]
 })
 export class HomeComponent implements OnInit {
     wallets:Wallet[]=[]
@@ -75,33 +75,7 @@ export class HomeComponent implements OnInit {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
-    }
-
-    openAddCategoryDialog() {
-        const dialogRef = this.dialog.open(AddCategoryComponent)
-
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("category successfully added")
-                    this.router.navigateByUrl('/dashboard');
-                }
-            });
-
-    }
-
-    openAddVendorDialog() {
-        const dialogRef = this.dialog.open(AddVendorComponent)
-
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("vendor successfully added")
-                    this.router.navigateByUrl('/dashboard');
-                }
-            });
-
-    }
+    }     
 
     openAddWalletDialog() {
         const dialogRef = this.dialog.open(AddWalletComponent, {
@@ -119,7 +93,7 @@ export class HomeComponent implements OnInit {
     }
 
     openActiveWalletDialog(){
-        const dialogRef = this.dialog.open(ManageWalletComponent, {})
+        const dialogRef = this.dialog.open(WalletsPageComponent, {})
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {                    

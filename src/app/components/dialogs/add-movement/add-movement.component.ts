@@ -1,15 +1,15 @@
 import { Router, RouterModule } from '@angular/router';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Category } from '../../../../interfaces/category';
-import { CategoryService } from '../../../../services/category.service';
-import { VendorService } from '../../../../services/vendor.service';
-import { Vendor } from '../../../../interfaces/vendor';
-import { WalletService } from '../../../../services/wallet.service';
-import { Pocket } from '../../../../interfaces/pocket';
-import { MovementService } from '../../../../services/movement.service';
-import { AuthenticationService } from '../../../../services/authentication.service';
+import { Category } from '../../../interfaces/category';
+import { CategoryService } from '../../../services/category.service';
+import { VendorService } from '../../../services/vendor.service';
+import { Vendor } from '../../../interfaces/vendor';
+import { WalletService } from '../../../services/wallet.service';
+import { Pocket } from '../../../interfaces/pocket';
+import { MovementService } from '../../../services/movement.service';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -28,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './add-movement.component.css'
 })
 
-export class AddMovementComponent implements OnInit {
+export class AddMovementComponent implements OnInit, OnChanges {
   walletId: any
   form!: FormGroup
   categories: Category[] = []
@@ -61,6 +61,9 @@ export class AddMovementComponent implements OnInit {
     this.walletId = this.data.walletId
     this.income = this.data.income
     this.getUser()
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+   this.getPockets()
   }
 
   ngOnInit(): void {
@@ -124,13 +127,10 @@ export class AddMovementComponent implements OnInit {
       };    
       this._movementsService.addMovementAndRefresh(movement).subscribe(
         response => response
-      )
-
-      this.router.navigateByUrl('/dashboard')
-
-      
+      )           
       
   }    
+ 
     
 }
   

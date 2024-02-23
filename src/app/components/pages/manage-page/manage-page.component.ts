@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { WalletComponent } from '../../components/main/wallet/wallet.component';
-import { WalletService } from '../../services/wallet.service';
+import { WalletComponent } from '../../main/wallet/wallet.component';
+import { WalletService } from '../../../services/wallet.service';
 
 //Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { AddPocketComponent } from '../../components/dialogs/add-pocket/add-pocket.component';
-import { EditWalletComponent } from '../../components/dialogs/edit-wallet/edit-wallet.component';
-import { AddWalletComponent } from '../../components/dialogs/add-wallet/add-wallet.component';
-import { Wallet } from '../../interfaces/wallet';
+import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
+import { EditWalletComponent } from '../../dialogs/edit-wallet/edit-wallet.component';
+import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
+import { Wallet } from '../../../interfaces/wallet';
 import { WalletsPageComponent } from '../wallets-page/wallets-page.component';
+import { CategoriesPageComponent } from '../categories-page/categories-page.component';
+import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
 
 @Component({
     selector: 'app-manage-page',
@@ -102,12 +104,22 @@ export class ManagePageComponent {
 
 
     openVendorsManager() {
-        throw new Error('Method not implemented.');
+        const dialogRef = this.dialog.open(VendorsPageComponent, {})
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if (response) {
+                    console.log('vendors changes saved ok: ', response)
+                }
+            })
     }
 
-
-
-    openCategoriesManager() {
-        throw new Error('Method not implemented.');
+    openCategoriesPage() {
+        const dialogRef = this.dialog.open(CategoriesPageComponent, {});
+        dialogRef.afterClosed().subscribe(
+            response => {
+                if (response) {
+                    console.log('categories changes saved ok: ', response)
+                }
+            })
     }
 }

@@ -1,7 +1,8 @@
-import { Observable, catchError, finalize, of, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pocket } from '../interfaces/pocket';
+import { transferableAbortController } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -40,18 +41,104 @@ export class PocketService {
     )
   }
 
-  create(pocket: any) : Observable <Pocket> | any {
+  create(pocket: any): Observable<Pocket> | any {
     return this.http.post(this.url, pocket).pipe(
       tap(response => console.log(" create pocket response: ", response)),
       catchError(error => error),
       finalize(() => console.log("create pocket subscription ended")))
   }
 
-  deleteAll(){
+  deleteAll() {
     return this.http.delete(this.url).pipe(
       tap(response => console.log(" create pocket response: ", response)),
       catchError(error => error),
       finalize(() => console.log("create pocket subscription ended")))
   }
+
+  refreshPocketsOfTransfers(fromPocketId: string, toPocketId: string, transferAmount: Number | any) {
+    this.refreshFromPocket(fromPocketId, transferAmount).subscribe(
+      response=> response
+    )
+    this.refreshToPocket(toPocketId, transferAmount).subscribe(
+      response=> response
+    )
+    
+
+  }
+
+  refreshFromPocket(pocketId:string, transferAmount:number){
+    return this.getById(pocketId).pipe(
+      tap(pocket => console.log(pocket)),
+      map((pocket: Pocket) => {
+        return pocket.amount
+      }),
+      catchError(error => {
+        console.error('Error al obtener el monto del bolsillo:', error);
+        return of(null)
+      }),
+      map((amount) => {
+        if (amount != null) {
+          const newAmount = amount-transferAmount
+          return { newAmount }
+        } else {
+          return { amount: null }
+        }
+      }),
+      tap(({ newAmount }) => console.log("newAmount: ", newAmount)),
+      switchMap(({ newAmount }) => {
+        return this.edit({
+          _id: pocketId,
+          amount: newAmount,
+          lastModified: new Date()
+        });
+      }),
+      catchError(error => {
+        console.error('Error al obtener el bolsillo:', error);
+        return of(null)
+      }),      
+    )
+  }
+
+  refreshToPocket(pocketId:string, transferAmount:number){
+    return this.getById(pocketId).pipe(
+      tap(pocket => console.log(pocket)),
+      map((pocket: Pocket) => {
+        return pocket.amount
+      }),
+      catchError(error => {
+        console.error('Error al obtener el monto del bolsillo:', error);
+        return of(null)
+      }),
+      map((amount) => {
+        if (amount != null) {
+          const newAmount = amount+transferAmount
+          return { newAmount }
+        } else {
+          return { amount: null }
+        }
+      }),
+      tap(({ newAmount }) => console.log("newAmount: ", newAmount)),
+      switchMap(({ newAmount }) => {
+        return this.edit({
+          _id: pocketId,
+          amount: newAmount,
+          lastModified: new Date()
+        });
+      }),
+      catchError(error => {
+        console.error('Error al obtener el bolsillo:', error);
+        return of(null)
+      }),      
+    )
+  }
+
+
+
+
+    
+
+  
+
+ 
 
 }

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
-import { WalletComponent } from '../../main/wallet/wallet.component';
+import { WalletComponent } from '../../../components/main/wallet/wallet.component';
 
 @Component({
   selector: 'app-edit-wallet',

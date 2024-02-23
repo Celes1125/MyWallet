@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { AuthenticationService } from '../../services/authentication.service';
+import { UserService } from '../../../services/user.service';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 //Material Design imports
 import { MatSnackBar } from '@angular/material/snack-bar';

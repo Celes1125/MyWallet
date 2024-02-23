@@ -1,12 +1,12 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { WalletComponent } from '../../components/main/wallet/wallet.component';
-import { WalletService } from '../../services/wallet.service';
+import { WalletComponent } from '../../main/wallet/wallet.component';
+import { WalletService } from '../../../services/wallet.service';
 import { FormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
-import { EditWalletComponent } from '../../components/dialogs/edit-wallet/edit-wallet.component';
+import { EditWalletComponent } from '../../dialogs/edit-wallet/edit-wallet.component';
 import { RouterModule, Router } from '@angular/router';
 
-import { Wallet } from '../../interfaces/wallet';
+import { Wallet } from '../../../interfaces/wallet';
 // Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,9 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DeleteWalletComponent } from '../../components/dialogs/delete-wallet/delete-wallet.component';
-import { AddWalletComponent } from '../../components/dialogs/add-wallet/add-wallet.component';
-
+import { DeleteWalletComponent } from '../../dialogs/delete-wallet/delete-wallet.component';
+import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
 
 @Component({
   selector: 'app-wallets-page',

@@ -27,6 +27,21 @@ export class VendorService {
       )
     }
 
+    edit(vendor:any):Observable<Vendor> | any {
+      return this.http.put(this.url+vendor._id, vendor).pipe(
+        tap(response => console.log(response)),
+        catchError(error => error),
+        finalize( ()=> console.log("edit vendor subscription ended"))
+      )
+    }
+
+    delete(id:string){
+      return this.http.delete(this.url+id).pipe(
+        tap(response => console.log(response)),
+        catchError(error => error),
+        finalize( ()=> console.log("delete vendor subscription ended"))
+      )
+    }
 }
 
 

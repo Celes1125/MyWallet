@@ -35,6 +35,7 @@ export class AddMovementComponent implements OnInit, OnChanges {
   vendors: Vendor[] = []
   pockets: Pocket[] = []
   income: boolean
+  transfer!:boolean
   id!: any
   pocketId: any;
   amountToAdd: any;

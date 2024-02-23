@@ -2,7 +2,7 @@
 import { Component, Inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { WalletService } from '../../../services/wallet.service';
 import { PocketService } from '../../../services/pocket.service';
 //Material Design

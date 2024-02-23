@@ -1,7 +1,8 @@
+
 @if (income) {
-  <h2 mat-dialog-title>Add new income</h2>
-}@else {
-  <h2 mat-dialog-title>Add new expense</h2>
+<h2 mat-dialog-title>Add new income</h2>
+}@else if (!income){
+<h2 mat-dialog-title>Add new expense</h2>
 }
 <form [formGroup]="form" (ngSubmit)="addMovement()">
   <mat-dialog-content class="mat-typography">
@@ -32,3 +33,4 @@
     <button type="submit" [mat-dialog-close]="true" cdkFocusInitial>Save changes</button>
   </mat-dialog-actions>
 </form>
+

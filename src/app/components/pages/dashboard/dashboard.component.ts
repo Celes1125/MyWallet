@@ -1,8 +1,8 @@
 
-import { Component, OnInit } from '@angular/core';
-import { TopMenuComponent } from "../../components/menu/top-menu/top-menu.component";
-import { BottomMenuComponent } from "../../components/menu/bottom-menu/bottom-menu.component";
-import { HomeComponent } from "../../components/main/home/home.component";
+import { Component } from '@angular/core';
+import { TopMenuComponent } from '../../menu/top-menu/top-menu.component';
+import { BottomMenuComponent } from '../../menu/bottom-menu/bottom-menu.component';
+import { HomeComponent } from '../../main/home/home.component';
 import { ManagePageComponent } from '../manage-page/manage-page.component';
 import { ReportsPageComponent } from "../reports-page/reports-page.component";
 import { CommonModule } from '@angular/common';
@@ -14,14 +14,12 @@ import { CommonModule } from '@angular/common';
     styleUrl: './dashboard.component.css',
     imports: [CommonModule, TopMenuComponent, BottomMenuComponent, HomeComponent, ManagePageComponent, ReportsPageComponent]
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent {
   homeFlag:boolean=true
   manageFlag:boolean =false
   reportFlag:boolean=false 
   
-  ngOnInit() {    
 
-  }
 
   setHomeFlag(flag:boolean){
     this.homeFlag=flag

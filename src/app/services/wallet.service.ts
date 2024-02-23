@@ -23,7 +23,7 @@ export class WalletService {
     )
   }
 
-  getPocketsOfWallet(id: string): Observable<any>{
+  getPocketsOfWallet(id: string | any): Observable<any>{
     return this.http.get(this.url + 'pockets/' + id).pipe(
       tap(console.log),
       catchError(error=> error),

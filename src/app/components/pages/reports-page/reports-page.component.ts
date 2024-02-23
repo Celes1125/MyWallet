@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MovementService } from '../../services/movement.service';
+import { MovementService } from '../../../services/movement.service';
 
 @Component({
   selector: 'app-reports-page',

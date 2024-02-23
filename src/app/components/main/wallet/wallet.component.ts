@@ -5,6 +5,7 @@ import { WalletService } from '../../../services/wallet.service';
 import { DeletePocketComponent } from '../../dialogs/delete-pocket/delete-pocket.component';
 import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
 import { EditPocketComponent } from '../../dialogs/edit-pocket/edit-pocket.component';
+
 //Material Design
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,11 +26,11 @@ import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wal
 export class WalletComponent implements OnInit {
 
     @Input() wallet!: any
-    @Input() showAddPocketButton:boolean = true
+    @Input() showAddPocketButton: boolean = true
     pockets!: any
     dataSource!: any
     router: Router = new Router;
-
+    totalAmount!: number
 
     constructor(
         private walletService: WalletService,
@@ -40,6 +41,7 @@ export class WalletComponent implements OnInit {
 
     ngOnInit(): void {
         this.getPocketsOfWallet()
+
     }
 
     getPocketsOfWallet() {
@@ -49,13 +51,22 @@ export class WalletComponent implements OnInit {
                 response => {
                     this.pockets = response
                     this.dataSource = new MatTableDataSource(this.pockets);
+                    this.getTotalAmount(this.pockets)
                 }
             )
         }
-
     }
 
+    getTotalAmount(pockets: any) {
+        this.totalAmount = 0;
 
+        if (pockets && pockets.length > 0) {
+            for (let i = 0; i < pockets.length; i++) {
+                // Sumar el valor de la propiedad amount de cada pocket al totalAmount
+                this.totalAmount += pockets[i].amount;
+            }
+        }    
+    }
 
     displayedColumns: string[] = ['pocket', 'currency', 'amount', 'edit', 'delete'];
 
@@ -64,16 +75,16 @@ export class WalletComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    openAddPocketDialog(wallet:Wallet) {
+    openAddPocketDialog(wallet: Wallet) {
         const dialogRef = this.dialog.open(AddPocketComponent, {
             data: {
-                wallet:wallet
+                wallet: wallet
             }
 
         });
         dialogRef.afterClosed().subscribe(
             response => {
-                if (response) {                   
+                if (response) {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
@@ -86,7 +97,7 @@ export class WalletComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-                    
+
                     this.router.navigateByUrl('/dashboard');
                 }
             });
@@ -95,28 +106,28 @@ export class WalletComponent implements OnInit {
     openEditPocketDialog(id: string) {
         const dialogRef = this.dialog.open(EditPocketComponent, {
             data: {
-                id: id,               
+                id: id,
             }
         })
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-                    
+
                     this.router.navigateByUrl('/dashboard');
                 }
             });
     }
 
-    openEditWalletName(wallet: any){
-        const dialogRef = this.dialog.open (EditWalletNameComponent, {
+    openEditWalletName(wallet: any) {
+        const dialogRef = this.dialog.open(EditWalletNameComponent, {
             data: {
-                wallet : wallet
+                wallet: wallet
             }
         });
 
         dialogRef.afterClosed().subscribe(
             response => {
-                if (response) {                    
+                if (response) {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
@@ -125,8 +136,8 @@ export class WalletComponent implements OnInit {
 
     }
 
-    
-   
+
+
 }
 
 

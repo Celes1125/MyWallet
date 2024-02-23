@@ -27,5 +27,23 @@ export class CategoryService {
       )
     }
 
+    edit(category:any):Observable<Category> | any {
+      const id = category._id
+      const url= this.url+id
+      return this.http.put(url, category).pipe(
+        tap(response=>console.log(response)),
+        catchError(error=>error),
+        finalize(()=>console.log("put category subscription ended"))
+      )
+    }
+
+    delete(id:string){
+      return this.http.delete(this.url+id).pipe(
+        tap(response=>console.log(response)),
+        catchError(error=>error),
+        finalize(()=>console.log("delete category subscription ended"))
+      )
+    }
+
 }
 

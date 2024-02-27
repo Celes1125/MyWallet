@@ -35,8 +35,7 @@ export class AddMovementComponent implements OnInit, OnChanges {
   vendors: Vendor[] = []
   pockets: Pocket[] = []
   income: boolean
-  transfer!:boolean
-  id!: any
+  transfer!:boolean  
   pocketId: any;
   amountToAdd: any;
   firstAmount: any;  
@@ -61,7 +60,7 @@ export class AddMovementComponent implements OnInit, OnChanges {
 
     this.walletId = this.data.walletId
     this.income = this.data.income
-    this.getUser()
+    
   }
   ngOnChanges(changes: SimpleChanges): void {
    this.getPockets()
@@ -74,14 +73,7 @@ export class AddMovementComponent implements OnInit, OnChanges {
 
   }
 
-  getUser() {
-    this._authService.getUserId().subscribe(
-      response => {
-        console.log('front response: ', response)
-        this.id = response
-      }
-    )
-  }
+ 
 
 
   getCategories() {
@@ -122,8 +114,7 @@ export class AddMovementComponent implements OnInit, OnChanges {
         category: this.form.value.category,
         vendor: this.form.value.vendor,
         pocket: this.form.value.pocket,
-        currency: 'euro',
-        user: this.id,
+        currency: 'euro',        
         amount: this.form.value.amount
       };    
       this._movementsService.addMovementAndRefresh(movement).subscribe(

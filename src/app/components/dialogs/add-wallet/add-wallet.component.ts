@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } 
 import { WalletService } from '../../../services/wallet.service';
 //Material Design
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 
 @Component({
@@ -16,9 +17,10 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 export class AddWalletComponent {
   activated:boolean = false
   walletForm: FormGroup
+  userId!:string
   constructor (
     private _formBuilder : FormBuilder,
-    private _walletService: WalletService,
+    private _walletService: WalletService,    
     @Inject(MAT_DIALOG_DATA) public data:any
   ){
     this.walletForm = this._formBuilder.group({
@@ -27,12 +29,16 @@ export class AddWalletComponent {
     })
 
     this.activated = this.data.activated
+    
   }
+
+  
 
   addWallet(){
       const wallet = {
       name: this.walletForm.value.name,
-      activated: this.activated, 
+      activated: this.activated
+      
       
     }
     this._walletService.create(wallet).subscribe(

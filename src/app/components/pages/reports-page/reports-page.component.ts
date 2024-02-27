@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 //Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MovementService } from '../../../services/movement.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-reports-page',
@@ -12,7 +13,7 @@ import { MovementService } from '../../../services/movement.service';
   templateUrl: './reports-page.component.html',
   styleUrl: './reports-page.component.css'
 })
-export class ReportsPageComponent {
+export class ReportsPageComponent implements OnChanges {
   movements: any
   dataSource:any
   
@@ -20,13 +21,22 @@ export class ReportsPageComponent {
   constructor(
     private _movementsService:MovementService
   ){
-    this._movementsService.getAll().subscribe(
-      response=> {
-        this.movements = response,
-        this.dataSource = new MatTableDataSource(this.movements); }     
-    )   
+    this.getMovements()     
 
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getMovements()  
+  }
+
+
+  getMovements(){
+    this._movementsService.getAll().subscribe(
+      (response:Observable<any> | any)=> {
+        this.movements = response,
+        this.dataSource = new MatTableDataSource(this.movements); }     
+    )  
+  }
+  
 
  displayedColumns: string[] = ['creator', 'type', 'category', 'vendor', 'currency', 'amount', 'date', 'pocket'];
 

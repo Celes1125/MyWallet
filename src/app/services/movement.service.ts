@@ -1,8 +1,10 @@
+import { Movement } from './../interfaces/movement';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, map, tap, switchMap, of } from 'rxjs';
+import { catchError, finalize, map, tap, switchMap, of, Observable, filter, throwError } from 'rxjs';
 import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
+import { AuthenticationService } from './authentication.service';
 
 
 @Injectable({
@@ -10,21 +12,37 @@ import { Pocket } from '../interfaces/pocket';
 })
 export class MovementService {
   income: any;
-
-  constructor(private http: HttpClient, private _pocketService: PocketService) { }
-
+  userId!:string;
   url = "http://localhost:3000/movements/"
 
-  getAll() {
-    return this.http.get(this.url).pipe(
-      tap(response => console.log(response)),
-      catchError(error => error),
-      finalize(() => console.log('get movements subscription ended'))
+  constructor(private http: HttpClient, 
+              private _pocketService: PocketService,
+              private _authService: AuthenticationService) {
+                this.getUser()
+               }
+
+  getUser(){
+    this._authService.getUserId().subscribe(
+      response => this.userId = response
     )
   }
 
+  getAll(): Observable<Movement[]> | any {
+    return this.http.get<Movement[]>(this.url).pipe(
+      // Filter movements based on userId
+      filter((movements: Movement[]) => movements.some(movement => movement.user._id === this.userId)),
+      // Tap the filtered movements for logging
+      tap((filteredMovements: Movement[]) => console.log("MOVEMENTS DE CELE: ", filteredMovements)),
+      // Catch and handle errors (optional: provide meaningful logging or UI feedback)
+      catchError(error => error),
+      // Finalize with a message (optional)
+      finalize(() => console.log('get movements subscription ended'))
+    );
+  } 
+
   create(movement: any) {
-    return this.http.post(this.url, movement).pipe(
+    const newMovement = {...movement, user:this.userId}
+    return this.http.post(this.url, newMovement).pipe(
       tap(response => response),
       catchError(error => error),
       finalize(() => {

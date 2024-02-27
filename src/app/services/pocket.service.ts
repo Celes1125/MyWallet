@@ -2,14 +2,17 @@ import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pocket } from '../interfaces/pocket';
-import { transferableAbortController } from 'util';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PocketService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private _authService:AuthenticationService) { 
+                
+              }
 
   url = "http://localhost:3000/pockets/"
 

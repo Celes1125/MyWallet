@@ -16,12 +16,15 @@
     <label>Insert transfer amount
         <input type="number" autocomplete="off"  name="transferAmount" formControlName="transferAmount">
     </label>
+    <label>Note
+      <input type="text" autocomplete="off"  name="note" formControlName="note">
+  </label>
  
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button type="submit" (click)="transfer()" [mat-dialog-close]="true" cdkFocusInitial>Transfer</button>
+    <button type="submit" (click)="makeTransfer()" [mat-dialog-close]="true" cdkFocusInitial>Transfer</button>
   </mat-dialog-actions>
 </form>
 

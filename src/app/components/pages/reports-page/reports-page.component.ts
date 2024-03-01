@@ -1,47 +1,17 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component} from '@angular/core';
 //Material Design
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MovementService } from '../../../services/movement.service';
-import { Observable } from 'rxjs';
+
+import { MovementsPageComponent } from '../movements-page/movements-page.component';
+import { TransfersPageComponent } from '../transfers-page/transfers-page.component';
+
 
 @Component({
-  selector: 'app-reports-page',
-  standalone: true,
-  imports: [MatTableModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './reports-page.component.html',
-  styleUrl: './reports-page.component.css'
+    selector: 'app-reports-page',
+    standalone: true,
+    templateUrl: './reports-page.component.html',
+    styleUrl: './reports-page.component.css',
+    imports: [MovementsPageComponent, TransfersPageComponent]
 })
-export class ReportsPageComponent implements OnChanges {
-  movements: any
-  dataSource:any
-  
+export class ReportsPageComponent {
 
-  constructor(
-    private _movementsService:MovementService
-  ){
-    this.getMovements()     
-
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    this.getMovements()  
-  }
-
-
-  getMovements(){
-    this._movementsService.getAll().subscribe(
-      (response:Observable<any> | any)=> {
-        this.movements = response,
-        this.dataSource = new MatTableDataSource(this.movements); }     
-    )  
-  }
-  
-
- displayedColumns: string[] = ['creator', 'type', 'category', 'vendor', 'currency', 'amount', 'date', 'pocket'];
-
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
   }

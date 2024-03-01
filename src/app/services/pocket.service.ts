@@ -58,11 +58,11 @@ export class PocketService {
       finalize(() => console.log("create pocket subscription ended")))
   }
 
-  refreshPocketsOfTransfers(fromPocketId: string, toPocketId: string, transferAmount: Number | any) {
-    this.refreshFromPocket(fromPocketId, transferAmount).subscribe(
+  refreshPocketsOfTransfers(transfer:any) {
+    this.refreshFromPocket(transfer.fromPocket, transfer.amount).subscribe(
       response=> response
     )
-    this.refreshToPocket(toPocketId, transferAmount).subscribe(
+    this.refreshToPocket(transfer.toPocket, transfer.amount).subscribe(
       response=> response
     )
     

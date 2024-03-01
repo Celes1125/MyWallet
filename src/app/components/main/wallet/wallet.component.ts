@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Wallet } from '../../../interfaces/wallet';
 import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wallet-name.component';
+import { Pocket } from '../../../interfaces/pocket';
 
 @Component({
     selector: 'app-wallet',
@@ -31,6 +32,7 @@ export class WalletComponent implements OnInit {
     dataSource!: any
     router: Router = new Router;
     totalAmount!: number
+    netoAmount!:number
 
     constructor(
         private walletService: WalletService,
@@ -51,20 +53,25 @@ export class WalletComponent implements OnInit {
                 response => {
                     this.pockets = response
                     this.dataSource = new MatTableDataSource(this.pockets);
-                    this.getTotalAmount(this.pockets)
+                    this.getAmounts(this.pockets)
                 }
             )
         }
     }
 
-    getTotalAmount(pockets: any) {
+    getAmounts(pockets: any) {
         this.totalAmount = 0;
+        this.netoAmount=0;
 
         if (pockets && pockets.length > 0) {
             for (let i = 0; i < pockets.length; i++) {
                 // Sumar el valor de la propiedad amount de cada pocket al totalAmount
-                this.totalAmount += pockets[i].amount;
+                this.totalAmount += pockets[i].amount;                
             }
+            const mainPocket= pockets.find((pocket:Pocket) => pocket.name === "ingresos")
+            
+            this.netoAmount = this.totalAmount-mainPocket.amount
+            
         }    
     }
 

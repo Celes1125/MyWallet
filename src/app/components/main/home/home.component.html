@@ -7,7 +7,7 @@
         <button (click)="openActiveWalletDialog()">Active one wallet to use</button>
     }@else if (activeWallet) {
         <h1>your active wallet is {{activeWallet.name}}</h1>     
-        <h1>you have {{ totalAmount }} counting all pockets of this wallet</h1>  
+         
         <app-wallet [wallet]="activeWallet"></app-wallet>
         <div>
             <p>Add new</p>

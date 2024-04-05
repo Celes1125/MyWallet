@@ -1,7 +1,8 @@
-import { Pocket } from './../../../interfaces/pocket';
-import { map } from 'rxjs';
+import { SharedService } from './../../../services/shared.service';
+import { FormsModule } from '@angular/forms';
 
-import { Component, OnInit } from '@angular/core';
+
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
@@ -23,50 +24,41 @@ import { MakeTransferComponent } from '../../dialogs/make-transfer/make-transfer
     standalone: true,
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    imports: [CommonModule, WalletComponent, MatButtonModule, MatIconModule, MatDialogModule, RouterModule, AddWalletComponent, WalletsPageComponent]
+    imports: [FormsModule, CommonModule, WalletComponent, MatButtonModule, MatIconModule, MatDialogModule, RouterModule, AddWalletComponent, WalletsPageComponent]
 })
-export class HomeComponent  {
-    wallets:Wallet[]=[]
-    activeWallet: any
-    router: Router = new Router()
-    income: boolean = true
-    transfer:boolean = true
-    activated: boolean = true
+export class HomeComponent implements OnInit {
+    wallets: any | null = null
+    selectedWallet: any | null = null;
+    router: Router = new Router()    
     fromHome: boolean = true
     totalAmount!: number
+
     constructor(
         private walletService: WalletService,
+        private sharedService: SharedService,
         public dialog: MatDialog
     ) {
+
+    }
+    ngOnInit() {
+        this.getAllWallets()
+        this.sharedService.selectedValue$.subscribe(value => (this.selectedWallet = value));
+    }
+
+    getAllWallets() {
         this.walletService.getAll().subscribe(
-            (response: Wallet[])=> {
-                const walletsNow = response  
-                this.wallets = walletsNow              
-            }
-        )
-       
-        this.getActiveWallet()
+            response =>
+                this.wallets = response,
 
-    }   
-
-
-    getActiveWallet() {
-        this.walletService.getActiveWallet().subscribe(
-            (activeWallet:Wallet) => {
-                this.activeWallet = activeWallet
-                console.log('wallet: ', activeWallet)
-            }
         )
     }
 
-    
-
-    openAddMovementDialog(walletId: string, income: boolean, transfer?:boolean) {
+    openAddMovementDialog(movement_type: string) {
         const dialogRef = this.dialog.open(AddMovementComponent, {
             data: {
-                walletId: walletId,
-                income: income,
-              
+                wallet: this.selectedWallet,
+                walletId: this.selectedWallet._id,
+                movement_type: movement_type
 
             }
 
@@ -78,7 +70,7 @@ export class HomeComponent  {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
-    }     
+    }
 
     openAddWalletDialog() {
         const dialogRef = this.dialog.open(AddWalletComponent, {
@@ -89,37 +81,27 @@ export class HomeComponent  {
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-                    
+
                     this.router.navigateByUrl('/dashboard');
                 }
             });
     }
 
-    openActiveWalletDialog(){
-        const dialogRef = this.dialog.open(WalletsPageComponent, {})
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {                    
-                    this.router.navigateByUrl('/dashboard');
-                }
-            });
-    }
-
-    openTransferDialog(wallet: Wallet) {
+    /*openTransferDialog(wallet: Wallet) {
         const dialogRef = this.dialog.open(MakeTransferComponent, {
             data: {
-                wallet: wallet,                
+                wallet: wallet,
             }
 
         });
         dialogRef.afterClosed().subscribe(
-            response => { 
+            response => {
                 if (response) {
                     alert("transfer ok")
                     this.router.navigateByUrl('/dashboard');
                 }
             });
-    }     
+    }*/
 
 
 

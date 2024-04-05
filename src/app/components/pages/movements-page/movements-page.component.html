@@ -5,8 +5,8 @@
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- Creator Column -->
-    <ng-container matColumnDef="creator">
-        <th mat-header-cell *matHeaderCellDef>creator</th>
+    <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>user</th>
         <td mat-cell *matCellDef="let movement"> 
           {{movement.user.name}} </td>
       </ng-container>
@@ -49,11 +49,33 @@
         <td mat-cell *matCellDef="let movement">{{movement.date}}</td>
       </ng-container>
 
-      <!-- Pocket Column -->
-    <ng-container matColumnDef="pocket">
-        <th mat-header-cell *matHeaderCellDef>pocket</th>
-        <td mat-cell *matCellDef="let movement">{{movement.pocket.name}}({{movement.pocket.wallet.name}})</td>
+      <!-- from pocket Column -->
+    <ng-container matColumnDef="fromPocket">
+        <th mat-header-cell *matHeaderCellDef>fromPocket</th>
+        <td mat-cell *matCellDef="let movement">{{movement.fromPocket.name}}</td>
       </ng-container>     
+         <!-- to pocket Column -->
+    <ng-container matColumnDef="toPocket">
+      <th mat-header-cell *matHeaderCellDef>toPocket</th>
+      <td mat-cell *matCellDef="let movement">{{movement.toPocket.name}}</td>
+    </ng-container>   
+       <!-- Pocket Column -->
+       <ng-container matColumnDef="pocket">
+        <th mat-header-cell *matHeaderCellDef>pocket</th>
+        <td mat-cell *matCellDef="let movement">{{movement.pocket.name}}</td>
+      </ng-container>   
+
+      <!-- Wallet Column -->
+    <ng-container matColumnDef="wallet">
+      <th mat-header-cell *matHeaderCellDef>wallet</th>
+      <td mat-cell *matCellDef="let movement">{{movement.wallet.name}}</td>
+    </ng-container>  
+
+      <!-- Notes Column -->
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef>notes</th>
+        <td mat-cell *matCellDef="let movement">{{movement.notes}}</td>
+      </ng-container>  
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

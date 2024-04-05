@@ -1,23 +1,16 @@
-@if(wallets){
+@if (!wallets) {
+<button (click)="openAddWalletDialog()">Go to create a wallet to use</button>
+}@else if (!selectedWallet && wallets.length != 0) {
+<h2>Select a wallet to open</h2>
+<app-wallets-page></app-wallets-page>
+}@else if (selectedWallet){
+<app-wallet [wallet]="selectedWallet"></app-wallet>
 
-    @if(wallets.length === 0){
-        
-        <button (click)="openAddWalletDialog()">Go to create a wallet to use</button>
-    }@else if (wallets.length !==0 && !activeWallet) {
-        <button (click)="openActiveWalletDialog()">Active one wallet to use</button>
-    }@else if (activeWallet) {
-        <h1>your active wallet is {{activeWallet.name}}</h1>     
-         
-        <app-wallet [wallet]="activeWallet"></app-wallet>
-        <div>
-            <p>Add new</p>
-            <button (click)="openAddMovementDialog(activeWallet._id, !income)">Expense</button>
-            <button (click)="openAddMovementDialog(activeWallet._id, income)">Income</button>
-            <button (click)="openTransferDialog(activeWallet)">Transfer</button>
+<div>
+    <p>Add new</p>
+    <button (click)="openAddMovementDialog('expense')">Expense</button>
+    <button (click)="openAddMovementDialog('income')">Income</button>
+    <button (click)="openAddMovementDialog('transfer')">Transfer</button>
 
-        </div>
-    }
- 
-    
+</div>
 }
-

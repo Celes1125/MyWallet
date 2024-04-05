@@ -1,5 +1,6 @@
 export enum MovementType {
     in = "in",
-    out = "out"
+    out = "out",
+    transfer = "transfer"
 }
 

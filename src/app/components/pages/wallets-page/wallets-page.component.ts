@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DeleteWalletComponent } from '../../dialogs/delete-wallet/delete-wallet.component';
 import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
+import { SharedService } from '../../../services/shared.service';
 
 @Component({
   selector: 'app-wallets-page',
@@ -32,11 +33,14 @@ export class WalletsPageComponent {
   router: Router = new Router
   labelPosition: 'before' | 'after' = 'before';
 
+
   constructor(
     private walletService: WalletService,
+    private sharedService: SharedService,
     public dialog: MatDialog) {
     this.getAllWallets()
   }
+
 
   getAllWallets() {
     this.walletService.getAll().subscribe(
@@ -44,6 +48,10 @@ export class WalletsPageComponent {
         this.wallets = response,
           this.dataSource = new MatTableDataSource(this.wallets);
       })
+  }
+
+  handleChange(value: Wallet) {
+    this.sharedService.setSelectedValue(value);
   }
 
   displayedColumns: string[] = ['check', 'edit', 'delete'];
@@ -59,43 +67,10 @@ export class WalletsPageComponent {
     return `${this.selection.isSelected(element) ? 'deselect' : 'select'} row ${element.position + 1}`;
   }
 
-  active(wallet: any) {
-    this.selection.clear();
+  showWalletAtHome(wallet: any) {
+    //this.selection.clear();
     this.selection.select(wallet);
-    const newWallets = [...this.wallets]
-    newWallets.forEach(
-      w => {
-        if (w._id === wallet._id) {
-          w.activated = true
-        } else {
-          w.activated = false
-        }
-      }
-    )
-    console.log("local:", newWallets)
-    this.refreshWallets(newWallets)
-  }
-
-  inactive() {
-    const newWallets = [...this.wallets]
-    newWallets.forEach(
-      w => {
-        w.activated = false
-      }
-    )
-    console.log("local:", newWallets)
-    this.refreshWallets(newWallets)
-  }
-
-  refreshWallets(newWallets: Wallet[]) {
-    newWallets.forEach(
-      nw => {
-        this.walletService.edit(nw).subscribe(
-          response => console.log(response)
-        )
-      })
-
-
+    this.handleChange(wallet)
   }
 
   openEditWalletDialog(wallet: any) {
@@ -149,18 +124,3 @@ export class WalletsPageComponent {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

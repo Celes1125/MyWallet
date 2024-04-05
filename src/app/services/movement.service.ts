@@ -1,7 +1,7 @@
 import { Movement } from './../interfaces/movement';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, map, tap, switchMap, of, Observable, filter, throwError } from 'rxjs';
+import { catchError, finalize, map, tap, switchMap, of, Observable, filter } from 'rxjs';
 import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
@@ -27,12 +27,12 @@ export class MovementService {
     )
   }
 
-  getAll(): Observable<Movement[]> | any {
+  getAll(): Observable<any> {
     return this.http.get<Movement[]>(this.url).pipe(
-      // Filter movements based on userId
+      // Filter movements based on userId      
       filter((movements: Movement[]) => movements.some(movement => movement.user._id === this.userId)),
       // Tap the filtered movements for logging
-      tap((filteredMovements: Movement[]) => console.log("MOVEMENTS DE CELE: ", filteredMovements)),
+      tap((filteredMovements: any) => console.log("MOVEMENTS DE CELE: ", filteredMovements)),
       // Catch and handle errors (optional: provide meaningful logging or UI feedback)
       catchError(error => error),
       // Finalize with a message (optional)
@@ -40,7 +40,7 @@ export class MovementService {
     );
   } 
 
-  create(movement: any) {
+  create(movement: any) : Observable<any> {
     const newMovement = {...movement, user:this.userId}
     return this.http.post(this.url, newMovement).pipe(
       tap(response => response),
@@ -62,16 +62,15 @@ export class MovementService {
         console.error('Error alobtener el bolsillo:', error);
         return of(null)
       }),     
-      map(amount => {
-        if (amount !== null) {  // Añade esta comprobación
-          const newAmount = (movement.type === 'in') ? amount + movement.amount : amount - movement.amount;
+      map((amount:any) => {
+        if (amount !== null && amount !== undefined) {  // Añade esta comprobación
+          const newAmount = (movement.type === 'in') ? amount + movement.amount : amount-movement.amount;
           return { amount, newAmount };
         } else {
           // Manejar el caso en que amount es null (por ejemplo, lanzar un error o devolver un valor predeterminado)
           return { amount: null, newAmount: null }; // Ejemplo de retorno con valores nulos
         }
-      }),
-      tap(({ newAmount }) => console.log(newAmount)),
+      }),      
       switchMap(({ newAmount }) => {
         return this._pocketService.edit({
           _id: movement.pocket,
@@ -79,10 +78,7 @@ export class MovementService {
           lastModified: new Date()
         });
       }),
-      catchError(error => {
-        console.error('Error al obtener el bolsillo:', error);
-        return of(null)
-      }),
+      catchError(error => error)
     )
 
   }
@@ -95,6 +91,11 @@ export class MovementService {
       finalize(() => console.log('delete movements by pocket subscription ended'))
 
     )
+  }
+
+  edit(movement: any): Observable<any> {
+    const url = this.url + movement._id
+    return this.http.put<any>(url, movement)
   }
 }
 

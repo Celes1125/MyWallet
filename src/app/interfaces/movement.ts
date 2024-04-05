@@ -3,6 +3,8 @@ import { CurrencyType } from "../enums/currency-type";
 import { MovementType } from "../enums/movement-type";
 import { Category } from './category';
 import { Pocket } from './pocket';
+import { Wallet } from './wallet';
+import { User } from './user';
 
 export interface Movement {
     _id: string,
@@ -10,8 +12,12 @@ export interface Movement {
     date: Date,
     amount: number,
     currency: CurrencyType,
-    user: any,
-    vendor: Vendor,
-    category: Category,
-    pocket: Pocket
+    notes: string | null
+    user: User,
+    vendor: Vendor | null,
+    category: Category | null,
+    fromPocket: Pocket | null,
+    toPocket: Pocket | null,
+    pocket: Pocket | null,
+    wallet: Wallet
 }

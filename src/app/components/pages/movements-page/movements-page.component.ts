@@ -15,8 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class MovementsPageComponent implements OnChanges {
   movements: any
-  dataSource:any
-  
+  dataSource:any  
 
   constructor(
     private _movementsService:MovementService
@@ -24,24 +23,29 @@ export class MovementsPageComponent implements OnChanges {
     this.getMovements()     
 
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMovements()  
+    this.getMovements()
   }
 
-
-  getMovements(){
+  getMovements() {
     this._movementsService.getAll().subscribe(
-      (response:Observable<any> | any)=> {
+      (response: Observable<any>) => {
         this.movements = response,
-        this.dataSource = new MatTableDataSource(this.movements); }     
-    )  
+        this.dataSource = new MatTableDataSource(this.movements);
+      }
+    );  
   }
   
 
- displayedColumns: string[] = ['creator', 'type', 'category', 'vendor', 'currency', 'amount', 'date', 'pocket'];
+ displayedColumns: string[] = ['user', 'type', 'category', 'vendor', 'currency', 'amount', 'date', 'fromPocket','toPocket', 'pocket', 'wallet', 'notes'];
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
+
   }
+
+

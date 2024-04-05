@@ -26,9 +26,9 @@ export class CategoryService {
 
   getAll(): Observable<Category[]> | any {
     return this.http.get(this.url).pipe(
-      tap((allCategories:any) => console.log(allCategories)),     
-      map((allCategories: Category[]) => allCategories.filter((category:any) => category.creator._id === this.userId)), 
-      tap((response:Category[]) => console.log("CATEGORIAS DE CELE: ",response)),   
+      tap((allCategories: any) => console.log(allCategories)),
+      map((allCategories: Category[]) => allCategories.filter((category: any) => category.creator._id === this.userId)),
+      tap((response: Category[]) => console.log("CATEGORIAS DE CELE: ", response)),
       catchError(error => error),
       finalize(() => console.log("get categories subscription ended"))
     )
@@ -62,5 +62,15 @@ export class CategoryService {
     )
   }
 
+  getById(id: string) {
+    return this.http.get(this.url + id).pipe(
+      tap(response => console.log(response)),
+      catchError(error => error),
+      finalize(() => console.log("get by id category subscription ended"))
+    )
+  }
+  
 }
+
+
 

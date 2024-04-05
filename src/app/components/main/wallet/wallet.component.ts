@@ -61,16 +61,19 @@ export class WalletComponent implements OnInit {
 
     getAmounts(pockets: any) {
         this.totalAmount = 0;
-        this.netoAmount=0;
+        this.netoAmount = 0;
 
         if (pockets && pockets.length > 0) {
             for (let i = 0; i < pockets.length; i++) {
                 // Sumar el valor de la propiedad amount de cada pocket al totalAmount
                 this.totalAmount += pockets[i].amount;                
             }
-            const mainPocket= pockets.find((pocket:Pocket) => pocket.name === "ingresos")
+            const mainPocket= pockets[0]
             
-            this.netoAmount = this.totalAmount-mainPocket.amount
+            if(mainPocket){
+                this.netoAmount = this.totalAmount-mainPocket.amount
+            }
+           
             
         }    
     }

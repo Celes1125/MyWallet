@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from '../../../services/wallet.service';
 //Material Design
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { AuthenticationService } from '../../../services/authentication.service';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { PocketService } from '../../../services/pocket.service';
 
 @Component({
   selector: 'app-add-wallet',
@@ -20,31 +19,28 @@ export class AddWalletComponent {
   userId!:string
   constructor (
     private _formBuilder : FormBuilder,
-    private _walletService: WalletService,    
-    @Inject(MAT_DIALOG_DATA) public data:any
+    private _walletService: WalletService,
+    private _pocketService: PocketService
+    
   ){
     this.walletForm = this._formBuilder.group({
       name: ["", [Validators.required]],
-
     })
-
-    this.activated = this.data.activated
     
   }
-
   
 
   addWallet(){
       const wallet = {
-      name: this.walletForm.value.name,
-      activated: this.activated
-      
+      name: this.walletForm.value.name,    }  
+      this._walletService.create(wallet).subscribe(
+        (response:any) =>console.log(response)
+      )
       
     }
-    this._walletService.create(wallet).subscribe(
-      response =>console.log(response)
-    )
-  }
+      
+    }
+    
 
 
-}
+

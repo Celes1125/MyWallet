@@ -5,16 +5,25 @@
 <button (click)="openAddWalletDialog()">create new wallet</button>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-    <!-- Checkbox Column -->
+     <!-- Checkbox Column -->
     <ng-container matColumnDef="check">
         <th mat-header-cell *matHeaderCellDef>
         </th>
         <td mat-cell *matCellDef="let wallet">
-            <mat-checkbox (change)="$event && $event.checked === true ? active(wallet) : inactive()"
-                [checked]="selection.isSelected(wallet) || wallet.activated" [aria-label]="checkboxLabel(wallet)"
+            <mat-checkbox (change)="$event && $event.checked === true ? showWalletAtHome(wallet) : null"
+                [checked]="selection.isSelected(wallet)" [aria-label]="checkboxLabel(wallet)"
                 [labelPosition]="labelPosition">{{wallet.name}}
 
             </mat-checkbox>
+        </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>name
+        </th>
+        <td mat-cell *matCellDef="let wallet">
+           {{wallet.name}}
         </td>
     </ng-container>
 

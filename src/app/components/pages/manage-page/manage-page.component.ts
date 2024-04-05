@@ -25,7 +25,7 @@ import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
 })
 export class ManagePageComponent {
 
-    activeWallet: any
+   
     router: Router = new Router()
 
     constructor(
@@ -33,20 +33,8 @@ export class ManagePageComponent {
         public dialog: MatDialog
     ) {
 
-        this.getActiveWallet()
-    }
-
-    ngOnInit(): void {
-    }
-
-    getActiveWallet() {
-        this.walletService.getActiveWallet().subscribe(
-            (activeWallet: Wallet) => {
-                this.activeWallet = activeWallet
-                console.log('wallet: ', activeWallet)
-            }
-        )
-    }
+        
+    } 
 
     openAddPocketDialog(wallet: any) {
         const dialogRef = this.dialog.open(AddPocketComponent, {

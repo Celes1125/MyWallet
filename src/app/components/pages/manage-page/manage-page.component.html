@@ -1,22 +1,10 @@
+ 
 
-@if(activeWallet){
-    <h1>your active wallet is {{activeWallet.name}}</h1>
-    <button (click)="openWalletsManager()">active other</button>
-    <app-wallet [wallet]="activeWallet"></app-wallet>    
 
-<div>
-      <br>  
+     
      
         <button (click)="openWalletsManager()">Wallets</button>
         <button (click)="openCategoriesPage()">Categories</button>
         <button (click)="openVendorsManager()">Vendors</button>
-</div>
-}@else{
-    <p><a (click)="openWalletsManager()">
-        You need to active one of your created wallets.
-
-    </a>
-</p>
-}
 
 

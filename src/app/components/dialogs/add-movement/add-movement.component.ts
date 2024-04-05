@@ -1,15 +1,15 @@
+import { Movement } from './../../../interfaces/movement';
+import { CategoryService } from './../../../services/category.service';
 import { Router, RouterModule } from '@angular/router';
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Category } from '../../../interfaces/category';
-import { CategoryService } from '../../../services/category.service';
 import { VendorService } from '../../../services/vendor.service';
 import { Vendor } from '../../../interfaces/vendor';
 import { WalletService } from '../../../services/wallet.service';
 import { Pocket } from '../../../interfaces/pocket';
 import { MovementService } from '../../../services/movement.service';
-import { AuthenticationService } from '../../../services/authentication.service';
 
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -29,37 +29,59 @@ import { MatButtonModule } from '@angular/material/button';
 })
 
 export class AddMovementComponent implements OnInit, OnChanges {
-  walletId: any
-  form!: FormGroup
+  
+  wallet!: any
+  walletId!:any
+  incomeForm!: FormGroup
+  expenseForm!: FormGroup
+  transferForm!:FormGroup
   categories: Category[] = []
   vendors: Vendor[] = []
-  pockets: Pocket[] = []
-  income: boolean
-  transfer!:boolean  
+  pockets: Pocket[] = [] 
   pocketId: any;
   amountToAdd: any;
   firstAmount: any;  
   router: Router = new Router;
+  movement_type:string
 
   constructor(
     private _formBuilder: FormBuilder,
     private _categoriesService: CategoryService,
     private _vendorsService: VendorService,
     private _walletService: WalletService,
-    private _movementsService: MovementService,
-    private _authService: AuthenticationService,    
+    private _movementsService: MovementService,        
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
 
-    this.form = this._formBuilder.group({
-      category: ['', [Validators.required]],
-      vendor: ['', [Validators.required]],
-      pocket: ['', [Validators.required]],
-      amount: [Number, [Validators.required]]
+    this.wallet = this.data.wallet
+    this.walletId = this.data.walletId    
+    this.movement_type = this.data.movement_type
+
+    this.getCategories();
+    this.getVendors();
+    this.getPockets();
+
+    this.incomeForm = this._formBuilder.group({
+      category: [{}, [Validators.required]],
+      vendor: [{}, [Validators.required]],
+      pocket: [{}, [Validators.required]],
+      amount: [0, [Validators.required]]
     });
 
-    this.walletId = this.data.walletId
-    this.income = this.data.income
+    this.expenseForm = this._formBuilder.group({
+      category: [{}, [Validators.required]],
+      vendor: [{}, [Validators.required]],
+      pocket: [{}, [Validators.required]],
+      amount: [0, [Validators.required]]
+    });
+
+    this.transferForm = this._formBuilder.group({
+      fromPocket: ["", [Validators.required]],
+      toPocket: ["", [Validators.required]],
+      amount: [0, [Validators.required]],
+      notes: ["", [Validators.required]]
+    })  
+
     
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,14 +89,10 @@ export class AddMovementComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.getCategories();
-    this.getVendors();
-    this.getPockets();
+  
+    
 
   }
-
- 
-
 
   getCategories() {
     this._categoriesService.getAll().subscribe(
@@ -87,7 +105,6 @@ export class AddMovementComponent implements OnInit, OnChanges {
       }
     )
   }
-
   getVendors() {
     this._vendorsService.getAll().subscribe(
       (response: Vendor[], error: string) => {
@@ -99,32 +116,84 @@ export class AddMovementComponent implements OnInit, OnChanges {
       }
     )
   }
-
-  getPockets() {
+  getPockets() {        
     this._walletService.getPocketsOfWallet(this.walletId).subscribe(
       response => {
         this.pockets = response
+       
       }
     )
   } 
 
-  addMovement(){   
-      const movement = {
-        type: (this.income) ? "in" : "out",
-        category: this.form.value.category,
-        vendor: this.form.value.vendor,
-        pocket: this.form.value.pocket,
-        currency: 'euro',        
-        amount: this.form.value.amount
-      };    
-      this._movementsService.addMovementAndRefresh(movement).subscribe(
-        response => response
-      )           
+  addMovement() {
+    let movement;
+    
+    switch(this.movement_type) {
+      case 'income':
+        movement = {
+          type: "in",
+          category: this.categories.find(category => category._id === this.incomeForm.value.category),
+          vendor: this.vendors.find(vendor => vendor._id === this.incomeForm.value.vendor),
+          pocket: this.pockets.find(pocket => pocket._id === this.incomeForm.value.pocket),
+          currency: 'euro',
+          amount: this.incomeForm.value.amount,
+          notes: "",
+          fromPocket: null,
+          toPocket: null,
+          wallet: this.wallet
+        };
+        console.log("INCOME MOVEMENT: ", movement);
+        break;
+  
+      case 'expense':
+        movement = {
+          type: "out",
+          category: this.categories.find(category => category._id === this.expenseForm.value.category),
+          vendor: this.vendors.find(vendor => vendor._id === this.expenseForm.value.vendor),
+          pocket: this.pockets.find(pocket => pocket._id === this.expenseForm.value.pocket),
+          currency: 'euro',
+          amount: this.expenseForm.value.amount,
+          notes: "",
+          fromPocket: null,
+          toPocket: null,
+          wallet: this.wallet
+        };
+        console.log("EXPENSE MOVEMENT: ", movement);
+      
+        break;
+  
+      case 'transfer':
+        movement = {
+          type: "transfer",
+          category: null,
+          vendor: null,
+          pocket: null,
+          currency: 'euro',
+          amount: this.transferForm.value.amount,
+          notes: this.transferForm.value.notes,
+          fromPocket: this.pockets.find(pocket => pocket._id === this.transferForm.value.fromPocket),
+          toPocket: this.pockets.find(pocket => pocket._id === this.transferForm.value.toPocket),
+          wallet: this.wallet
+        };
+        console.log("TRANSFER MOVEMENT: ", movement);
+        break;
+  
+      default:
+        console.error("Invalid movement type.");
+        break;
+    }
+  }
+  
+
+
+      /*this._movementsService.addMovementAndRefresh(movement).subscribe(
+        (response:any) => response
+      )   */        
       
   }    
  
     
-}
+
   
    
 

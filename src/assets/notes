@@ -1,13 +1,14 @@
 -opción deleteAll restringida a los objetos del usuario
 -añadir el delete objetos relacionados a la función delete de un objeto segun corresponda
--que haya un pocket por default en todas las wallets, que se llame INGRESOS
--que en la home se pueda visualizar el monto total de todos los pockets pero también la suma total de todos los pockets restando INGRESOS
+
+
 -que los nombres de wallet, vendor, category sean únicos dentro del conjunto de los objetos del usuario
 -que los nombres de los pockets sean únicos dentro de la wallet a la cual pertenecen
--agregar movimientos de transferencias a los reportes
+
 -mostrar reportes
 -archivar datos de reportes/bajar en pdf...
 -poder compartir una misma wallet de modo que se puedan realizar y ver todos los movimientos de todos los usuarios que compartan la misma wallet
+    
 -limpiar
 -front
 -produccion

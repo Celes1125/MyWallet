@@ -2,7 +2,7 @@ import { Component} from '@angular/core';
 //Material Design
 
 import { MovementsPageComponent } from '../movements-page/movements-page.component';
-import { TransfersPageComponent } from '../transfers-page/transfers-page.component';
+
 
 
 @Component({
@@ -10,7 +10,7 @@ import { TransfersPageComponent } from '../transfers-page/transfers-page.compone
     standalone: true,
     templateUrl: './reports-page.component.html',
     styleUrl: './reports-page.component.css',
-    imports: [MovementsPageComponent, TransfersPageComponent]
+    imports: [MovementsPageComponent]
 })
 export class ReportsPageComponent {
 

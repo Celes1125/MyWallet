@@ -1,4 +1,4 @@
-import { Movement } from './../../../interfaces/movement';
+import { PocketService } from './../../../services/pocket.service';
 import { CategoryService } from './../../../services/category.service';
 import { Router, RouterModule } from '@angular/router';
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
@@ -29,32 +29,33 @@ import { MatButtonModule } from '@angular/material/button';
 })
 
 export class AddMovementComponent implements OnInit, OnChanges {
-  
+
   wallet!: any
-  walletId!:any
+  walletId!: any
   incomeForm!: FormGroup
   expenseForm!: FormGroup
-  transferForm!:FormGroup
+  transferForm!: FormGroup
   categories: Category[] = []
   vendors: Vendor[] = []
-  pockets: Pocket[] = [] 
+  pockets: Pocket[] = []
   pocketId: any;
   amountToAdd: any;
-  firstAmount: any;  
+  firstAmount: any;
   router: Router = new Router;
-  movement_type:string
+  movement_type: string
 
   constructor(
     private _formBuilder: FormBuilder,
     private _categoriesService: CategoryService,
     private _vendorsService: VendorService,
     private _walletService: WalletService,
-    private _movementsService: MovementService,        
+    private _movementsService: MovementService,
+    private _pocketService: PocketService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
 
     this.wallet = this.data.wallet
-    this.walletId = this.data.walletId    
+    this.walletId = this.data.walletId
     this.movement_type = this.data.movement_type
 
     this.getCategories();
@@ -80,17 +81,17 @@ export class AddMovementComponent implements OnInit, OnChanges {
       toPocket: ["", [Validators.required]],
       amount: [0, [Validators.required]],
       notes: ["", [Validators.required]]
-    })  
+    })
 
-    
+
   }
   ngOnChanges(changes: SimpleChanges): void {
-   this.getPockets()
+    this.getPockets()
   }
 
   ngOnInit(): void {
-  
-    
+
+
 
   }
 
@@ -116,19 +117,19 @@ export class AddMovementComponent implements OnInit, OnChanges {
       }
     )
   }
-  getPockets() {        
+  getPockets() {
     this._walletService.getPocketsOfWallet(this.walletId).subscribe(
       response => {
         this.pockets = response
-       
+
       }
     )
-  } 
+  }
 
   addMovement() {
     let movement;
-    
-    switch(this.movement_type) {
+
+    switch (this.movement_type) {
       case 'income':
         movement = {
           type: "in",
@@ -143,8 +144,9 @@ export class AddMovementComponent implements OnInit, OnChanges {
           wallet: this.wallet
         };
         console.log("INCOME MOVEMENT: ", movement);
+        this._movementsService.addIncomeOrExpense(movement).subscribe(response => response)
         break;
-  
+
       case 'expense':
         movement = {
           type: "out",
@@ -159,9 +161,9 @@ export class AddMovementComponent implements OnInit, OnChanges {
           wallet: this.wallet
         };
         console.log("EXPENSE MOVEMENT: ", movement);
-      
+        this._movementsService.addIncomeOrExpense(movement).subscribe(response => response)
         break;
-  
+
       case 'transfer':
         movement = {
           type: "transfer",
@@ -176,26 +178,27 @@ export class AddMovementComponent implements OnInit, OnChanges {
           wallet: this.wallet
         };
         console.log("TRANSFER MOVEMENT: ", movement);
+
+        this._movementsService.create(movement).subscribe(response => response)        
+        this._pocketService.refreshPocketsOfTransfers(movement)
         break;
-  
+
       default:
         console.error("Invalid movement type.");
         break;
     }
   }
-  
 
 
-      /*this._movementsService.addMovementAndRefresh(movement).subscribe(
-        (response:any) => response
-      )   */        
-      
-  }    
- 
-    
 
-  
-   
+
+
+}
+
+
+
+
+
 
 
 

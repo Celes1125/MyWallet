@@ -1,8 +1,9 @@
-import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, finalize, from, map, mergeMap, of, reduce, switchMap, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
+import { WalletService } from './wallet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,13 @@ import { AuthenticationService } from './authentication.service';
 export class PocketService {
 
   constructor(private http: HttpClient,
-              private _authService:AuthenticationService) { 
-                
+              private _authService:AuthenticationService,
+              ) { 
+              
               }
 
   url = "http://localhost:3000/pockets/"
-
-  getAll(): Observable<any> {
-    return this.http.get(this.url)
-  }
-
+  
   delete(id: string) {
     const url = this.url + id
     return this.http.delete(url).pipe(
@@ -59,10 +57,10 @@ export class PocketService {
   }
 
   refreshPocketsOfTransfers(transfer:any) {
-    this.refreshFromPocket(transfer.fromPocket, transfer.amount).subscribe(
+    this.refreshFromPocket(transfer.fromPocket._id, transfer.amount).subscribe(
       response=> response
     )
-    this.refreshToPocket(transfer.toPocket, transfer.amount).subscribe(
+    this.refreshToPocket(transfer.toPocket._id, transfer.amount).subscribe(
       response=> response
     )
     
@@ -133,10 +131,11 @@ export class PocketService {
         return of(null)
       }),      
     )
-  }
-
+  } 
   
 
+  }
+    
 
 
 
@@ -146,4 +145,4 @@ export class PocketService {
 
  
 
-}
+

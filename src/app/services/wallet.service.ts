@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, filter, finalize, from, map, mergeMap, of, reduce, switchMap, tap } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
-import { Wallet } from '../interfaces/wallet';
 import { PocketService } from './pocket.service';
+import { resolve } from 'path';
 
 @Injectable({
   providedIn: 'root'
@@ -58,12 +58,11 @@ export class WalletService {
     )
 
   }
+  
 
   getById(id: string): any {
     return this.http.get(this.url + id)
   }
-
-
 
   edit(wallet: any) {
     const id = wallet._id
@@ -76,14 +75,27 @@ export class WalletService {
   }
 
   delete(id: string) {   
-    const url = this.url + id
-    return this.http.delete(url).pipe(
-      tap((response) => response),
-      catchError(error => error),
-      finalize(() => console.log('delete wallet subscription ended'))
-    )
-  }
-
+      this.getPocketsOfWallet(id)
+      .pipe(
+        // SwitchMap to delete each pocket and emit completion signal
+        switchMap(pockets =>
+          from(pockets).pipe(
+            // MergeMap to handle concurrent pocket deletions
+            mergeMap((pocket: any) => this._pocketService.delete(pocket._id)),
+            // Reduce to wait for all pocket deletions to complete
+            reduce(() => {}, () => true)
+          )
+        )
+      ).subscribe(() => {
+        // Pockets deleted, proceed to delete the wallet
+        const url = this.url + id
+        return this.http.delete(url).pipe(
+          tap((response) => response),
+          catchError(error => error),
+          finalize(() => console.log('delete wallet subscription ended'))
+        ).subscribe(response=>response)    
+  })}
+  
   create(wallet: any): Observable<any>{
     const newwallet = { ...wallet, users: [this.userId] }
     return this.http.post(this.url, newwallet).pipe(
@@ -102,6 +114,7 @@ export class WalletService {
           currency: "euro",          
           wallet: id
         }
+        console.log("ID: ", id)
         return this._pocketService.create(pocket);
       }),
       catchError(error => {

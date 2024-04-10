@@ -6,7 +6,6 @@ import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -51,15 +50,16 @@ export class MovementService {
     )
   }
 
-  addMovementAndRefresh(movement: any) {
+  addIncomeOrExpense(movement: any) {
     return this.create(movement).pipe(
       tap((createdMovement) => console.log('created movement: ', createdMovement)),
-      switchMap(() => this._pocketService.getById(movement.pocket)),
+      switchMap(() => this._pocketService.getById(movement.pocket._id)),
       map((pocket: Pocket) => {
-        return pocket.amount;
+        const amount = pocket.amount;
+        return amount
       }),
       catchError(error => {
-        console.error('Error alobtener el bolsillo:', error);
+        console.error('Error al obtener el bolsillo:', error);
         return of(null)
       }),     
       map((amount:any) => {
@@ -73,7 +73,7 @@ export class MovementService {
       }),      
       switchMap(({ newAmount }) => {
         return this._pocketService.edit({
-          _id: movement.pocket,
+          _id: movement.pocket._id,
           amount: newAmount,
           lastModified: new Date()
         });
@@ -98,4 +98,3 @@ export class MovementService {
     return this.http.put<any>(url, movement)
   }
 }
-

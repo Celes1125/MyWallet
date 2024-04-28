@@ -3,6 +3,7 @@
     <input matInput (keyup)="applyFilter($event)" placeholder="¿name wallet?" #input>
 </mat-form-field>
 <button (click)="openAddWalletDialog()">create new wallet</button>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
      <!-- Checkbox Column -->

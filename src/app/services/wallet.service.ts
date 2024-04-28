@@ -74,7 +74,7 @@ export class WalletService {
     )
   }
 
-  delete(id: string) {   
+  delete(id: string) {
       this.getPocketsOfWallet(id)
       .pipe(
         // SwitchMap to delete each pocket and emit completion signal
@@ -93,8 +93,8 @@ export class WalletService {
           tap((response) => response),
           catchError(error => error),
           finalize(() => console.log('delete wallet subscription ended'))
-        ).subscribe(response=>response)    
-  })}
+        ).subscribe(response => response)
+  })}     
   
   create(wallet: any): Observable<any>{
     const newwallet = { ...wallet, users: [this.userId] }

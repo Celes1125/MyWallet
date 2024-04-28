@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletService } from '../../../services/wallet.service';
@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Wallet } from '../../../interfaces/wallet';
 import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wallet-name.component';
-import { Pocket } from '../../../interfaces/pocket';
+
 
 @Component({
     selector: 'app-wallet',
@@ -33,13 +33,16 @@ export class WalletComponent implements OnInit {
     router: Router = new Router;
     totalAmount!: number
     netoAmount!:number
+    
 
     constructor(
         private walletService: WalletService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+ 
     ) {
 
-    }
+    }    
+  
 
     ngOnInit(): void {
         this.getPocketsOfWallet()
@@ -107,12 +110,12 @@ export class WalletComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             response => {
                 if (response) {
-
                     this.router.navigateByUrl('/dashboard');
-                }
+                    
+                }                
             });
-    }
-
+    
+        }
     openEditPocketDialog(id: string) {
         const dialogRef = this.dialog.open(EditPocketComponent, {
             data: {

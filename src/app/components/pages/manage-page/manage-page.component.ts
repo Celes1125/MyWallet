@@ -11,7 +11,6 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
 import { EditWalletComponent } from '../../dialogs/edit-wallet/edit-wallet.component';
 import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
-import { Wallet } from '../../../interfaces/wallet';
 import { WalletsPageComponent } from '../wallets-page/wallets-page.component';
 import { CategoriesPageComponent } from '../categories-page/categories-page.component';
 import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
@@ -23,18 +22,12 @@ import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
     templateUrl: './manage-page.component.html',
     styleUrl: './manage-page.component.css',
 })
-export class ManagePageComponent {
-
-   
+export class ManagePageComponent{   
     router: Router = new Router()
-
     constructor(
         private walletService: WalletService,
         public dialog: MatDialog
-    ) {
-
-        
-    } 
+    ) {   }  
 
     openAddPocketDialog(wallet: any) {
         const dialogRef = this.dialog.open(AddPocketComponent, {
@@ -81,12 +74,13 @@ export class ManagePageComponent {
     }
     openWalletsManager() {
         const dialogRef = this.dialog.open(WalletsPageComponent, {})
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("wallets changes saved ok")
-                }
-            }
+
+        dialogRef.afterClosed().subscribe( ()=> {
+            alert("wallets changes saved ok")
+                
+        }            
+                    
+            
         )
     }
 

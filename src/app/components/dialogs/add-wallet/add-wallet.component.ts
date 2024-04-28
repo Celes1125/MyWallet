@@ -1,11 +1,9 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from '../../../services/wallet.service';
 //Material Design
 import { MatDialogModule } from '@angular/material/dialog';
-import { PocketService } from '../../../services/pocket.service';
-
 @Component({
   selector: 'app-add-wallet',
   standalone: true,
@@ -14,33 +12,32 @@ import { PocketService } from '../../../services/pocket.service';
   styleUrl: './add-wallet.component.css'
 })
 export class AddWalletComponent {
-  activated:boolean = false
+  activated: boolean = false
   walletForm: FormGroup
-  userId!:string
-  constructor (
-    private _formBuilder : FormBuilder,
+  userId!: string
+  constructor(
+    private _formBuilder: FormBuilder,
     private _walletService: WalletService,
-    private _pocketService: PocketService
-    
-  ){
+
+  ) {
     this.walletForm = this._formBuilder.group({
       name: ["", [Validators.required]],
     })
-    
-  }
-  
 
-  addWallet(){
-      const wallet = {
-      name: this.walletForm.value.name,    }  
-      this._walletService.create(wallet).subscribe(
-        (response:any) =>console.log(response)
-      )
-      
+  }
+  addWallet() {
+    const wallet = {
+      name: this.walletForm.value.name,
     }
-      
-    }
+    this._walletService.create(wallet).subscribe(
+      (response: any) => console.log(response)
+    )
     
+
+  }
+
+}
+
 
 
 

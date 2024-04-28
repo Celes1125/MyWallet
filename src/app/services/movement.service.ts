@@ -93,6 +93,17 @@ export class MovementService {
     )
   }
 
+  deleteMovementsByUser(){
+    let id = this.userId
+    const url = this.url + "byUserId/" + id
+    return this.http.delete(url).pipe(
+      tap(response => response),
+      catchError(error => error),
+      finalize(() => console.log('delete movements by user subscription ended'))
+
+    )
+  }
+
   edit(movement: any): Observable<any> {
     const url = this.url + movement._id
     return this.http.put<any>(url, movement)

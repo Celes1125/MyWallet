@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { WalletComponent } from '../../main/wallet/wallet.component';
 import { WalletService } from '../../../services/wallet.service';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DeleteWalletComponent } from '../../dialogs/delete-wallet/delete-wallet.component';
 import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
 import { SharedService } from '../../../services/shared.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wallets-page',
@@ -27,7 +28,7 @@ import { SharedService } from '../../../services/shared.service';
 })
 export class WalletsPageComponent {
 
-  wallets: any[] = []
+  wallets!: any
   dataSource: any = []
   selection = new SelectionModel<any>(false, [])
   router: Router = new Router
@@ -42,10 +43,12 @@ export class WalletsPageComponent {
   }
 
 
+
+
   getAllWallets() {
     this.walletService.getAll().subscribe(
-      response => {
-        this.wallets = response,
+      (response: Observable<Wallet[]>) => {
+        return this.wallets = response,
           this.dataSource = new MatTableDataSource(this.wallets);
       })
   }
@@ -68,12 +71,13 @@ export class WalletsPageComponent {
   }
 
   showWalletAtHome(wallet: any) {
-    //this.selection.clear();
+    this.selection.clear();
     this.selection.select(wallet);
     this.handleChange(wallet)
   }
 
   openEditWalletDialog(wallet: any) {
+
     const dialogRef = this.dialog.open(EditWalletComponent, {
       data: {
         walletToEdit: wallet
@@ -89,21 +93,21 @@ export class WalletsPageComponent {
       });
   }
 
-  openDeleteWalletDialog(wallet: Wallet) {
+  openDeleteWalletDialog(wallet: any) {    
     const dialogRef = this.dialog.open(DeleteWalletComponent, {
       data: {
-        walletToDelete: wallet
+        walletToDelete: wallet   
 
       }
     })
-    dialogRef.afterClosed().subscribe(
-      response => {
-        if (response) {
-          alert("wallet delete ok")
-          this.getAllWallets()
-
-        }
-      });
+  this.dataSource    
+    dialogRef.afterClosed().subscribe(() => {
+      this.selection.clear(wallet);
+      this.sharedService.setSelectedValue(null)
+      this.router.navigateByUrl('/dashboard')
+      this.getAllWallets()
+      
+    });
   }
 
   openAddWalletDialog() {
@@ -116,11 +120,12 @@ export class WalletsPageComponent {
       (response: any) => {
         if (response) {
           alert("wallet added ok")
+          this.router.navigateByUrl('/dashboard')
           this.getAllWallets()
 
         }
       });
-     
+
   }
 
 }

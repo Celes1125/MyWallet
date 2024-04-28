@@ -1,6 +1,6 @@
 import { SharedService } from './../../../services/shared.service';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
@@ -12,7 +12,7 @@ import { WalletsPageComponent } from '../../pages/wallets-page/wallets-page.comp
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-  
+
 
 @Component({
     selector: 'app-home',
@@ -22,31 +22,40 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
     imports: [FormsModule, CommonModule, WalletComponent, MatButtonModule, MatIconModule, MatDialogModule, RouterModule, AddWalletComponent, WalletsPageComponent]
 })
 export class HomeComponent implements OnInit {
-    wallets: any | null = null
-    selectedWallet: any | null = null;
-    router: Router = new Router()    
+    wallets: any
+    selectedWallet: any
+    router: Router = new Router()
     fromHome: boolean = true
     totalAmount!: number
+    stateOf: string = ''
 
     constructor(
         private walletService: WalletService,
         private sharedService: SharedService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+
     ) {
 
     }
+    
+
     ngOnInit() {
-        this.getAllWallets()
-        this.sharedService.selectedValue$.subscribe(value => (this.selectedWallet = value));
-    }
+        this.getAllWallets();    
+        this.sharedService.selectedValue$.subscribe(value => {
+            this.selectedWallet = value;
+        }); 
+    } 
 
     getAllWallets() {
         this.walletService.getAll().subscribe(
-            response =>
-                this.wallets = response,
-
-        )
+            response => {
+                this.wallets = response;                 
+                               
+            }
+        );
+        
     }
+    
 
     openAddMovementDialog(movement_type: string) {
         const dialogRef = this.dialog.open(AddMovementComponent, {
@@ -81,23 +90,6 @@ export class HomeComponent implements OnInit {
                 }
             });
     }
-
-    /*openTransferDialog(wallet: Wallet) {
-        const dialogRef = this.dialog.open(MakeTransferComponent, {
-            data: {
-                wallet: wallet,
-            }
-
-        });
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("transfer ok")
-                    this.router.navigateByUrl('/dashboard');
-                }
-            });
-    }*/
-
 
 
 

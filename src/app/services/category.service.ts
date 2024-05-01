@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, finalize, map, tap } from 'rxjs';
+import { Observable, catchError, filter, finalize, map, of, switchMap, tap } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { AuthenticationService } from './authentication.service';
 
@@ -24,21 +24,21 @@ export class CategoryService {
     )
   }
 
-  getAll(): Observable<Category[]> | any {
-    return this.http.get(this.url).pipe(
-      tap((allCategories: any) => console.log(allCategories)),
-      map((allCategories: Category[]) => allCategories.filter((category: any) => category.creator._id === this.userId)),
-      tap((response: Category[]) => console.log("CATEGORIAS DE CELE: ", response)),
+  getAll(): Observable<any> {
+    return this.http.get<Category[]>(this.url).pipe(
+      //filter categories based on userId     
+      filter((categories: Category[]) => categories.some((category: any) => category.creator._id === this.userId)),
+      tap((response: any) => console.log("filtered cat: ", response)),
       catchError(error => error),
       finalize(() => console.log("get categories subscription ended"))
-    )
-
+    );
   }
+
 
   create(category: any): Observable<Category> | any {
     const newCategory = { ...category, creator: this.userId }
     return this.http.post(this.url, newCategory).pipe(
-      tap(response => console.log(response)),
+      tap(response => response),
       catchError(error => error),
       finalize(() => console.log("post category subscription ended"))
     )
@@ -69,7 +69,7 @@ export class CategoryService {
       finalize(() => console.log("get by id category subscription ended"))
     )
   }
-  
+
 }
 
 

@@ -1,4 +1,4 @@
-@if(dataSource){
+
     <mat-form-field>
         <mat-label>Search your categories</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="¿name category?" #input>
@@ -12,7 +12,7 @@
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let category">
-                {{ category.name}}
+                {{category.name}}
             </td>
         </ng-container>
         
@@ -49,7 +49,5 @@
     
     </table>
     
-}@else {
-    you dont have any category, go to create one
-}
+
 

@@ -10,7 +10,6 @@ export const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent, canActivate:[authGuard] },
     { path: 'login', component: LoginPageComponent},  
     { path: '', redirectTo: 'login', pathMatch: 'full' },      
-    { path:'**', component: NotFoundComponent},// acordarse de meterle el lazy loading, pasa que aun no lo entiendo...
-
+    { path:'**', component: NotFoundComponent},// remember apply lazy loading when understand it
 
 ];

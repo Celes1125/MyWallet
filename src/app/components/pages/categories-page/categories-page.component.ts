@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { WalletComponent } from '../../main/wallet/wallet.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 
+
 @Component({
   selector: 'app-categories-page',
   standalone: true,
@@ -24,22 +25,27 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   styleUrl: './categories-page.component.css'
 })
 export class CategoriesPageComponent {
-  categories: any[] = []
-  dataSource: any = []
+  categories: any
+  dataSource: any
   router: Router = new Router
-  deleteFlag:boolean=true
+  deleteFlag: boolean = true
+
   constructor(
-    private categoryService: CategoryService,
-    public dialog: MatDialog) {
+    private _categoryService: CategoryService,
+    public dialog: MatDialog
+  ) {
     this.getAllCategories()
+
   }
 
+
   getAllCategories() {
-    this.categoryService.getAll().subscribe(
-      (response:any)=> {
-        this.categories = response,
-          this.dataSource = new MatTableDataSource(this.categories);
-      })
+    this._categoryService.getAll().subscribe((response: any) => {
+      if (response) {
+        this.categories = response;
+        this.dataSource = new MatTableDataSource(this.categories)
+      }
+    })
   }
 
   displayedColumns: string[] = ['name', 'edit', 'delete'];
@@ -49,23 +55,24 @@ export class CategoriesPageComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openCategoriesDialog(category?: Category, deleteFlag?: boolean ) {
+  openCategoriesDialog(category?: Category, deleteFlag?: boolean) {
     const dialogRef = this.dialog.open(CategoriesDialogComponent, {
       data: {
         category: category,
-        deleteFlag:deleteFlag 
-    }});
+        deleteFlag: deleteFlag
+      }
+    });
     dialogRef.afterClosed().subscribe(
       response => {
-          if (response) {
-              alert("categories changes saved ok")
-              this.getAllCategories()
-          }
+        if (response) {
+          alert("categories changes saved ok")
+          this.getAllCategories()
+        }
       })
   }
 
-}
 
+}
 
 
 

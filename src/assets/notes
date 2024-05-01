@@ -1,5 +1,5 @@
 
--opción delete all movements
+
 -que los nombres de wallet, vendor, category sean únicos dentro del conjunto de los objetos del usuario
 -que los nombres de los pockets sean únicos dentro de la wallet a la cual pertenecen
 -mostrar reportes

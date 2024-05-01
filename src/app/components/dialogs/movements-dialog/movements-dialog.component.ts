@@ -1,5 +1,5 @@
-import { PocketService } from './../../../services/pocket.service';
-import { CategoryService } from './../../../services/category.service';
+import { PocketService } from '../../../services/pocket.service';
+import { CategoryService } from '../../../services/category.service';
 import { Router, RouterModule } from '@angular/router';
 import { Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -24,11 +24,11 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDialogModule, MatFormFieldModule,
     MatStepperModule, MatButtonModule, MatInputModule, RouterModule],
-  templateUrl: './add-movement.component.html',
-  styleUrl: './add-movement.component.css'
+  templateUrl: './movements-dialog.component.html',
+  styleUrl: './movements-dialog.component.css'
 })
 
-export class AddMovementComponent implements OnInit, OnChanges {
+export class MovementsDialogComponent implements OnInit, OnChanges {
 
   wallet!: any
   walletId!: any
@@ -97,12 +97,10 @@ export class AddMovementComponent implements OnInit, OnChanges {
 
   getCategories() {
     this._categoriesService.getAll().subscribe(
-      (response: Category[], error: string) => {
+      (response: Category[]) => {
         if (response) {
           this.categories = response
-        } else {
-          console.log(error)
-        }
+        }         
       }
     )
   }

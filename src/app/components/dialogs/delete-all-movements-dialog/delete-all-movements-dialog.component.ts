@@ -7,10 +7,10 @@ import { MovementService } from '../../../services/movement.service';
   selector: 'app-delete-all-movements',
   standalone: true,
   imports: [MatDialogModule],
-  templateUrl: './delete-all-movements.component.html',
-  styleUrl: './delete-all-movements.component.css'
+  templateUrl: './delete-all-movements-dialog.component.html',
+  styleUrl: './delete-all-movements-dialog.component.css'
 })
-export class DeleteAllMovementsComponent {
+export class DeleteAllMovementsDialogComponent {
 
   constructor (
     private _movementService: MovementService

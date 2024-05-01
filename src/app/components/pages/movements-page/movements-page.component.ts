@@ -1,3 +1,4 @@
+import { DeleteAllMovementsDialogComponent } from '../../dialogs/delete-all-movements-dialog/delete-all-movements-dialog.component';
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 //Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -6,7 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MovementService } from '../../../services/movement.service';
 import { Observable } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DeleteAllMovementsComponent } from '../../dialogs/delete-all-movements/delete-all-movements.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -45,7 +45,7 @@ export class MovementsPageComponent implements OnChanges {
 
   openDeleteAllMovementsDialog() {
     {
-      const dialogRef = this.dialog.open(DeleteAllMovementsComponent, {})
+      const dialogRef = this.dialog.open(DeleteAllMovementsDialogComponent, {})
 
       this.dataSource
       dialogRef.afterClosed().subscribe(() => {

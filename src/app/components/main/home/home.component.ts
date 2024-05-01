@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from "../wallet/wallet.component";
 import { WalletService } from '../../../services/wallet.service';
-import { AddMovementComponent } from '../../dialogs/add-movement/add-movement.component';
+import { MovementsDialogComponent } from '../../dialogs/movements-dialog/movements-dialog.component';
 import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
 import { WalletsPageComponent } from '../../pages/wallets-page/wallets-page.component';
 //Material Design
@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
     
 
     openAddMovementDialog(movement_type: string) {
-        const dialogRef = this.dialog.open(AddMovementComponent, {
+        const dialogRef = this.dialog.open(MovementsDialogComponent, {
             data: {
                 wallet: this.selectedWallet,
                 walletId: this.selectedWallet._id,

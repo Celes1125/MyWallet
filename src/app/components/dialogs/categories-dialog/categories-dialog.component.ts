@@ -46,7 +46,7 @@ export class CategoriesDialogComponent {
       description: this.form.value.description
     }
     this._categoryService.create(category).subscribe(
-      (response:any) => response
+      (response:any) => {console.log(response)}
     )
   }
 

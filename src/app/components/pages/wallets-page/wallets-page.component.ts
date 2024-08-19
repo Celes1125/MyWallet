@@ -1,12 +1,13 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { WalletsDialogComponent } from './../../dialogs/wallets-dialog/wallets-dialog.component';
+import { Component } from '@angular/core';
 import { WalletComponent } from '../../main/wallet/wallet.component';
 import { WalletService } from '../../../services/wallet.service';
 import { FormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
-import { EditWalletComponent } from '../../dialogs/edit-wallet/edit-wallet.component';
 import { RouterModule, Router } from '@angular/router';
-
 import { Wallet } from '../../../interfaces/wallet';
+import { SharedService } from '../../../services/shared.service';
+import { Observable } from 'rxjs';
 // Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,17 +15,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DeleteWalletComponent } from '../../dialogs/delete-wallet/delete-wallet.component';
-import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
-import { SharedService } from '../../../services/shared.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wallets-page',
   standalone: true,
   templateUrl: './wallets-page.component.html',
   styleUrl: './wallets-page.component.css',
-  imports: [AddWalletComponent, WalletComponent, MatTableModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule, FormsModule, MatDialogModule, RouterModule]
+  imports: [WalletComponent, MatTableModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule, FormsModule, MatDialogModule, RouterModule]
 })
 export class WalletsPageComponent {
 
@@ -33,17 +30,15 @@ export class WalletsPageComponent {
   selection = new SelectionModel<any>(false, [])
   router: Router = new Router
   labelPosition: 'before' | 'after' = 'before';
-
+  deleteFlag: boolean = true
 
   constructor(
     private walletService: WalletService,
     private sharedService: SharedService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog
+  ) {
     this.getAllWallets()
   }
-
-
-
 
   getAllWallets() {
     this.walletService.getAll().subscribe(
@@ -76,11 +71,11 @@ export class WalletsPageComponent {
     this.handleChange(wallet)
   }
 
-  openEditWalletDialog(wallet: any) {
+  openEditWalletDialog(walletId:string) {
 
-    const dialogRef = this.dialog.open(EditWalletComponent, {
+    const dialogRef = this.dialog.open(WalletsDialogComponent, {
       data: {
-        walletToEdit: wallet
+        walletToEditId: walletId
       }
     })
     dialogRef.afterClosed().subscribe(
@@ -93,16 +88,17 @@ export class WalletsPageComponent {
       });
   }
 
-  openDeleteWalletDialog(wallet: any) {    
-    const dialogRef = this.dialog.open(DeleteWalletComponent, {
+  openDeleteWalletDialog(walletId: string) {    
+    const dialogRef = this.dialog.open(WalletsDialogComponent, {
       data: {
-        walletToDelete: wallet   
-
+        walletToDeleteId: walletId       
       }
     })
-  this.dataSource    
+  this.dataSource  
+     
     dialogRef.afterClosed().subscribe(() => {
-      this.selection.clear(wallet);
+     
+      this.selection.clear();
       this.sharedService.setSelectedValue(null)
       this.router.navigateByUrl('/dashboard')
       this.getAllWallets()
@@ -111,10 +107,8 @@ export class WalletsPageComponent {
   }
 
   openAddWalletDialog() {
-    const dialogRef = this.dialog.open(AddWalletComponent, {
-      data: {
-
-      }
+    const dialogRef = this.dialog.open(WalletsDialogComponent, {
+      data: {}
     });
     dialogRef.afterClosed().subscribe(
       (response: any) => {

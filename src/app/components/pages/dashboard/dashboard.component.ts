@@ -17,9 +17,7 @@ import { CommonModule } from '@angular/common';
 export class DashboardComponent {
   homeFlag:boolean=true
   manageFlag:boolean =false
-  reportFlag:boolean=false 
-  
-
+  reportFlag:boolean=false  
 
   setHomeFlag(flag:boolean){
     this.homeFlag=flag

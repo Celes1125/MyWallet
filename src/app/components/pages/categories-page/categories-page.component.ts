@@ -2,7 +2,6 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { WalletComponent } from '../../main/wallet/wallet.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
 import { CategoryService } from '../../../services/category.service';
 import { CategoriesDialogComponent } from '../../dialogs/categories-dialog/categories-dialog.component';
 import { Category } from '../../../interfaces/category';;
@@ -20,7 +19,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-categories-page',
   standalone: true,
-  imports: [AddWalletComponent, WalletComponent, MatTableModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule, FormsModule, MatDialogModule, RouterModule],
+  imports: [WalletComponent, MatTableModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule, FormsModule, MatDialogModule, RouterModule],
   templateUrl: './categories-page.component.html',
   styleUrl: './categories-page.component.css'
 })

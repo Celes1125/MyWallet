@@ -2,9 +2,7 @@ import { Component, Input, OnInit,  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletService } from '../../../services/wallet.service';
-import { DeletePocketComponent } from '../../dialogs/delete-pocket/delete-pocket.component';
-import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
-import { EditPocketComponent } from '../../dialogs/edit-pocket/edit-pocket.component';
+import { PocketsDialogComponent } from '../../dialogs/pockets-dialog/pockets-dialog.component';
 
 //Material Design
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -12,8 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { WalletsDialogComponent } from '../../dialogs/wallets-dialog/wallets-dialog.component';
 import { Wallet } from '../../../interfaces/wallet';
-import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wallet-name.component';
 
 
 @Component({
@@ -22,24 +20,26 @@ import { EditWalletNameComponent } from '../../dialogs/edit-wallet-name/edit-wal
     templateUrl: './wallet.component.html',
     styleUrls: ['./wallet.component.css'],
     imports: [CommonModule, MatTableModule, MatInputModule, RouterModule,
-        MatFormFieldModule, MatButtonModule, MatDialogModule, AddPocketComponent]
+        MatFormFieldModule, MatButtonModule, MatDialogModule]
 })
 export class WalletComponent implements OnInit {
 
-    @Input() wallet!: any
+    @Input() wallet!: Wallet
     @Input() showAddPocketButton: boolean = true
     pockets!: any
     dataSource!: any
     router: Router = new Router;
     totalAmount!: number
     netoAmount!:number
-    
+    deleteFlag: boolean = true
+    changeName: boolean = true
 
     constructor(
         private walletService: WalletService,
         public dialog: MatDialog,
  
     ) {
+
 
     }    
   
@@ -86,55 +86,36 @@ export class WalletComponent implements OnInit {
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
+    }    
+  
 
-    openAddPocketDialog(wallet: Wallet) {
-        const dialogRef = this.dialog.open(AddPocketComponent, {
-            data: {
-                wallet: wallet
-            }
-
-        });
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    this.router.navigateByUrl('/dashboard');
+    openWalletsDialog() {
+        if(this.wallet != undefined){            
+            const dialogRef = this.dialog.open(WalletsDialogComponent, {
+                data: {
+                    wallet: this.wallet,                   
+                    changeName: this.changeName
                 }
-            });
-    }
-
-    openDeletePocketDialog(id: string) {
-        const dialogRef = this.dialog.open(DeletePocketComponent, {
-            data: { id: id }
-        });
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    this.router.navigateByUrl('/dashboard');
-                    
-                }                
             });
     
-        }
-    openEditPocketDialog(id: string) {
-        const dialogRef = this.dialog.open(EditPocketComponent, {
-            data: {
-                id: id,
-            }
-        })
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
+            dialogRef.afterClosed().subscribe(
+                response => {
+                    if (response) {
+                        this.router.navigateByUrl('/dashboard');
+                    }
+                });
+    
+        } 
 
-                    this.router.navigateByUrl('/dashboard');
-                }
-            });
     }
 
-    openEditWalletName(wallet: any) {
-        const dialogRef = this.dialog.open(EditWalletNameComponent, {
+    openPocketsDialog(pocketId?:string, deleteFlag?:boolean){
+        const dialogRef = this.dialog.open(PocketsDialogComponent, {
             data: {
-                wallet: wallet
+                wallet: this.wallet,
+                pocketId:pocketId,
+                deleteFlag:deleteFlag
+
             }
         });
 
@@ -144,9 +125,6 @@ export class WalletComponent implements OnInit {
                     this.router.navigateByUrl('/dashboard');
                 }
             });
-
-
-
     }
 
 

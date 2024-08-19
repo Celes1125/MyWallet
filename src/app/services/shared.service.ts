@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Wallet } from '../interfaces/wallet';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {  
-  private selectedValueSubject = new BehaviorSubject<string | null>(null);
+  private selectedValueSubject = new BehaviorSubject<Wallet | null>(null);
   selectedValue$ = this.selectedValueSubject.asObservable();
   
 
-  setSelectedValue(value: any | null) {
+  setSelectedValue(value: Wallet | null) {
     this.selectedValueSubject.next(value);
   }
 }

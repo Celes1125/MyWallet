@@ -2,18 +2,16 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from '../../main/wallet/wallet.component';
-import { WalletService } from '../../../services/wallet.service';
-
+import { WalletsPageComponent } from '../wallets-page/wallets-page.component';
+import { CategoriesPageComponent } from '../categories-page/categories-page.component';
+import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
 //Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { AddPocketComponent } from '../../dialogs/add-pocket/add-pocket.component';
-import { EditWalletComponent } from '../../dialogs/edit-wallet/edit-wallet.component';
-import { AddWalletComponent } from '../../dialogs/add-wallet/add-wallet.component';
-import { WalletsPageComponent } from '../wallets-page/wallets-page.component';
-import { CategoriesPageComponent } from '../categories-page/categories-page.component';
-import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
+import { PocketsDialogComponent } from '../../dialogs/pockets-dialog/pockets-dialog.component';
+import { WalletsDialogComponent } from '../../dialogs/wallets-dialog/wallets-dialog.component';
+
 
 @Component({
     selector: 'app-manage-page',
@@ -24,13 +22,12 @@ import { VendorsPageComponent } from '../vendors-page/vendors-page.component';
 })
 export class ManagePageComponent{   
     router: Router = new Router()
-    constructor(
-        private walletService: WalletService,
+    constructor(        
         public dialog: MatDialog
     ) {   }  
 
-    openAddPocketDialog(wallet: any) {
-        const dialogRef = this.dialog.open(AddPocketComponent, {
+   /* openAddPocketDialog(wallet: any) {
+        const dialogRef = this.dialog.open(PocketsDialogComponent, {
             data: {
                 wallet: wallet
             }
@@ -46,7 +43,7 @@ export class ManagePageComponent{
     }
 
     openEditWalletDialog(wallet: any) {
-        const dialogRef = this.dialog.open(EditWalletComponent, {
+        const dialogRef = this.dialog.open(WalletsDialogComponent, {
             data: {
                 walletToEdit: wallet
             }
@@ -59,7 +56,7 @@ export class ManagePageComponent{
             });
     }
     openAddWalletDialog() {
-        const dialogRef = this.dialog.open(AddWalletComponent, {
+        const dialogRef = this.dialog.open(WalletsDialogComponent, {
             data: {
 
             }
@@ -71,8 +68,10 @@ export class ManagePageComponent{
                 }
             }
         )
-    }
-    openWalletsManager() {
+    }*/
+
+
+    openWalletsPage() {
         const dialogRef = this.dialog.open(WalletsPageComponent, {})
 
         dialogRef.afterClosed().subscribe( ()=> {
@@ -85,7 +84,7 @@ export class ManagePageComponent{
     }
 
 
-    openVendorsManager() {
+    openVendorsPage() {
         const dialogRef = this.dialog.open(VendorsPageComponent, {})
         dialogRef.afterClosed().subscribe(
             response => {

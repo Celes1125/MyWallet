@@ -1,14 +1,15 @@
-<ng-container *ngIf="!this.wallets || this.wallets.lenght === 0">
+<div #createWallet style="display: none;">
     <p>You don't have any wallets yet. Create one to get started!</p>
-    <button (click)="openAddWalletDialog()">Create Wallet</button>
-</ng-container>
-<ng-container *ngIf="this.wallets && !this.selectedWallet">
+    <button (click)="openWalletsDialog()">Create Wallet</button>
+</div>
+
+<div #selectWallet style="display: none;">
     <h2>Select a wallet to use</h2>
     <app-wallets-page></app-wallets-page>
+</div>
 
-</ng-container>
-<ng-container *ngIf="this.wallets && this.selectedWallet">
-
+<div #showingWallet style="display: none;">
+    @if(selectedWallet){
     <app-wallet [wallet]="selectedWallet"></app-wallet>
     <div>
         <p>Add new</p>
@@ -16,4 +17,5 @@
         <button (click)="openAddMovementDialog('income')">Income</button>
         <button (click)="openAddMovementDialog('transfer')">Transfer</button>
     </div>
-</ng-container>
+    }
+</div>

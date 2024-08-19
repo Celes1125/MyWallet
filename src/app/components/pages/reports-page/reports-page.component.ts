@@ -1,8 +1,5 @@
 import { Component} from '@angular/core';
-//Material Design
-
 import { MovementsPageComponent } from '../movements-page/movements-page.component';
-
 
 
 @Component({

@@ -1,0 +1,80 @@
+
+<div #createWallet>
+  <div>
+    <h2 mat-dialog-title>Add new wallet</h2>
+    <form [formGroup]="walletForm">
+      <mat-dialog-content class="mat-typography">
+        <label>Enter a name for your new wallet
+          <input type="text" autocomplete="off" placeholder="walletName" name="walletName" formControlName="walletName">
+        </label>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button (click)="addWallet()" type="submit" [mat-dialog-close]="true" cdkFocusInitial>Create wallet</button>
+      </mat-dialog-actions>
+    </form>
+  </div>
+</div>
+
+
+<!-- 
+
+
+@if(wallet){
+
+<div #editWalletsName style="display:none">
+  <h2 mat-dialog-title>Edit wallet's name</h2>
+  <mat-dialog-content class="mat-typography">
+    <p>Your wallet's name now: </p>
+    {{ wallet.name }}
+    <p>Your wallet's new name: </p>
+    <input [(ngModel)]="newName" placeholder="write here a new name for your wallet">
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="changeWalletName()" type="submit" [mat-dialog-close]="true" cdkFocusInitial>Save changes</button>
+  </mat-dialog-actions>
+</div>
+
+<div #editWallet style="display:none">
+  <h2 mat-dialog-title>Edit {{wallet.name}}</h2>
+  <mat-dialog-content class="mat-typography">
+    <app-wallet [wallet]="wallet"></app-wallet>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" [mat-dialog-close]="true" cdkFocusInitial>Save changes</button>
+  </mat-dialog-actions>
+</div>
+
+<div #deleteWallet style="display:none">
+  <h2 mat-dialog-title>Delete {{wallet.name}}</h2>
+  <mat-dialog-content class="mat-typography">
+    <h1>Are you sure about deleting this wallet?</h1>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>CANCEL</button>
+    <button type="submit" [mat-dialog-close]="true" cdkFocusInitial (click)="delete()">YES, PLEASE DELETE</button>
+  </mat-dialog-actions>
+</div>
+}
+
+<div #createWallet style="display:none">
+  <div>
+    <h2 mat-dialog-title>Add new wallet</h2>
+    <form [formGroup]="walletForm">
+      <mat-dialog-content class="mat-typography">
+        <label>Enter a name for your new wallet
+          <input type="text" autocomplete="off" placeholder="walletName" name="walletName" formControlName="walletName">
+        </label>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button (click)="addWallet()" type="submit" [mat-dialog-close]="true" cdkFocusInitial>Create wallet</button>
+      </mat-dialog-actions>
+    </form>
+  </div>
+</div>
+ 
+ -->
+ 

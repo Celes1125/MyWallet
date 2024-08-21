@@ -10,7 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { PocketsDialogComponent } from '../../dialogs/pockets-dialog/pockets-dialog.component';
-import { WalletsDialogComponent } from '../../dialogs/wallets-dialog/wallets-dialog.component';
 
 
 @Component({
@@ -26,7 +25,7 @@ export class ManagePageComponent{
         public dialog: MatDialog
     ) {   }  
 
-   /* openAddPocketDialog(wallet: any) {
+   openAddPocketDialog(wallet: any) {
         const dialogRef = this.dialog.open(PocketsDialogComponent, {
             data: {
                 wallet: wallet
@@ -42,7 +41,7 @@ export class ManagePageComponent{
             });
     }
 
-    openEditWalletDialog(wallet: any) {
+    /*openEditWalletDialog(wallet: any) {
         const dialogRef = this.dialog.open(WalletsDialogComponent, {
             data: {
                 walletToEdit: wallet

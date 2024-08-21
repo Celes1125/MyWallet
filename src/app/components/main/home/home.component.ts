@@ -3,17 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { WalletComponent } from "../wallet/wallet.component";
+import { WalletComponent } from '../wallet/wallet.component';
 import { WalletService } from '../../../services/wallet.service';
 import { MovementsDialogComponent } from '../../dialogs/movements-dialog/movements-dialog.component';
 import { WalletsPageComponent } from '../../pages/wallets-page/wallets-page.component';
-import { WalletsDialogComponent } from '../../dialogs/wallets-dialog/wallets-dialog.component';
 //Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
-import { create } from 'domain';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -74,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         }
     }
-
+/*
     openWalletsDialog() {
         const dialogRef = this.dialog.open(WalletsDialogComponent, {
             data: {}
@@ -84,7 +82,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 this.router.navigateByUrl('/dashboard');
             }
         });
-    }
+    }*/
     
     openAddMovementDialog(movement_type: string) {
         const dialogRef = this.dialog.open(MovementsDialogComponent, {

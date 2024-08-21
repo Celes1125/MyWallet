@@ -10,8 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { WalletsDialogComponent } from '../../dialogs/wallets-dialog/wallets-dialog.component';
 import { Wallet } from '../../../interfaces/wallet';
+import { EditWalletNameDialogComponent } from '../../dialogs/edit-wallet-name-dialog/edit-wallet-name-dialog.component';
 
 
 @Component({
@@ -30,18 +30,14 @@ export class WalletComponent implements OnInit {
     dataSource!: any
     router: Router = new Router;
     totalAmount!: number
-    netoAmount!:number
-    deleteFlag: boolean = true
-    changeName: boolean = true
+    netoAmount!:number   
+    deleteFlag: boolean = true    
 
     constructor(
         private walletService: WalletService,
         public dialog: MatDialog,
  
-    ) {
-
-
-    }    
+    ) { }    
   
 
     ngOnInit(): void {
@@ -61,6 +57,7 @@ export class WalletComponent implements OnInit {
             )
         }
     }
+    displayedColumns: string[] = ['pocket', 'currency', 'amount', 'edit', 'delete'];
 
     getAmounts(pockets: any) {
         this.totalAmount = 0;
@@ -79,22 +76,17 @@ export class WalletComponent implements OnInit {
            
             
         }    
-    }
-
-    displayedColumns: string[] = ['pocket', 'currency', 'amount', 'edit', 'delete'];
+    }    
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
-    }    
-  
+    }      
 
-    openWalletsDialog() {
-        if(this.wallet != undefined){            
-            const dialogRef = this.dialog.open(WalletsDialogComponent, {
+    openEditWalletNameDialog(wallet: Wallet) {                  
+            const dialogRef = this.dialog.open(EditWalletNameDialogComponent, {
                 data: {
-                    wallet: this.wallet,                   
-                    changeName: this.changeName
+                    wallet:wallet
                 }
             });
     
@@ -106,8 +98,7 @@ export class WalletComponent implements OnInit {
                 });
     
         } 
-
-    }
+    
 
     openPocketsDialog(pocketId?:string, deleteFlag?:boolean){
         const dialogRef = this.dialog.open(PocketsDialogComponent, {
@@ -127,11 +118,7 @@ export class WalletComponent implements OnInit {
             });
     }
 
-
-
 }
-
-
 
 
 

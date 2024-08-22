@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, filter, finalize, from, map, mergeMap, of, reduce, switchMap, tap } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { PocketService } from './pocket.service';
-import { resolve } from 'path';
 
 @Injectable({
   providedIn: 'root'

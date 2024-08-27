@@ -16,6 +16,7 @@ export class VendorsDialogComponent {
   deleteFlag?: boolean | undefined
   form!: FormGroup
   editForm!: FormGroup
+  vendors:Vendor[]
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,25 +29,29 @@ export class VendorsDialogComponent {
       name: ["", [Validators.required]]
 
     })
-
     if (this.vendor !== undefined) {
-
       this.editForm = this._formBuilder.group({
         editname: this.vendor.name
       })
     }
-
+    this.vendors = this.data.vendors
+    
   }
 
 
   createNewVendor() {
-    const vendor = {
+    const newVendor = {
       name: this.form.value.name
     }
-    this._vendorService.create(vendor).subscribe(
-      (response: any) => response
-    )
-  }
+    const checkName: boolean = this.vendors.some((vendor) => vendor.name.toLowerCase()==newVendor.name.toLowerCase())
+    if (checkName) {
+      alert('that name is already in use')
+    } else {
+      return this._vendorService.create(newVendor).subscribe(
+        (response: any) => response
+      )
+    }
+  }        
 
   editVendor() {
     if (this.vendor !== undefined) {

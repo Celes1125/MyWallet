@@ -16,6 +16,7 @@ export class CategoriesDialogComponent {
   deleteFlag?: boolean | undefined
   form!:FormGroup
   editForm!: FormGroup
+  categories:Category[]
     
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,18 +37,25 @@ export class CategoriesDialogComponent {
         editdescription: this.category.description
       })
     }
+    this.categories = this.data.categories
+    console.log('CATEGORIES: ', this.categories)
     
   }
 
-
   createNewCategory(){
-    const category= {
+    const newCategory= {
       name: this.form.value.name,
       description: this.form.value.description
     }
-    this._categoryService.create(category).subscribe(
-      (response:any) => {console.log(response)}
-    )
+    const checkName = this.categories.some((category)=> category.name.toLowerCase() == newCategory.name.toLowerCase())
+
+    if(checkName){
+      alert('The name is already in use')
+    }else{
+      return this._categoryService.create(newCategory).subscribe(
+        (response:any) => {console.log(response)}
+      )
+    }
   }
 
   editCategory(){

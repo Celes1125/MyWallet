@@ -51,7 +51,8 @@ export class VendorsPageComponent  {
     const dialogRef = this.dialog.open(VendorsDialogComponent, {
       data: {
         vendor: vendor,
-        deleteFlag: deleteFlag
+        deleteFlag: deleteFlag,
+        vendors: this.vendors
       }
     });
     dialogRef.afterClosed().subscribe(

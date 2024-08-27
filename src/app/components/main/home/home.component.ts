@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     async ngOnInit(): Promise<any> {
         console.log('OnInit')
         try {
-            this.wallets = await firstValueFrom(this.walletService.getAll());
+           this.wallets = await firstValueFrom(this.walletService.getAll());
             console.log('Wallets cargadas en ngOnInit:', this.wallets);
 
         } catch (error) {
@@ -84,7 +84,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     openCreateWalletDialog() {
         const dialogRef = this.dialog.open(CreateWalletDialogComponent, {
-            data: {}
+            data: {
+                wallets : this.wallets
+            }
         });
         dialogRef.afterClosed().subscribe(response => {
             if (response) {

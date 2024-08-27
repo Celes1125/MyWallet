@@ -24,7 +24,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   styleUrl: './categories-page.component.css'
 })
 export class CategoriesPageComponent {
-  categories: any
+  categories: any[]=[]
   dataSource: any
   router: Router = new Router
   deleteFlag: boolean = true
@@ -36,7 +36,6 @@ export class CategoriesPageComponent {
     this.getAllCategories()
 
   }
-
 
   getAllCategories() {
     this._categoryService.getAll().subscribe((response: any) => {
@@ -58,7 +57,8 @@ export class CategoriesPageComponent {
     const dialogRef = this.dialog.open(CategoriesDialogComponent, {
       data: {
         category: category,
-        deleteFlag: deleteFlag
+        deleteFlag: deleteFlag,
+        categories:this.categories
       }
     });
     dialogRef.afterClosed().subscribe(

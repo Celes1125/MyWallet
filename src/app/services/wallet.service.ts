@@ -95,7 +95,7 @@ export class WalletService {
         ).subscribe(response => response)
   })}     
   
-  create(wallet: any): Observable<any>{
+  create(wallet: any): Observable<any> {
     const newwallet = { ...wallet, users: [this.userId] }
     return this.http.post(this.url, newwallet).pipe(
       tap((newWallet: any) => console.log("new wallet: ", newWallet)),
@@ -117,26 +117,13 @@ export class WalletService {
         return this._pocketService.create(pocket);
       }),
       catchError(error => {
-        console.error('Error al crear el bolsillo:', error);
+        alert(error.error.message); 
+        console.error('Error al crear el bolsillo:', error);        
         return of(null)
       }),  
       finalize( ()=> console.log("add new wallet and main pocket suscription ended"))    
     )
-
-
-
-
-
   }
 
 }
-/*
-getActiveWallet(): any {
-  return this.getAll().pipe(
-    map((wallets) => wallets.filter((wallet: any) => wallet.activated === true)),
-    map((filteredWallets) => filteredWallets.length > 0 ? filteredWallets[0] : null),
-    tap(console.log),
-    catchError(async (error) => console.log(error)),
-    //finalize( ()=> console.log("getActiveWallet subscription ended"))
-  );
-}*/
+

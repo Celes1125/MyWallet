@@ -31,19 +31,21 @@ export class CreateWalletDialogComponent implements OnInit {
     this.userWallets = this.data.wallets
   }
   async ngOnInit(): Promise<void> {
-    console.log('OnInit');
+    console.log('OnInit user wallets list: ', this.userWallets);
 
   }
-
-  async addWallet() {
-    let newWallet = { name: this.walletForm.value.walletName.toLowerCase() }
-    const checkName: boolean = this.userWallets.some((wallet) => wallet.name?.toLowerCase()==newWallet.name.toLowerCase())
+  addWallet() {
+    let newWallet = { name: this.walletForm.value.walletName.toUpperCase() }
+    const checkName: boolean = this.userWallets.some((wallet) => wallet.name?.toUpperCase()==newWallet.name.toUpperCase())
     if (checkName) {
       return alert('that name is already in use')
     } else {
-      return this._walletService.create(newWallet).subscribe(response => console.log(response))
+      return  this._walletService.create(newWallet).subscribe(response => console.log('new wallet: ', response))
     }
   }
+  
+
+ 
 }
 
 

@@ -8,7 +8,8 @@ import { Observable, catchError, finalize, of, tap } from 'rxjs';
 })
 export class AuthenticationService {  
 
-  constructor(private httpClient: HttpClient,
+  constructor(
+    private httpClient: HttpClient,
     private userService: UserService) { }
 
   login(email: string, password: string): Observable<{ response: any }> {
@@ -18,6 +19,7 @@ export class AuthenticationService {
           console.log('Inicio de sesión exitoso');
           //sending token to local storage
           localStorage.setItem('token', response.token);
+          
 
         } else {
           console.error('non valid format: ');
@@ -37,25 +39,18 @@ export class AuthenticationService {
     return !!localStorage.getItem('token')
   }
 
-  getUserId(){
+  getUserId () : Observable<any> {
     const token = localStorage.getItem('token');    
     return this.httpClient.get('http://localhost:3000/users/token/'+token).pipe(
       tap((response: any) => {
-        console.log('userId: ', response);
+        console.log('userId from auth service: ', response);
         console.log('http://localhost:3000/users/token/'+token)
         return response
       }),
-      catchError(error => {
-        alert('ERROR: ' + error);
-        return of(null);
-      }),
-      finalize(() => {
-        console.log('getUserId subscription ended');
-      })
-    );
-
+      catchError(error =>error),
+      finalize(() => {console.log('getUserId subscription ended');}));
   }
 
-  
-
 }
+
+

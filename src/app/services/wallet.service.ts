@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, finalize, from, map, mergeMap, of, reduce, switchMap, tap } from 'rxjs';
+import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { PocketService } from './pocket.service';
 
@@ -9,45 +9,48 @@ import { PocketService } from './pocket.service';
 })
 export class WalletService {
 
-  userId!: string
+  userId$!: Observable<string>
 
   constructor(private http: HttpClient,
     private _authService: AuthenticationService,
-    private _pocketService: PocketService) {
-    this.getUser()
+    private _pocketService: PocketService) {    
+    
+    this._authService.getUserId().subscribe(
+      response => this.userId$ = response
+    )
+    
   }
 
   url = "http://localhost:3000/wallets/"
 
-  getUser() {
-    this._authService.getUserId().subscribe(
-      response => {
-        console.log('front response: ', response)
-        this.userId = response
-      }
-    )
-  }
+  getAll(): Observable<any[]> {  
+   
+        return this.http.get<any[]>(this.url).pipe(
+      tap((wallets) => console.log('all wallets without filter: ', wallets)),
+      // Map the wallets array and filter based on the userId
+      map((wallets) => wallets.filter((wallet: any) => {
+        // Ensure the 'users' array exists and isn't empty
+        if (!Array.isArray(wallet.users) || wallet.users.length === 0) {
+          return false; // Exclude wallets without a valid 'users' array
+        }
+        // Check if any user in the wallet's 'users' array matches the current userId
+        let wo = wallet.users.some((user: any) => user._id === this.userId$);
+        console.log('wallets of the userId: ', wo);
+        return wallet.users.some((user: any) => user._id === this.userId$);
+      })
+      ),
 
-  getAll(): Observable<any> {
-    return this.http.get(this.url).pipe(
-      tap((wallets: any) => console.log('WALLETS RESPONSE: ', wallets)),
-  
-      // Filter wallets where at least one user ID in the 'users' array matches the current user ID
-      filter((wallets: any) =>
-        wallets.some((wallet: any) => {
-          // Ensure the 'users' array exists and isn't empty before accessing elements
-          if (!Array.isArray(wallet.users) || wallet.users.length === 0) {
-            return false; // Exclude wallets without a valid 'users' array
-          }
-  
-          return wallet.users.some((user:any) => user._id === this.userId); // Check for user ID match
-        })),
-  
-      catchError((error) => error),
-      finalize(() => console.log('ended walletsList$ subscription'))
+      // Handle errors that may occur during the HTTP request
+      catchError((error) => {
+        console.error('Error fetching wallets:', error);
+        return throwError(() => new Error('Failed to retrieve wallets'));
+      })
     );
   }
   
+
+ 
+        
 
   getPocketsOfWallet(id: string | any): Observable<any> {
     return this.http.get(this.url + 'pockets/' + id).pipe(
@@ -57,7 +60,6 @@ export class WalletService {
     )
 
   }
-  
 
   getById(id: string): any {
     return this.http.get(this.url + id)
@@ -74,7 +76,7 @@ export class WalletService {
   }
 
   delete(id: string) {
-      this.getPocketsOfWallet(id)
+    this.getPocketsOfWallet(id)
       .pipe(
         // SwitchMap to delete each pocket and emit completion signal
         switchMap(pockets =>
@@ -82,7 +84,7 @@ export class WalletService {
             // MergeMap to handle concurrent pocket deletions
             mergeMap((pocket: any) => this._pocketService.delete(pocket._id)),
             // Reduce to wait for all pocket deletions to complete
-            reduce(() => {}, () => true)
+            reduce(() => { }, () => true)
           )
         )
       ).subscribe(() => {
@@ -93,37 +95,48 @@ export class WalletService {
           catchError(error => error),
           finalize(() => console.log('delete wallet subscription ended'))
         ).subscribe(response => response)
-  })}     
-  
+      })
+  }
+
   create(wallet: any): Observable<any> {
-    const newwallet = { ...wallet, users: [this.userId] }
-    return this.http.post(this.url, newwallet).pipe(
+    return this._authService.getUserId().pipe(
+      tap((response: any) => {
+        console.log('getting user from the wallet service: ', response);
+        this.userId$ = response;  // Aquí es donde asignas el userId$
+      }),
+      mergeMap(() => {
+        const newwallet = { ...wallet, users: [this.userId$] };  // Esperas hasta que userId$ esté relleno
+        return this.http.post(this.url, newwallet);
+      }),
       tap((newWallet: any) => console.log("new wallet: ", newWallet)),
       map((newWallet: any) => {
-        console.log(newWallet._id)
-        return {id: newWallet._id, name: newWallet.name}        
-
+        console.log(newWallet._id);
+        return { id: newWallet._id, name: newWallet.name };
       }),
-           
-      //tap( (id) => console.log("id: ", id)),            
-      switchMap(({id, name}) => {
+      switchMap(({ id, name }) => {
         const pocket = {
-          name: "main pocket of: "+name,
+          name: "main pocket of: " + name,
           amount: 0,
-          currency: "euro",          
+          currency: "euro",
           wallet: id
-        }
-        console.log("ID: ", id)
+        };
+        console.log("ID: ", id);
         return this._pocketService.create(pocket);
       }),
-      catchError(error => {
-        alert(error.error.message); 
-        console.error('Error al crear el bolsillo:', error);        
-        return of(null)
-      }),  
-      finalize( ()=> console.log("add new wallet and main pocket suscription ended"))    
-    )
+      catchError((error) => {
+        if (error.error.message.includes('E11000')) {
+          alert("That name is already in use, the new wallets name must be a different one" + "( " + error.error.message + " )");
+          return error;
+        } else {
+          alert('creating a new wallet error: ' + error.error.message);
+          return error;
+        }
+      }),
+      finalize(() => console.log("add new wallet and main pocket subscription ended"))
+    );
   }
+  
+  
 
 }
 

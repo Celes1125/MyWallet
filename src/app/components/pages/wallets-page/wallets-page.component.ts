@@ -32,7 +32,7 @@ export class WalletsPageComponent {
   selection = new SelectionModel<any>(false, [])
   router: Router = new Router
   labelPosition: 'before' | 'after' = 'before';
-  
+
   constructor(
     private walletService: WalletService,
     private sharedService: SharedService,
@@ -43,7 +43,7 @@ export class WalletsPageComponent {
 
   getAllWallets() {
     this.walletService.getAll().subscribe(
-      (response: Observable<Wallet[]>) => {
+      (response: any) => {
         return this.wallets = response,
           this.dataSource = new MatTableDataSource(this.wallets);
       })
@@ -72,8 +72,10 @@ export class WalletsPageComponent {
     this.handleChange(wallet)
   }
 
-  openCreateWalletDialog(){
-    const dialogRef = this.dialog.open(CreateWalletDialogComponent, {})
+  openCreateWalletDialog() {
+    const dialogRef = this.dialog.open(CreateWalletDialogComponent, {
+      data: { wallets: this.wallets }
+    })
     dialogRef.afterClosed().subscribe(
       response => {
         if (response) {
@@ -82,12 +84,12 @@ export class WalletsPageComponent {
             ;
         }
       });
-  } 
+  }
 
-  openEditWalletDialog(wallet:Wallet) {  
+  openEditWalletDialog(wallet: Wallet) {
     const dialogRef = this.dialog.open(EditWalletDialogComponent, {
       data: {
-      wallet:wallet,       
+        wallet: wallet,
       }
     })
     dialogRef.afterClosed().subscribe(
@@ -100,20 +102,20 @@ export class WalletsPageComponent {
       });
   }
 
-  openDeleteWalletDialog(wallet:Wallet) {     
+  openDeleteWalletDialog(wallet: Wallet) {
     const dialogRef = this.dialog.open(DeleteWalletDialogComponent, {
-      data: {   
-        wallet:wallet,               
+      data: {
+        wallet: wallet,
       }
     })
-  this.dataSource       
-    dialogRef.afterClosed().subscribe(() => {     
+    this.dataSource
+    dialogRef.afterClosed().subscribe(() => {
       this.selection.clear();
       this.sharedService.setSelectedValue(null)
       this.router.navigateByUrl('/dashboard')
       this.getAllWallets()
-      
+
     });
-  }  
+  }
 
 }

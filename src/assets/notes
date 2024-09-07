@@ -1,11 +1,12 @@
 
 
-
--que los nombres de los pockets sean únicos dentro de la wallet a la cual pertenecen
+-revisar TODAS las validaciones del backend y las que le siguen por el front
+-manejo de errores: meter todos los cartelitos necesarios!
+-controlar los refresh luego de eventos crud
 -mostrar reportes
 -archivar datos de reportes/bajar en pdf...
 -poder compartir una misma wallet de modo que se puedan realizar y ver todos los movimientos de todos los usuarios que compartan la misma wallet
-    
+
 -limpiar
 -front
 -produccion

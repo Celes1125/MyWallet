@@ -43,6 +43,16 @@ export class VendorsDialogComponent {
     const newVendor = {
       name: this.form.value.name
     }
+
+      return this._vendorService.create(newVendor).subscribe(
+        (response: any) => response
+      )
+    
+  }     
+  /* createNewVendor() {
+    const newVendor = {
+      name: this.form.value.name
+    }
     const checkName: boolean = this.vendors.some((vendor) => vendor.name.toLowerCase()==newVendor.name.toLowerCase())
     if (checkName) {
       alert('that name is already in use')
@@ -51,7 +61,7 @@ export class VendorsDialogComponent {
         (response: any) => response
       )
     }
-  }        
+  } */   
 
   editVendor() {
     if (this.vendor !== undefined) {

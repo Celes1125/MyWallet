@@ -22,7 +22,7 @@ export class MovementService {
 
   getUser(){
     this._authService.getUserId().subscribe(
-      response => this.userId = response
+      (      response: string) => this.userId = response
     )
   }
 

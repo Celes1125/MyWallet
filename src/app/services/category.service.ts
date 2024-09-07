@@ -17,7 +17,7 @@ export class CategoryService {
 
   getUser() {
     this._authService.getUserId().subscribe(
-      response => {
+      (      response: string) => {
         console.log('front response: ', response)
         this.userId = response
       }

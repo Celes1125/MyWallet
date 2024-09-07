@@ -3,7 +3,7 @@
     <h2 mat-dialog-title>Edit pocket</h2>
 <form [formGroup]="editPocketForm" (ngSubmit)="editPocket()">
   <mat-dialog-content class="mat-typography">
-    <input type="text" autocomplete="off"  name="name" formControlName="name">
+    <input type="text" autocomplete="off"  name="pocketName" formControlName="pocketName">
     <select type="text" autocomplete="on"  name="currency" formControlName="currency">
       <option value="euro">$eu</option>
       <option value="dolar">$usd</option>

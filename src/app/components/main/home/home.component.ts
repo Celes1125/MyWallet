@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
-import { EmptyError, firstValueFrom, of } from 'rxjs';
+import { EmptyError, firstValueFrom, Observable, of } from 'rxjs';
 import { CreateWalletDialogComponent } from '../../dialogs/create-wallet-dialog/create-wallet-dialog.component';
 
 @Component({
@@ -25,6 +25,7 @@ import { CreateWalletDialogComponent } from '../../dialogs/create-wallet-dialog/
 export class HomeComponent implements OnInit, AfterViewInit {
     router: Router = new Router()
     wallets: Wallet[] = []
+    wallets$: Observable<Wallet[]> = this.walletService.getAll()
     selectedWallet: Wallet | null = null
     @ViewChild('createWallet') createWalletElement!: ElementRef
     @ViewChild('selectWallet') selectWalletElement!: ElementRef
@@ -36,21 +37,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         public sharedService: SharedService
     ) { }
 
-
-    async ngOnInit(): Promise<any> {
-        console.log('OnInit')
-        try {
-           this.wallets = await firstValueFrom(this.walletService.getAll());
-            console.log('Wallets cargadas en ngOnInit:', this.wallets);
-
-        } catch (error) {
-            if (error instanceof EmptyError) {
-                console.warn('No hay elementos en la secuencia.');
-                return of(null); // O cualquier valor predeterminado que desees
-            }
-            return console.error('Error with ngOnInit promises:', error);
-        }
-
+    ngOnInit() {
+        this.wallets$.subscribe(response => this.wallets = response)  
         this.sharedService.selectedValue$.subscribe(response => {
             this.selectedWallet = response;
             this.displayHomeOptions()
@@ -89,9 +77,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
             }
         });
         dialogRef.afterClosed().subscribe(response => {
-            if (response) {
+            if (response != null) {
                 this.router.navigateByUrl('/dashboard');
-            }
+            } 
         });
     }
 

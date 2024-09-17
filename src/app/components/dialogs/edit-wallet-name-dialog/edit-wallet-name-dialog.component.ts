@@ -29,7 +29,7 @@ export class EditWalletNameDialogComponent {
   editWalletName(){              
     let newWallet = {
       _id: this.wallet._id,
-      name: this.newName
+      name: this.newName.toUpperCase()
     }
     this._walletService.edit(newWallet).subscribe(
       response => response

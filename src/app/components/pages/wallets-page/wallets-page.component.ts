@@ -6,7 +6,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { RouterModule, Router } from '@angular/router';
 import { Wallet } from '../../../interfaces/wallet';
 import { SharedService } from '../../../services/shared.service';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 // Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -41,12 +41,15 @@ export class WalletsPageComponent {
     this.getAllWallets()
   }
 
-  getAllWallets() {
-    this.walletService.getAll().subscribe(
-      (response: any) => {
-        return this.wallets = response,
-          this.dataSource = new MatTableDataSource(this.wallets);
-      })
+  async getAllWallets(): Promise<void> {
+    try {
+      const response = await lastValueFrom(this.walletService.getAll());
+      this.wallets = response;
+      this.dataSource = new MatTableDataSource(this.wallets);
+    } catch (error) {
+      console.error('Error fetching wallets:', error);
+      // Manejo del error, si es necesario
+    }
   }
 
   handleChange(value: Wallet) {
@@ -79,11 +82,9 @@ export class WalletsPageComponent {
     dialogRef.afterClosed().subscribe(
       response => {
         if (response) {
-          alert("wallet created ok")
           this.getAllWallets()
-            ;
-        }
-      });
+        };
+      })
   }
 
   openEditWalletDialog(wallet: Wallet) {
@@ -102,18 +103,18 @@ export class WalletsPageComponent {
       });
   }
 
-  openDeleteWalletDialog(wallet: Wallet) {
+  async openDeleteWalletDialog(wallet: Wallet) {
     const dialogRef = this.dialog.open(DeleteWalletDialogComponent, {
       data: {
         wallet: wallet,
       }
     })
     this.dataSource
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe(async () => {
       this.selection.clear();
-      this.sharedService.setSelectedValue(null)
+      this.sharedService.setSelectedValue(null)      
+      await this.getAllWallets()
       this.router.navigateByUrl('/dashboard')
-      this.getAllWallets()
 
     });
   }

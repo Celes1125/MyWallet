@@ -3,6 +3,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Category } from '../../../interfaces/category';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { response } from 'express';
 
 @Component({
   selector: 'app-categories-dialog',
@@ -11,12 +13,13 @@ import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } 
   templateUrl: './categories-dialog.component.html',
   styleUrl: './categories-dialog.component.css'
 })
-export class CategoriesDialogComponent {
+export class CategoriesDialogComponent implements OnInit {
   category?:Category
   deleteFlag?: boolean | undefined
   form!:FormGroup
   editForm!: FormGroup
-  categories:Category[]
+  categories: Category[] = []
+  categories$: Observable<Category[]> = this._categoryService.getAll()  
     
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,19 +31,24 @@ export class CategoriesDialogComponent {
     this.form = this._formBuilder.group({
       name: ["",[Validators.required]],
       description: ""
-    })
-    
-    if(this.category !== undefined){    
- 
+    }); 
+   
+    if(this.category !== undefined){ 
       this.editForm = this._formBuilder.group({
         editname: this.category.name,
         editdescription: this.category.description
       })
-    }
-    this.categories = this.data.categories
-    console.log('CATEGORIES: ', this.categories)
+    } 
     
   }
+
+  ngOnInit(): void {
+    this.categories$.subscribe((response) => {
+      this.categories = response
+      console.log('categories on dialog: ', this.categories)
+    })
+  } 
+  
 
   createNewCategory(){
     const newCategory= {
@@ -53,7 +61,7 @@ export class CategoriesDialogComponent {
       alert('The name is already in use')
     }else{
       return this._categoryService.create(newCategory).subscribe(
-        (response:any) => {console.log(response)}
+        (response:any)=>response
       )
     }
   }
@@ -78,9 +86,11 @@ export class CategoriesDialogComponent {
     if(this.category !== undefined){
       this._categoryService.delete(this.category._id).subscribe(
         (response:any) => response
-      )
+      )      
     }  
 
   }
 
 }
+
+

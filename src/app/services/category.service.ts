@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, defaultIfEmpty, filter, finalize, map, of, switchMap, tap } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { AuthenticationService } from './authentication.service';
 
@@ -10,26 +10,39 @@ import { AuthenticationService } from './authentication.service';
 export class CategoryService {
   url = "http://localhost:3000/categories/"
   userId!: string
-  constructor(private http: HttpClient,
+
+  constructor(
+    private http: HttpClient,
     private _authService: AuthenticationService) {
     this.getUser()
   }
 
   getUser() {
     this._authService.getUserId().subscribe(
-      (      response: string) => {
+      (response: string) => {
         console.log('front response: ', response)
         this.userId = response
       }
     )
   }
 
-  getAll(): Observable<any> {
+  getAll(): Observable<Category[]> {
     return this.http.get<Category[]>(this.url).pipe(
-      //filter categories based on userId     
-      filter((categories: Category[]) => categories.some((category: any) => category.creator._id === this.userId)),
-      tap((response: any) => console.log("filtered cat: ", response)),
-      catchError(error => error),
+      // Fitering categories matching by userId
+      map((categories: Category[]) => categories.filter((category: Category) => category.creator._id === this.userId)),
+
+      //If empty, returns an empty array
+      defaultIfEmpty([]),
+
+      tap((response: Category[]) => console.log("filtered cat: ", response)),
+
+      // error manage
+      catchError((error) => {
+        console.log('error: ', error);
+        return of([]); // if error, then returns an empty array too
+      }),
+
+      // finalize actions
       finalize(() => console.log("get categories subscription ended"))
     );
   }

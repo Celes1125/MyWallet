@@ -38,7 +38,8 @@ export class CreateWalletDialogComponent implements OnInit {
     let newWallet = { name: this.walletForm.value.walletName.toUpperCase() }
     const checkName: boolean = this.userWallets.some((wallet) => wallet.name?.toUpperCase()==newWallet.name.toUpperCase())
     if (checkName) {
-      return alert('that name is already in use')
+      alert('that name is already in use')
+      return of (null)
     } else {
       return  this._walletService.create(newWallet).subscribe(response => console.log('new wallet: ', response))
     }

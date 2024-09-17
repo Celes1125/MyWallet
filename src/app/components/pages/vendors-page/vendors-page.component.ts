@@ -19,24 +19,25 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   styleUrl: './vendors-page.component.css'
 })
 
-export class VendorsPageComponent  {
-  vendors: any[] = []
-  dataSource: any = []
+export class VendorsPageComponent implements OnInit {
+  dataSource!: any
   router: Router = new Router
-  deleteFlag: boolean = true
-
+  deleteFlag: boolean = true  
+  
   constructor(
     private vendorService: VendorService,
-    public dialog: MatDialog) {
-      this.getAllVendors()
-  }
+    public dialog: MatDialog) { }
 
+  ngOnInit(): void {
+    this.getAllVendors();
+  }
 
   getAllVendors() {
     this.vendorService.getAll().subscribe(
       (response: any) => {
-        this.vendors = response,
-          this.dataSource = new MatTableDataSource(this.vendors);
+        this.dataSource = new MatTableDataSource(response);
+        
+        
       })
   }
 
@@ -51,15 +52,18 @@ export class VendorsPageComponent  {
     const dialogRef = this.dialog.open(VendorsDialogComponent, {
       data: {
         vendor: vendor,
-        deleteFlag: deleteFlag,
-        vendors: this.vendors
+        deleteFlag: deleteFlag
+                 
       }
     });
     dialogRef.afterClosed().subscribe(
       response => {
         if (response) {
-          alert("vendors changes saved ok")
           this.getAllVendors()
+          console.log('DATASOURCE: ',this.dataSource) 
+          console.log("vendors changes saved ok: ", response)
+          alert("vendors changes saved ok")
+          
         }
       })
   }

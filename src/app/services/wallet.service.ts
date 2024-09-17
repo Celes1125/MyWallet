@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError } from 'rxjs';
+import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError, defaultIfEmpty, of } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { PocketService } from './pocket.service';
 
@@ -13,21 +13,22 @@ export class WalletService {
 
   constructor(private http: HttpClient,
     private _authService: AuthenticationService,
-    private _pocketService: PocketService) {    
-    
+    private _pocketService: PocketService) {
+
     this._authService.getUserId().subscribe(
       response => this.userId$ = response
     )
-    
+
   }
 
   url = "http://localhost:3000/wallets/"
 
-  getAll(): Observable<any[]> {  
-   
-        return this.http.get<any[]>(this.url).pipe(
+  getAll(): Observable<any[]> {
+    return this.http.get<any[]>(this.url).pipe(
       tap((wallets) => console.log('all wallets without filter: ', wallets)),
       // Map the wallets array and filter based on the userId
+      defaultIfEmpty([]),
+      // Handle errors that may occur during the HTTP request
       map((wallets) => wallets.filter((wallet: any) => {
         // Ensure the 'users' array exists and isn't empty
         if (!Array.isArray(wallet.users) || wallet.users.length === 0) {
@@ -37,20 +38,18 @@ export class WalletService {
         let wo = wallet.users.some((user: any) => user._id === this.userId$);
         console.log('wallets of the userId: ', wo);
         return wallet.users.some((user: any) => user._id === this.userId$);
+        
       })
       ),
-
+      defaultIfEmpty([]),
       // Handle errors that may occur during the HTTP request
+      
       catchError((error) => {
         console.error('Error fetching wallets:', error);
-        return throwError(() => new Error('Failed to retrieve wallets'));
+        return of([]); // if error, then returns an empty array too
       })
     );
   }
-  
-
- 
-        
 
   getPocketsOfWallet(id: string | any): Observable<any> {
     return this.http.get(this.url + 'pockets/' + id).pipe(
@@ -107,7 +106,7 @@ export class WalletService {
       mergeMap(() => {
         const newwallet = { ...wallet, users: [this.userId$] };  // Esperas hasta que userId$ esté relleno
         return this.http.post(this.url, newwallet);
-      }),
+      }),      
       tap((newWallet: any) => console.log("new wallet: ", newWallet)),
       map((newWallet: any) => {
         console.log(newWallet._id);
@@ -135,8 +134,8 @@ export class WalletService {
       finalize(() => console.log("add new wallet and main pocket subscription ended"))
     );
   }
-  
-  
+
+
 
 }
 

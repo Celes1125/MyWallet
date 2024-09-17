@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WalletComponent } from '../../main/wallet/wallet.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -14,8 +14,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-
-
 @Component({
   selector: 'app-categories-page',
   standalone: true,
@@ -23,26 +21,23 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   templateUrl: './categories-page.component.html',
   styleUrl: './categories-page.component.css'
 })
-export class CategoriesPageComponent {
-  categories: any[]=[]
-  dataSource: any
+export class CategoriesPageComponent implements OnInit {  
+  dataSource!: any;
   router: Router = new Router
   deleteFlag: boolean = true
 
   constructor(
     private _categoryService: CategoryService,
-    public dialog: MatDialog
-  ) {
-    this.getAllCategories()
+    public dialog: MatDialog    
+  ) { }
 
+  ngOnInit(): void {
+    this.getAllCategories()
   }
 
   getAllCategories() {
-    this._categoryService.getAll().subscribe((response: any) => {
-      if (response) {
-        this.categories = response;
-        this.dataSource = new MatTableDataSource(this.categories)
-      }
+    this._categoryService.getAll().subscribe(response => {
+      this.dataSource = new MatTableDataSource(response)
     })
   }
 
@@ -57,23 +52,19 @@ export class CategoriesPageComponent {
     const dialogRef = this.dialog.open(CategoriesDialogComponent, {
       data: {
         category: category,
-        deleteFlag: deleteFlag,
-        categories:this.categories
+        deleteFlag: deleteFlag
       }
     });
     dialogRef.afterClosed().subscribe(
-      response => {
+      (response) => {
         if (response) {
-          alert("categories changes saved ok")
           this.getAllCategories()
+          console.log('DATASOURCE: ',this.dataSource)          
+          console.log("categories changes saved ok: ", response)
+          alert("categories changes saved ok: ")
         }
-      })
+      }
+    )
   }
 
-
 }
-
-
-
-
-

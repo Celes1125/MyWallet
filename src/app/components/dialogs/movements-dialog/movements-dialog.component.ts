@@ -106,11 +106,11 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
   }
   getVendors() {
     this._vendorsService.getAll().subscribe(
-      (response: Vendor[], error: string) => {
+      (response : any) => {
         if (response) {
           this.vendors = response
         } else {
-          console.log(error)
+          null
         }
       }
     )

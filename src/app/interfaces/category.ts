@@ -2,5 +2,5 @@ export interface Category {
     _id: string,
     name: string,
     description: string,
-    creator:string
+    creator:any
 }

@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
-import { EmptyError, firstValueFrom, Observable, of } from 'rxjs';
+import { EmptyError, firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { CreateWalletDialogComponent } from '../../dialogs/create-wallet-dialog/create-wallet-dialog.component';
 
 @Component({
@@ -24,8 +24,7 @@ import { CreateWalletDialogComponent } from '../../dialogs/create-wallet-dialog/
 })
 export class HomeComponent implements OnInit, AfterViewInit {
     router: Router = new Router()
-    wallets: Wallet[] = []
-    wallets$: Observable<Wallet[]> = this.walletService.getAll()
+    wallets!: Wallet[]  
     selectedWallet: Wallet | null = null
     @ViewChild('createWallet') createWalletElement!: ElementRef
     @ViewChild('selectWallet') selectWalletElement!: ElementRef
@@ -35,10 +34,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
         public dialog: MatDialog,
         public walletService: WalletService,
         public sharedService: SharedService
-    ) { }
+    ) { 
+        
+    }
 
-    ngOnInit() {
-        this.wallets$.subscribe(response => this.wallets = response)  
+    async ngOnInit(): Promise<any> {
+        console.log('OnInit')
+        try {
+           this.wallets = await lastValueFrom(this.walletService.getAll());
+            console.log('Wallets cargadas en ngOnInit:', this.wallets);
+
+        } catch (error) {
+            if (error instanceof EmptyError) {
+                console.warn('No hay elementos en la secuencia.');
+                return of([]); // O cualquier valor predeterminado que desees
+            }
+            return console.error('Error with ngOnInit promises:', error);
+        }
+
         this.sharedService.selectedValue$.subscribe(response => {
             this.selectedWallet = response;
             this.displayHomeOptions()
@@ -46,7 +59,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 this.selectWalletElement.nativeElement.style = "display:none"
             }
         })
-    }
+    }                
+        
 
     ngAfterViewInit(): void {
         console.log('afterViewInit')
@@ -58,26 +72,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
 
     displayHomeOptions() {
-        if (this.wallets.length >= 1 && this.selectedWallet != null) {
+        if (this.wallets?.length >= 1 && this.selectedWallet != null) {
             this.showingWalletElement.nativeElement.style = "display:block"
         }
-        if (this.wallets.length >= 1 && this.selectedWallet == null) {
+        if (this.wallets?.length >= 1 && this.selectedWallet == null) {
             this.selectWalletElement.nativeElement.style = "display:block"
         }
-        if (this.wallets.length == 0) {
-            this.createWalletElement.nativeElement.style = "display: block"
-
+        if (this.wallets?.length == 0) {
+            this.createWalletElement.nativeElement.style = "display:block"
         }
     }
 
     openCreateWalletDialog() {
         const dialogRef = this.dialog.open(CreateWalletDialogComponent, {
-            data: {
-                wallets : this.wallets
-            }
+            data: { }
         });
         dialogRef.afterClosed().subscribe(response => {
-            if (response != null) {
+            if (response) {                
                 this.router.navigateByUrl('/dashboard');
             } 
         });

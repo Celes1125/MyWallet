@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError, defaultIfEmpty, of } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { PocketService } from './pocket.service';
+import { Wallet } from '../interfaces/wallet';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,9 @@ export class WalletService {
 
   url = "http://localhost:3000/wallets/"
 
-  getAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.url).pipe(
-      tap((wallets) => console.log('all wallets without filter: ', wallets)),
-      // Map the wallets array and filter based on the userId
-      defaultIfEmpty([]),
-      // Handle errors that may occur during the HTTP request
+  getAll(): Observable<Wallet[]> {
+    return this.http.get<Wallet[]>(this.url).pipe(
+      tap((wallets) => console.log('all wallets without filter: ', wallets)),     
       map((wallets) => wallets.filter((wallet: any) => {
         // Ensure the 'users' array exists and isn't empty
         if (!Array.isArray(wallet.users) || wallet.users.length === 0) {
@@ -41,9 +39,7 @@ export class WalletService {
         
       })
       ),
-      defaultIfEmpty([]),
-      // Handle errors that may occur during the HTTP request
-      
+      defaultIfEmpty([]), 
       catchError((error) => {
         console.error('Error fetching wallets:', error);
         return of([]); // if error, then returns an empty array too

@@ -16,8 +16,9 @@ import { Wallet } from '../../../interfaces/wallet';
   styleUrl: './create-wallet-dialog.component.css'
 })
 export class CreateWalletDialogComponent implements OnInit {
-  walletForm: FormGroup;
-  userWallets: Wallet[]
+  walletForm: FormGroup
+  userWallets!: Wallet[]
+  wallets$:Observable<Wallet[]> = this._walletService.getAll()
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -28,10 +29,11 @@ export class CreateWalletDialogComponent implements OnInit {
       walletName: ["", [Validators.required]],
     })
 
-    this.userWallets = this.data.wallets
+    
   }
-  async ngOnInit(): Promise<void> {
-    console.log('OnInit user wallets list: ', this.userWallets);
+  ngOnInit() {
+    this.wallets$.subscribe( response => this.userWallets = response)
+    console.log('OnInit user wallets list: ',this.userWallets);
 
   }
   addWallet() {

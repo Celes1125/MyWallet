@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError, defaultIfEmpty, of } from 'rxjs';
+import { Observable, catchError, filter, finalize, map, mergeMap, reduce, switchMap, tap, firstValueFrom, from, throwError, defaultIfEmpty, of, combineLatest } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { PocketService } from './pocket.service';
 import { Wallet } from '../interfaces/wallet';
+import { Pocket } from '../interfaces/pocket';
 
 @Injectable({
   providedIn: 'root'
@@ -63,12 +64,29 @@ export class WalletService {
   edit(wallet: any) {
     const id = wallet._id
     const url = this.url + id
-    return this.http.put(url, wallet).pipe(
-      tap((modifiedWallet) => modifiedWallet),
+    const updateWallet = this.http.put(url, wallet)
+    const getPocketsOfWallet = this.getPocketsOfWallet(id)
+
+    return combineLatest([updateWallet, getPocketsOfWallet]).pipe(
+      switchMap(([modifiedWallet, pockets]) => {
+        const newMainPocket = {
+          "_id": pockets[0]._id,
+          "name": `Main pocket of: `+ wallet.name
+        }
+
+        return this._pocketService.edit(newMainPocket).pipe(
+          map(() => modifiedWallet), // Return the modified wallet after editing the main pocket
+          catchError(error => {
+            // Handle errors from _pocketService.edit
+            console.error('Error editing main pocket:', error);
+            return error;
+          })
+        );
+      }),
       catchError(error => error),
       finalize(() => console.log('edit wallet subscription ended'))
     )
-  }
+}
 
   delete(id: string) {
     this.getPocketsOfWallet(id)

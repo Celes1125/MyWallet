@@ -7,9 +7,9 @@
 -archivar datos de reportes/bajar en pdf...
 -poder compartir una misma wallet de modo que se puedan realizar y ver todos los movimientos de todos los usuarios que compartan la misma wallet
 -seguridad: en firefox se ven los datos de usuario y password en la request...
--el nombre del main pocket no actualiza cuando edito el nombre de la wallet
 -al editar el nombre de un vendor/categoría/wallet?/bolsillo...los movimientos viejos quedarán con los nombres viejos y los nuevos con los nuevos, esto impactará en los reportes. Entonces, al editar, tb se deberían actualizar los movimientos asociados...
 -limpiar
 -front
 -produccion
+
 

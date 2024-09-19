@@ -34,6 +34,7 @@ export class EditWalletNameDialogComponent {
     this._walletService.edit(newWallet).subscribe(
       response => response
     )
+    
 }
 
 

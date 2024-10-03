@@ -5,6 +5,7 @@ export interface Wallet {
     name:string | null | undefined
     creationDate: Date | null | undefined
     lastModified: Date | null | undefined    
-    users: User[]
+    users: User[],
+    is_deleted: Boolean
   
 }

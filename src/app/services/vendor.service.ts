@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, defaultIfEmpty, filter, finalize, map, of, tap } from 'rxjs';
+import { Observable, catchError, concatMap, defaultIfEmpty, filter, finalize, map, of, tap, throwError } from 'rxjs';
 import { Vendor } from '../interfaces/vendor';
 import { AuthenticationService } from './authentication.service';
 
@@ -24,35 +24,34 @@ export class VendorService {
     )
   }
 
+  // get all not deleted vendors of the user
   getAll(): Observable<Vendor[]> {
-    return this.http.get<Vendor[]>(this.url).pipe(
-      map((vendors: Vendor[]) => vendors.filter((vendor: Vendor) => vendor.creator._id === this.userId)),
+    return this._authService.getUserId().pipe(
+      concatMap((userId) => {
+        return this.http.get<Vendor[]>(this.url + 'notDeleted/' + userId)
+      }),
+      //If empty, returns an empty array
       defaultIfEmpty([]),
-      tap((response: Vendor[]) => console.log("filtered vendors: ", response)),      
+      // error manage
       catchError((error) => {
         console.log('error: ', error);
-        return of([]); 
+        return of([]); // if error, then returns an empty array too
       }),
+      // finalize actions
       finalize(() => console.log("get vendors subscription ended"))
-    )
-
+    );
   }
 
   create(vendor: any): Observable<Vendor> | any {
     const newVendor = { ...vendor, creator: this.userId }
     return this.http.post(this.url, newVendor).pipe(
-      tap(response => console.log(response)),
+      tap(response => console.log("Create vendor response: ", response)),
       catchError((error) => {
-        if (error.error.message.includes('E11000')) {
-          alert("That name is already in use, the new vendor name must be a different one" + "( " + error.error.message + " )");
-          return error;
-        } else {
-          alert('creating a new vendor error: ' + error.error.message);
-          return error;
-        }
+        console.error("Error in create vendor:", error);
+        return throwError(() => error); // Lanza el error para que sea capturado en la suscripción
       }),
-      finalize(() => console.log("post vendor subscription ended"))
-    )
+      finalize(() => console.log("Create vendor subscription ended"))
+    );
   }
 
   edit(vendor: any): Observable<Vendor> | any {
@@ -63,8 +62,9 @@ export class VendorService {
     )
   }
 
+  // logic delete of the vendor
   delete(id: string) {
-    return this.http.delete(this.url + id).pipe(
+    return this.http.patch(this.url + id, {}).pipe(
       tap(response => console.log(response)),
       catchError(error => error),
       finalize(() => console.log("delete vendor subscription ended"))

@@ -1,10 +1,11 @@
 import { Movement } from './../interfaces/movement';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, map, tap, switchMap, of, Observable, filter } from 'rxjs';
+import { catchError, finalize, map, tap, switchMap, of, Observable, filter, forkJoin } from 'rxjs';
 import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
+import { Wallet } from '../interfaces/wallet';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class MovementService {
   addIncomeOrExpense(movement: any) {
     return this.create(movement).pipe(
       tap((createdMovement) => console.log('created movement: ', createdMovement)),
-      switchMap(() => this._pocketService.getById(movement.pocket._id)),
+      switchMap(() => this._pocketService.getById(movement.pocket)),
       map((pocket: Pocket) => {
         const amount = pocket.amount;
         return amount
@@ -73,7 +74,7 @@ export class MovementService {
       }),      
       switchMap(({ newAmount }) => {
         return this._pocketService.edit({
-          _id: movement.pocket._id,
+          _id: movement.pocket,
           amount: newAmount,
           lastModified: new Date()
         });
@@ -108,4 +109,19 @@ export class MovementService {
     const url = this.url + movement._id
     return this.http.put<any>(url, movement)
   }
+
+  getMovementsOfWallet(walletId:any): Observable<any> {
+    return this.http.get<Movement[]>(this.url).pipe(
+      // Filter movements based on userId      
+      filter((movements: Movement[]) => movements.some(movement => movement.wallet._id === walletId)),
+      // Tap the filtered movements for logging
+      tap((filteredMovements: any) => console.log("MOVEMENTS OF WALLET: ", filteredMovements)),
+      // Catch and handle errors (optional: provide meaningful logging or UI feedback)
+      catchError(error => error),
+      // Finalize with a message (optional)
+      finalize(() => console.log('get movements of wallet subscription ended'))
+    );
+  } 
+
+  
 }

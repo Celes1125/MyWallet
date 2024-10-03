@@ -1,9 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { WalletService } from '../../../services/wallet.service';
+import { Wallet } from '../../../interfaces/wallet';
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Wallet } from '../../../interfaces/wallet';
-
 
 @Component({
   selector: 'app-delete-wallet-dialog',
@@ -12,20 +11,22 @@ import { Wallet } from '../../../interfaces/wallet';
   templateUrl: './delete-wallet-dialog.component.html',
   styleUrl: './delete-wallet-dialog.component.css'
 })
+
 export class DeleteWalletDialogComponent {
-  wallet:Wallet
-constructor(
-  @Inject(MAT_DIALOG_DATA) public data: any,
-    private _walletService: WalletService,
-){
-  this.wallet = this.data.wallet
+  wallet: Wallet;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _walletService: WalletService    
+  ) {
+    this.wallet = this.data.wallet;
+  }
+
+  // making a logic delete of the wallets, so movements items keep the wallet data
+  logic_delete(): any {
+    this._walletService.logic_delete(this.wallet._id).subscribe((response: any)=>response)
+  }
 }
 
-
-  delete(): void {      
-    this._walletService.delete(this.data.wallet._id)
-  } 
-  
-}
 
 

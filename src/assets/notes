@@ -1,13 +1,11 @@
 
 
--revisar TODAS las validaciones del backend y las que le siguen por el front
--manejo de errores: meter todos los cartelitos necesarios!
--controlar los refresh luego de eventos crud
+
 -mostrar reportes
 -archivar datos de reportes/bajar en pdf...
 -poder compartir una misma wallet de modo que se puedan realizar y ver todos los movimientos de todos los usuarios que compartan la misma wallet
 -seguridad: en firefox se ven los datos de usuario y password en la request...
--al editar el nombre de un vendor/categoría/wallet?/bolsillo...los movimientos viejos quedarán con los nombres viejos y los nuevos con los nuevos, esto impactará en los reportes. Entonces, al editar, tb se deberían actualizar los movimientos asociados...
+-no se manejan bien los valores negativos de los bolsillos
 -limpiar
 -front
 -produccion

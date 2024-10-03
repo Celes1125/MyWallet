@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, defaultIfEmpty, filter, finalize, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, concatMap, defaultIfEmpty, filter, finalize, map, of, switchMap, tap, throwError } from 'rxjs';
 import { Category } from '../interfaces/category';
 import { AuthenticationService } from './authentication.service';
 
@@ -25,36 +25,34 @@ export class CategoryService {
       }
     )
   }
-
+  // get all not deleted categories of the user
   getAll(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.url).pipe(
-      // Fitering categories matching by userId
-      map((categories: Category[]) => categories.filter((category: Category) => category.creator._id === this.userId)),
-
+    return this._authService.getUserId().pipe(
+      concatMap((userId) => {
+        return this.http.get<Category[]>(this.url + 'notDeleted/' + userId)
+      }),
       //If empty, returns an empty array
       defaultIfEmpty([]),
-
-      tap((response: Category[]) => console.log("filtered cat: ", response)),
-
       // error manage
       catchError((error) => {
         console.log('error: ', error);
         return of([]); // if error, then returns an empty array too
       }),
-
       // finalize actions
       finalize(() => console.log("get categories subscription ended"))
     );
   }
 
-
   create(category: any): Observable<Category> | any {
     const newCategory = { ...category, creator: this.userId }
     return this.http.post(this.url, newCategory).pipe(
-      tap(response => response),
-      catchError(error => error),
-      finalize(() => console.log("post category subscription ended"))
-    )
+      tap(response => console.log("Create category response: ", response)),
+      catchError((error) => {
+        console.error("Error in create category:", error);
+        return throwError(() => error); // Lanza el error para que sea capturado en la suscripción
+      }),
+      finalize(() => console.log("Create cateogry subscription ended"))
+    );
   }
 
   edit(category: any): Observable<Category> | any {
@@ -67,8 +65,9 @@ export class CategoryService {
     )
   }
 
+  //logic delete
   delete(id: string) {
-    return this.http.delete(this.url + id).pipe(
+    return this.http.patch(this.url + id, {}).pipe(
       tap(response => console.log(response)),
       catchError(error => error),
       finalize(() => console.log("delete category subscription ended"))

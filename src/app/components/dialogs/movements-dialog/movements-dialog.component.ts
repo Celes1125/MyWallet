@@ -63,16 +63,16 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
     this.getPockets();
 
     this.incomeForm = this._formBuilder.group({
-      category: [{}, [Validators.required]],
-      vendor: [{}, [Validators.required]],
-      pocket: [{}, [Validators.required]],
+      category: ["", [Validators.required]],
+      vendor: ["", [Validators.required]],
+      pocket: ["", [Validators.required]],
       amount: [0, [Validators.required]]
     });
 
     this.expenseForm = this._formBuilder.group({
-      category: [{}, [Validators.required]],
-      vendor: [{}, [Validators.required]],
-      pocket: [{}, [Validators.required]],
+      category: ["", [Validators.required]],
+      vendor: ["", [Validators.required]],
+      pocket: ["", [Validators.required]],
       amount: [0, [Validators.required]]
     });
 
@@ -131,15 +131,15 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
       case 'income':
         movement = {
           type: "in",
-          category: this.categories.find(category => category._id === this.incomeForm.value.category),
-          vendor: this.vendors.find(vendor => vendor._id === this.incomeForm.value.vendor),
-          pocket: this.pockets.find(pocket => pocket._id === this.incomeForm.value.pocket),
+          category: this.incomeForm.value.category,
+          vendor: this.incomeForm.value.vendor,
+          pocket: this.incomeForm.value.pocket,
           currency: 'euro',
           amount: this.incomeForm.value.amount,
           notes: "",
           fromPocket: null,
           toPocket: null,
-          wallet: this.wallet
+          wallet: this.wallet._id
         };
         console.log("INCOME MOVEMENT: ", movement);
         this._movementsService.addIncomeOrExpense(movement).subscribe(response => response)
@@ -148,15 +148,15 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
       case 'expense':
         movement = {
           type: "out",
-          category: this.categories.find(category => category._id === this.expenseForm.value.category),
-          vendor: this.vendors.find(vendor => vendor._id === this.expenseForm.value.vendor),
-          pocket: this.pockets.find(pocket => pocket._id === this.expenseForm.value.pocket),
+          category: this.expenseForm.value.category,
+          vendor: this.expenseForm.value.vendor,
+          pocket: this.expenseForm.value.pocket,
           currency: 'euro',
           amount: this.expenseForm.value.amount,
           notes: "",
           fromPocket: null,
           toPocket: null,
-          wallet: this.wallet
+          wallet: this.wallet._id
         };
         console.log("EXPENSE MOVEMENT: ", movement);
         this._movementsService.addIncomeOrExpense(movement).subscribe(response => response)
@@ -171,9 +171,9 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
           currency: 'euro',
           amount: this.transferForm.value.amount,
           notes: this.transferForm.value.notes,
-          fromPocket: this.pockets.find(pocket => pocket._id === this.transferForm.value.fromPocket),
-          toPocket: this.pockets.find(pocket => pocket._id === this.transferForm.value.toPocket),
-          wallet: this.wallet
+          fromPocket: this.transferForm.value.fromPocket,
+          toPocket: this.transferForm.value.toPocket,
+          wallet: this.wallet._id
         };
         console.log("TRANSFER MOVEMENT: ", movement);
 

@@ -3,7 +3,7 @@
     <h2 mat-dialog-title>Edit pocket</h2>
 <form [formGroup]="editPocketForm" (ngSubmit)="editPocket()">
   <mat-dialog-content class="mat-typography">
-    <input type="text" autocomplete="off"  name="pocketName" formControlName="pocketName">
+    <input type="text" autocomplete="off"  name="name" placeholder="name" formControlName="name">
     <select type="text" autocomplete="on"  name="currency" formControlName="currency">
       <option value="euro">$eu</option>
       <option value="dolar">$usd</option>
@@ -28,12 +28,12 @@
         
         
         <p>Are you sure about delete it?</p>
-        <p>This pocket's movements will remain in your history even after deletion</p>
+        <p>Don't worry, the pocket's movements will remain in your history even after this deletion</p>
         <input type="hidden" matInput [(ngModel)]="id">
         </mat-dialog-content>
         <mat-dialog-actions align="end">
           <button mat-button mat-dialog-close>Cancel</button>
-          <button type="submit" (click)="deletePocket()" [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+          <button type="submit" (click)="logic_deletePocket()" [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
         </mat-dialog-actions>
 
 }

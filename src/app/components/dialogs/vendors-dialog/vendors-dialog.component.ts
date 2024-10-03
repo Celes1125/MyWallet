@@ -49,14 +49,24 @@ export class VendorsDialogComponent implements OnInit{
     const newVendor = {
       name: this.form.value.name
     }
-    const checkName = this.vendors.some((vendor) => vendor.name.toLowerCase()== newVendor.name.toLowerCase() )
-    if(checkName){
-      alert('The name is already in use')
-    }else{
-      return this._vendorService.create(newVendor).subscribe(
-        (response: any) => response
-      )
-    }          
+    return this._vendorService.create(newVendor).subscribe({
+      next: (response: any) => {
+        console.log("vendor created successfully:", response);
+        alert("Vendor created successfully!");
+      },
+      error: (error: { status: number; error: { message: string; }; }) => {
+        if (error.status === 400) {
+          // Maneja el error 400 específico
+          alert("Error: " + error.error.message); // Muestra el mensaje de error recibido desde el backend
+        } else {
+          // Maneja otros posibles errores
+          console.error("Unexpected error:", error);
+          alert("An unexpected error occurred.");
+        }
+      },
+      
+    });
+          
   }  
 
   editVendor() {

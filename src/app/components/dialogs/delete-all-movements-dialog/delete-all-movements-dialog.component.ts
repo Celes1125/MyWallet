@@ -16,9 +16,8 @@ export class DeleteAllMovementsDialogComponent {
     private _movementService: MovementService
   ){}
 
-
+  //WARNING!!!fisic delete of all movements of the user!
   deleteAllMovements(){
-
     this._movementService.deleteMovementsByUser().subscribe(
       response=>response
     )

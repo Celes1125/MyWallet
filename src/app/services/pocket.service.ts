@@ -1,4 +1,4 @@
-import { Observable, catchError, finalize, from, map, mergeMap, of, reduce, switchMap, tap } from 'rxjs';
+import { Observable, catchError, defaultIfEmpty, finalize, from, map, mergeMap, of, reduce, switchMap, tap, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pocket } from '../interfaces/pocket';
@@ -18,11 +18,12 @@ export class PocketService {
 
   url = "http://localhost:3000/pockets/"
   
-  delete(id: string) {
+  logic_delete(id: string) {
     const url = this.url + id
-    return this.http.delete(url).pipe(
-      tap((response) => console.log(url, id)),
-      catchError(async (error) => console.log(error)),
+    return this.http.patch(url, {}).pipe(
+      tap(() => console.log(url, id)),
+      defaultIfEmpty([]),
+      catchError(error=>error),
       finalize(() => console.log("deletePocket subscription ended")),
     )
 
@@ -42,31 +43,36 @@ export class PocketService {
     )
   }
 
-  create(pocket: any): Observable<any>{
+  create(pocket: any): Observable<any> {
     return this.http.post(this.url, pocket).pipe(
-      tap(response => console.log(" create pocket response: ", response)),
-      catchError(error => error),
-      finalize(() => console.log("create pocket subscription ended")))
+      tap(response => console.log("Create pocket response: ", response)),
+      catchError((error) => {
+        console.error("Error in create pocket:", error);
+        return throwError(() => error); // Lanza el error para que sea capturado en la suscripción
+      }),
+      finalize(() => console.log("Create pocket subscription ended"))
+    );
   }
 
-  deleteAll() {
+  fisic_deleteAll() {
     return this.http.delete(this.url).pipe(
       tap(response => console.log(" create pocket response: ", response)),
       catchError(error => error),
       finalize(() => console.log("create pocket subscription ended")))
   }
 
+  //!!!this method better in backend...
   refreshPocketsOfTransfers(transfer:any) {
-    this.refreshFromPocket(transfer.fromPocket._id, transfer.amount).subscribe(
+    this.refreshFromPocket(transfer.fromPocket, transfer.amount).subscribe(
       response=> response
     )
-    this.refreshToPocket(transfer.toPocket._id, transfer.amount).subscribe(
+    this.refreshToPocket(transfer.toPocket, transfer.amount).subscribe(
       response=> response
     )
     
 
   }
-
+//!!!this method better in backend...
   refreshFromPocket(pocketId:string, transferAmount:number){
     return this.getById(pocketId).pipe(
       tap(pocket => console.log(pocket)),
@@ -99,7 +105,7 @@ export class PocketService {
       }),      
     )
   }
-
+//!!!this method better in backend...
   refreshToPocket(pocketId:string, transferAmount:number){
     return this.getById(pocketId).pipe(
       tap(pocket => console.log(pocket)),

@@ -19,5 +19,7 @@ export interface Movement {
     fromPocket: Pocket | null,
     toPocket: Pocket | null,
     pocket: Pocket | null,
-    wallet: Wallet
+    wallet: Wallet,
+    year?: string | null,
+    month?: string | null
 }

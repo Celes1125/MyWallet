@@ -29,6 +29,9 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   wallets: any[] = [];
   movementsType: any[] = [];
   movementsData: any[] = [];
+  years:any[]=[]
+  months:any[]=[]
+
 
   // Objeto que almacenará los filtros aplicados
   filterValues: any = {
@@ -37,6 +40,8 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     category: '',
     vendor: '',
     date: '',
+    year:'',
+    month:'',
     wallet: ''
   };
 
@@ -56,8 +61,15 @@ export class MovementsPageComponent implements OnChanges, OnInit {
 
   getMovements() {
     this._movementsService.getAll().subscribe((response: any) => {
-      this.movements = response;
-      this.dataSource = new MatTableDataSource(this.movements);
+      this.movements = response.map((movement: any) => {
+        const movementDate = new Date(movement.date); // Convertir la fecha a objeto Date
+        return {
+          ...movement,
+          year: movementDate.getFullYear(), // Extraer el año
+          month: movementDate.getMonth() + 1 // Extraer el mes (getMonth() devuelve 0-11, así que sumamos 1)
+        };
+      });
+      this.dataSource = new MatTableDataSource(this.movements);    
       
       // Configurar el predicate para múltiples filtros
       this.dataSource.filterPredicate = (data: any, filter: string) => {
@@ -69,8 +81,10 @@ export class MovementsPageComponent implements OnChanges, OnInit {
         const matchesVendor = searchFilter.vendor ? data.vendor?.name?.toLowerCase().includes(searchFilter.vendor) : true;
         const matchesDate = searchFilter.date ? data.date?.toLowerCase().includes(searchFilter.date) : true;
         const matchesWallet = searchFilter.wallet ? data.wallet?.name?.toLowerCase().includes(searchFilter.wallet) : true;
-        
-        return matchesUser && matchesType && matchesCategory && matchesVendor && matchesDate && matchesWallet;
+        const matchesYear = searchFilter.year? data.year?.includes(searchFilter.year) : true;
+        const matchesMonth= searchFilter.month? data.month?.includes(searchFilter.month) : true;
+
+        return matchesUser && matchesType && matchesCategory && matchesVendor && matchesYear && matchesMonth && matchesDate && matchesWallet;
       };
       // Llenar los arrays de usuarios, categorías y otros para los filtros
       this.users = this.getUniqueValues('user');
@@ -79,6 +93,8 @@ export class MovementsPageComponent implements OnChanges, OnInit {
       this.wallets = this.getUniqueValues('wallet');
       this.movementsType = this.getUniqueValues('type');
       this.movementsData = this.getUniqueValues('date');
+      this.years =this.getUniqueValues('year');
+      this.months =this.getUniqueValues('month');
     });
   }
 
@@ -115,7 +131,7 @@ export class MovementsPageComponent implements OnChanges, OnInit {
       }
   }
 
-  displayedColumns: string[] = ['user', 'type', 'category', 'vendor', 'currency', 'amount', 'date', 'fromPocket', 'toPocket', 'pocket', 'wallet', 'notes'];
+  displayedColumns: string[] = ['user', 'type', 'category', 'vendor', 'currency', 'amount', 'year', 'month', /*'date',*/ 'fromPocket', 'toPocket', 'pocket', 'wallet', 'notes'];
 
   // general filter
   applyFilter(event: Event) {
@@ -180,6 +196,24 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);
   }
+  applyYearFilter(year: any) {
+    if (year === 'all') {
+      this.filterValues.year = ''; 
+    } else {
+      this.filterValues.year = year?.toString() || '';
+    }
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }  
+  
+  applyMonthFilter(month: any) {
+    if (month === 'all') {
+      this.filterValues.month = ''; 
+    } else {
+      this.filterValues.month = month?.toString() || '';
+    }
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }  
+  
 
   resetAllFilters() {
     this.dataSource.filter = ''; 

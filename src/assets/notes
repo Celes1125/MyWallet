@@ -1,8 +1,14 @@
 
 
+-
+-mostrar reportes: 
+            -historial de movimientos con opción de filtrado por año/mes/usuario/, descarga en pdf y csv
+            -grafico de torta, porcentaje y total de movimientos por categoría anual
+            -grafico de barras, porcentaje y total de movimientos por categoría mensual
+            -podio de proveedores
+            -opción de archivo de reportes en la nube antes de borrar historial o datos de la app...
 
--mostrar reportes
--archivar datos de reportes/bajar en pdf...
+
 -poder compartir una misma wallet de modo que se puedan realizar y ver todos los movimientos de todos los usuarios que compartan la misma wallet
 -seguridad: en firefox se ven los datos de usuario y password en la request...
 -no se manejan bien los valores negativos de los bolsillos

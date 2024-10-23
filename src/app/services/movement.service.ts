@@ -1,16 +1,18 @@
 import { Movement } from './../interfaces/movement';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, map, tap, switchMap, of, Observable, filter, forkJoin } from 'rxjs';
+import { catchError, finalize, map, tap, switchMap, of, Observable, filter, forkJoin, throwError } from 'rxjs';
 import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
 import { Wallet } from '../interfaces/wallet';
+import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovementService {
+
   income: any;
   userId!:string;
   url = "http://localhost:3000/movements/"
@@ -27,10 +29,14 @@ export class MovementService {
     )
   }
 
+  //get all movements of the user
+
   getAll(): Observable<any> {
-    return this.http.get<Movement[]>(this.url).pipe(
+    let movesUrl = this.url+'userMovements/'+this.userId;
+    console.log('MOVESURL: ',movesUrl)
+    return this.http.get<Movement[]>(movesUrl).pipe(
       // Filter movements based on userId      
-      filter((movements: Movement[]) => movements.some(movement => movement.user._id === this.userId)),
+      //filter((movements: Movement[]) => movements.some(movement => movement.user._id === this.userId)),
       // Tap the filtered movements for logging
       tap((filteredMovements: any) => console.log("MOVEMENTS DE CELE: ", filteredMovements)),
       // Catch and handle errors (optional: provide meaningful logging or UI feedback)
@@ -123,5 +129,50 @@ export class MovementService {
     );
   } 
 
+  getPdfMovementsTable(): Observable<Blob>  {
+    // Obtener el token (ejemplo: desde localStorage o un servicio de autenticación)
+    const token = localStorage.getItem('token'); // O desde un servicio
+   
   
+    // Configurar las cabeceras, incluyendo el token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,  // Cabecera para el token
+      'Content-Type': 'application/json'   // Puedes ajustar el Content-Type según lo necesites
+    });
+  
+    return this.http.get(`${this.url}getTable/${this.userId}`, { 
+      headers: headers,                    // Incluir cabeceras
+      responseType: 'blob'                 // La respuesta es un blob (PDF)
+    }).pipe(
+      catchError(error => {
+        console.error('Error en la solicitud del PDF', error);
+        return of(error);  // Manejo de error
+      })
+    );
+  }
+
+
+  getPdfMovementsTableWithFilters(filters:any): Observable<Blob>  {
+    // Obtener el token (ejemplo: desde localStorage o un servicio de autenticación)
+    const token = localStorage.getItem('token'); // O desde un servicio
+   
+  
+    // Configurar las cabeceras, incluyendo el token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,  // Cabecera para el token
+      'Content-Type': 'application/json'   // Puedes ajustar el Content-Type según lo necesites
+    });
+  
+    return this.http.post(`${this.url}getTable/${this.userId}`, filters, { 
+      headers: headers,                    // Incluir cabeceras
+      responseType: 'blob'                 // La respuesta es un blob (PDF)
+    }).pipe(
+      catchError(error => {
+        console.error('Error en la solicitud del PDF', error);
+        return of(error);  // Manejo de error
+      })
+    );
+  }
+
+
 }

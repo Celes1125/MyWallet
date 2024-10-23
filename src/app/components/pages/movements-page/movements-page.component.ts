@@ -1,18 +1,21 @@
-import { MovementType } from './../../../enums/movement-type';
+
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteAllMovementsDialogComponent } from '../../dialogs/delete-all-movements-dialog/delete-all-movements-dialog.component';
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 //Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MovementService } from '../../../services/movement.service';
-import { Observable, filter } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { Movement } from '../../../interfaces/movement';
 import { CommonModule } from '@angular/common';
+import { catchError, of, tap } from 'rxjs';
+
 @Component({
   selector: 'app-movements-page',
   standalone: true,
@@ -21,6 +24,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './movements-page.component.css'
 })
 export class MovementsPageComponent implements OnChanges, OnInit {
+
+
+
   movements: any;
   dataSource: any;
   users: any[] = [];
@@ -29,10 +35,8 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   wallets: any[] = [];
   movementsType: any[] = [];
   movementsData: any[] = [];
-  years:any[]=[]
-  months:any[]=[]
-
-
+  years: any[] = []
+  months: any[] = []
   // Objeto que almacenará los filtros aplicados
   filterValues: any = {
     user: '',
@@ -40,21 +44,18 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     category: '',
     vendor: '',
     date: '',
-    year:'',
-    month:'',
+    year: '',
+    month: '',
     wallet: ''
   };
-
   constructor(
     private _movementsService: MovementService,
     public dialog: MatDialog,
     private router: Router
   ) { }
-
   ngOnInit(): void {
     this.getMovements()
   }
-
   ngOnChanges(changes: SimpleChanges): void {
     this.getMovements()
   }
@@ -69,20 +70,20 @@ export class MovementsPageComponent implements OnChanges, OnInit {
           month: movementDate.getMonth() + 1 // Extraer el mes (getMonth() devuelve 0-11, así que sumamos 1)
         };
       });
-      this.dataSource = new MatTableDataSource(this.movements);    
-      
+      this.dataSource = new MatTableDataSource(this.movements);
+
       // Configurar el predicate para múltiples filtros
       this.dataSource.filterPredicate = (data: any, filter: string) => {
         const searchFilter = JSON.parse(filter);
-        
+
         const matchesUser = searchFilter.user ? data.user?.name?.toLowerCase().includes(searchFilter.user) : true;
         const matchesType = searchFilter.type ? data.type?.toLowerCase().includes(searchFilter.type) : true;
         const matchesCategory = searchFilter.category ? data.category?.name?.toLowerCase().includes(searchFilter.category) : true;
         const matchesVendor = searchFilter.vendor ? data.vendor?.name?.toLowerCase().includes(searchFilter.vendor) : true;
         const matchesDate = searchFilter.date ? data.date?.toLowerCase().includes(searchFilter.date) : true;
         const matchesWallet = searchFilter.wallet ? data.wallet?.name?.toLowerCase().includes(searchFilter.wallet) : true;
-        const matchesYear = searchFilter.year? data.year?.includes(searchFilter.year) : true;
-        const matchesMonth= searchFilter.month? data.month?.includes(searchFilter.month) : true;
+        const matchesYear = searchFilter.year ? data.year?.includes(searchFilter.year) : true;
+        const matchesMonth = searchFilter.month ? data.month?.includes(searchFilter.month) : true;
 
         return matchesUser && matchesType && matchesCategory && matchesVendor && matchesYear && matchesMonth && matchesDate && matchesWallet;
       };
@@ -93,11 +94,10 @@ export class MovementsPageComponent implements OnChanges, OnInit {
       this.wallets = this.getUniqueValues('wallet');
       this.movementsType = this.getUniqueValues('type');
       this.movementsData = this.getUniqueValues('date');
-      this.years =this.getUniqueValues('year');
-      this.months =this.getUniqueValues('month');
+      this.years = this.getUniqueValues('year');
+      this.months = this.getUniqueValues('month');
     });
   }
-
   //To obtain unique values for user, category, vendor and wallet filters
   getUniqueValues(field: keyof Movement): any[] {
     const uniqueValues = this.movements
@@ -110,25 +110,24 @@ export class MovementsPageComponent implements OnChanges, OnInit {
         }
         return acc;
       }, []);
-  
+
     // Añadir una opción 'Todos' al principio del array
-    
+
     if (typeof uniqueValues[0] === 'object' && uniqueValues[0]?.name) {
       return [{ name: 'all' }, ...uniqueValues];  // Para objetos con `name`
     } else {
       return ['all', ...uniqueValues];  // Para strings como `date` o `type`
     }
   }
-   
 
   openDeleteAllMovementsDialog() {
     {
-        const dialogRef = this.dialog.open(DeleteAllMovementsDialogComponent, {})
+      const dialogRef = this.dialog.open(DeleteAllMovementsDialogComponent, {})
       this.dataSource
       dialogRef.afterClosed().subscribe(() => {
-          this.router.navigateByUrl('/dashboard')
-        });
-      }
+        this.router.navigateByUrl('/dashboard')
+      });
+    }
   }
 
   displayedColumns: string[] = ['user', 'type', 'category', 'vendor', 'currency', 'amount', 'year', 'month', /*'date',*/ 'fromPocket', 'toPocket', 'pocket', 'wallet', 'notes'];
@@ -148,17 +147,15 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);  // Refreshing global filter
   }
-  
   //movement type filter
   applyMovementTypeFilter(movementType: any) {
-    if (movementType === 'all'){
+    if (movementType === 'all') {
       this.filterValues.type = '';
-    }else{
+    } else {
       this.filterValues.type = movementType?.toLowerCase() || '';
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);
   }
-    
   // category filter
   applyCategoryFilter(category: any) {
     if (category?.name === 'all') {
@@ -171,7 +168,7 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   // vendor filter 
   applyVendorFilter(vendor: any) {
     if (vendor?.name === 'all') {
-      this.filterValues.vendor = ''; 
+      this.filterValues.vendor = '';
     } else {
       this.filterValues.vendor = vendor?.name?.toLowerCase() || '';
     }
@@ -180,17 +177,16 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   // date filter
   applyMovementDateFilter(date: any) {
     if (date === 'all') {
-      this.filterValues.date = ''; 
+      this.filterValues.date = '';
     } else {
       this.filterValues.date = date?.toLowerCase() || '';
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);
   }
-
   // wallet filter
   applyWalletFilter(wallet: any) {
     if (wallet?.name === 'all') {
-      this.filterValues.wallet = ''; 
+      this.filterValues.wallet = '';
     } else {
       this.filterValues.wallet = wallet?.name?.toLowerCase() || '';
     }
@@ -198,27 +194,132 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   }
   applyYearFilter(year: any) {
     if (year === 'all') {
-      this.filterValues.year = ''; 
+      this.filterValues.year = '';
     } else {
       this.filterValues.year = year?.toString() || '';
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);
-  }  
-  
+  }
   applyMonthFilter(month: any) {
     if (month === 'all') {
-      this.filterValues.month = ''; 
+      this.filterValues.month = '';
     } else {
       this.filterValues.month = month?.toString() || '';
     }
     this.dataSource.filter = JSON.stringify(this.filterValues);
-  }  
-  
-
-  resetAllFilters() {
-    this.dataSource.filter = ''; 
   }
+  resetAllFilters() {
+    this.dataSource.filter = '';
+  }
+
+  generatePdfFromFrontend() {
+    // Configurar el PDF en apaisado (horizontal) con tamaño A4
+    const doc = new jsPDF({
+      orientation: 'landscape', // Para que sea apaisado
+      unit: 'mm',               // Unidad de medida en milímetros
+      format: 'a4'              // Tamaño A4
+    });
+
+    // Captura los encabezados de la tabla
+    const tableHeaders = this.displayedColumns.map(col => {
+      switch (col) {
+        case 'user': return 'User';
+        case 'type': return 'Type';
+        case 'category': return 'Category';
+        case 'vendor': return 'Vendor';
+        case 'currency': return 'Currency';
+        case 'amount': return 'Amount';
+        case 'year': return 'Year';
+        case 'month': return 'Month';
+        case 'fromPocket': return 'From Pocket';
+        case 'toPocket': return 'To Pocket';
+        case 'pocket': return 'Pocket';
+        case 'wallet': return 'Wallet';
+        case 'notes': return 'Notes';
+        default: return col;
+      }
+    });
+
+    // Captura los datos de la tabla
+    const tableData = this.dataSource.filteredData.map((movement: any) => {
+      return this.displayedColumns.map(column => {
+        switch (column) {
+          case 'user': return movement.user?.name || '-';
+          case 'type': return movement.type || '-';
+          case 'category': return movement.category?.name || '-';
+          case 'vendor': return movement.vendor?.name || '-';
+          case 'currency': return movement.currency || '-';
+          case 'amount': return movement.amount || '-';
+          case 'year': return movement.year || '-';
+          case 'month': return movement.month || '-';
+          case 'fromPocket': return movement.fromPocket?.name || '-';
+          case 'toPocket': return movement.toPocket?.name || '-';
+          case 'pocket': return movement.pocket?.name || '-';
+          case 'wallet': return movement.wallet?.name || '-';
+          case 'notes': return movement.notes || '-';
+          default: return '-';
+        }
+      });
+    });
+
+    // Usa jsPDF autoTable para renderizar la tabla
+    (doc as any).autoTable({
+      head: [tableHeaders],
+      body: tableData,
+      startY: 10, // Empieza un poco más abajo para evitar el título
+    });
+
+    // Guarda el PDF
+    doc.save('movements_table.pdf');
+  }
+
+
+  generatePdfFromBackend() : any {
+    this._movementsService.getPdfMovementsTable()
+      .pipe(
+        tap((blob: Blob) => {
+          // Crear un enlace temporal para descargar el PDF
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'generated_file.pdf';  // Nombre del archivo
+          a.click();
+          window.URL.revokeObjectURL(url); // Limpiar URL después de descargar
+        }),
+        catchError((error) => {
+          console.error('Error al generar el PDF', error);
+          return of(null); // Manejo básico del error, puedes adaptar esto según sea necesario
+        })
+      )
+      .subscribe();  // Se puede seguir usando subscribe sin problema
+  }
+
+  generatePdfFromBackendWithFilters(){   
+    const filters = { ...this.filterValues }
+    this._movementsService.getPdfMovementsTableWithFilters(filters).pipe(
+      tap((blob: Blob) => {
+        // Descargar el PDF generado
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'movements_filtered.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url); // Limpiar URL después de descargar
+      }),
+      catchError(error => {
+        console.error('Error al generar el PDF', error);
+        return of(null);  // Manejo de errores
+      })
+    ).subscribe();
+  }
+    
 }
+
+
+
+
+
+
 
 
 

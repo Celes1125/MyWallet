@@ -2,7 +2,7 @@
   <mat-label>Search movements</mat-label>
   <input matInput (keyup)="applyFilter($event)" #input>
 </mat-form-field>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table id="myTable" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!-- Creator Column -->
   <ng-container matColumnDef="user">
@@ -172,7 +172,8 @@
 <br>
 <button id="resetFilters" (click)="resetAllFilters()">reset filters</button>
 <button id="deleteAllMovements" (click)="openDeleteAllMovementsDialog()">delete all movements</button>
-<button id="downloadPdfBtn">download pdf</button>
-<button id="downloadCsvBtn">download csv</button>
+<button (click)="generatePdfFromFrontend()">download pdf from frontend</button>
+<button (click)="generatePdfFromBackend()">download pdf from backend</button>
+<button (click)="generatePdfFromBackendWithFilters()">download pdf from backend with filters</button>
 
 

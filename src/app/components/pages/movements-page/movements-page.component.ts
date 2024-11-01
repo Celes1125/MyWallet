@@ -66,8 +66,8 @@ export class MovementsPageComponent implements OnChanges, OnInit {
         const movementDate = new Date(movement.date); // Convertir la fecha a objeto Date
         return {
           ...movement,
-          year: movementDate.getFullYear(), // Extraer el año
-          month: movementDate.getMonth() + 1 // Extraer el mes (getMonth() devuelve 0-11, así que sumamos 1)
+          year: movementDate.getFullYear().toString(), // Extraer el año
+          month: (movementDate.getMonth() + 1).toString().padStart(2, '0') // Extraer el mes (getMonth() devuelve 0-11, así que sumamos 1)
         };
       });
       this.dataSource = new MatTableDataSource(this.movements);
@@ -83,7 +83,7 @@ export class MovementsPageComponent implements OnChanges, OnInit {
         const matchesDate = searchFilter.date ? data.date?.toLowerCase().includes(searchFilter.date) : true;
         const matchesWallet = searchFilter.wallet ? data.wallet?.name?.toLowerCase().includes(searchFilter.wallet) : true;
         const matchesYear = searchFilter.year ? data.year?.includes(searchFilter.year) : true;
-        const matchesMonth = searchFilter.month ? data.month?.includes(searchFilter.month) : true;
+        const matchesMonth = searchFilter.month ? data.month.includes(searchFilter.month) : true;
 
         return matchesUser && matchesType && matchesCategory && matchesVendor && matchesYear && matchesMonth && matchesDate && matchesWallet;
       };
@@ -273,29 +273,12 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     doc.save('movements_table.pdf');
   }
 
-
-  generatePdfFromBackend() : any {
-    this._movementsService.getPdfMovementsTable()
-      .pipe(
-        tap((blob: Blob) => {
-          // Crear un enlace temporal para descargar el PDF
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'generated_file.pdf';  // Nombre del archivo
-          a.click();
-          window.URL.revokeObjectURL(url); // Limpiar URL después de descargar
-        }),
-        catchError((error) => {
-          console.error('Error al generar el PDF', error);
-          return of(null); // Manejo básico del error, puedes adaptar esto según sea necesario
-        })
-      )
-      .subscribe();  // Se puede seguir usando subscribe sin problema
-  }
-
-  generatePdfFromBackendWithFilters(){   
+  
+  generatePdfFromBackend(){   
+    
     const filters = { ...this.filterValues }
+    
+    console.log('FILTERS: ', filters)
     this._movementsService.getPdfMovementsTableWithFilters(filters).pipe(
       tap((blob: Blob) => {
         // Descargar el PDF generado

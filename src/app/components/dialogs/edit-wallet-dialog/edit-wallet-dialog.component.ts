@@ -2,7 +2,6 @@
 import { Component, Inject } from '@angular/core';
 import { Wallet } from '../../../interfaces/wallet';
 import { WalletComponent } from '../../main/wallet/wallet.component';
-import { WalletService } from '../../../services/wallet.service';
 //Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -16,11 +15,11 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class EditWalletDialogComponent {
   wallet: Wallet
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private _walletService: WalletService,
-  ){
+    @Inject(MAT_DIALOG_DATA) public data: any
+
+  ) {
     this.wallet = this.data.wallet
   }
 
-  
+
 }

@@ -4,11 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { WalletService } from '../../../services/wallet.service';
 import { Wallet } from '../../../interfaces/wallet';
-import { CurrencyType } from '../../../enums/currency-type';
-import { MovementService } from '../../../services/movement.service';
 import { CommonModule } from '@angular/common';
-import { Pocket } from '../../../interfaces/pocket';
-import { error } from 'console';
 
 @Component({
   selector: 'app-pockets-dialog',
@@ -26,10 +22,11 @@ export class PocketsDialogComponent {
   deleteFlag?: boolean | undefined
   pocketId: any;
   public id!: string
+
   constructor(
     private _pocketService: PocketService,
     private _walletService: WalletService,
-    private _formBuilder: FormBuilder,    
+    private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.getWallets()
@@ -48,7 +45,6 @@ export class PocketsDialogComponent {
       amount: ["", [Validators.required]],
       wallet: ["", [Validators.required]],
     });
-    
 
     this.pocketId = this.data.pocketId
     this.getPocket(this.pocketId)
@@ -61,7 +57,7 @@ export class PocketsDialogComponent {
       (response: Wallet[]) => this.wallets = response
     )
   }
-  
+
   addPocket() {
     const pocket = {
       name: this.addPocketForm.value.name,
@@ -85,13 +81,14 @@ export class PocketsDialogComponent {
           alert("An unexpected error occurred.");
         }
       },
-      
+
     });
-    
+
   }
+
   getPocket(id: string) {
-    this._pocketService.getById(id).subscribe((response:any) => {
-      console.log("pocket response on component: ", response)      
+    this._pocketService.getById(id).subscribe((response: any) => {
+      console.log("pocket response on component: ", response)
       this.editPocketForm.setValue({
         name: response.name,
         currency: response.currency,
@@ -101,6 +98,7 @@ export class PocketsDialogComponent {
       })
     })
   }
+
   editPocket() {
     const pocket = {
       _id: this.pocketId,
@@ -117,6 +115,7 @@ export class PocketsDialogComponent {
 
 
   }
+
   logic_deletePocket() {
     this._pocketService.logic_delete(this.id).subscribe(
       response => {

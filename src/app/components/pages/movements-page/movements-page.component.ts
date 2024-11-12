@@ -4,7 +4,6 @@ import { DeleteAllMovementsDialogComponent } from '../../dialogs/delete-all-move
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-//Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,8 +24,6 @@ import { catchError, of, tap } from 'rxjs';
 })
 export class MovementsPageComponent implements OnChanges, OnInit {
 
-
-
   movements: any;
   dataSource: any;
   users: any[] = [];
@@ -37,6 +34,7 @@ export class MovementsPageComponent implements OnChanges, OnInit {
   movementsData: any[] = [];
   years: any[] = []
   months: any[] = []
+
   // Objeto que almacenará los filtros aplicados
   filterValues: any = {
     user: '',
@@ -48,14 +46,17 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     month: '',
     wallet: ''
   };
+
   constructor(
     private _movementsService: MovementService,
     public dialog: MatDialog,
     private router: Router
   ) { }
+
   ngOnInit(): void {
     this.getMovements()
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.getMovements()
   }
@@ -272,7 +273,6 @@ export class MovementsPageComponent implements OnChanges, OnInit {
     // Guarda el PDF
     doc.save('movements_table.pdf');
   }
-
   
   generatePdfFromBackend(){   
     

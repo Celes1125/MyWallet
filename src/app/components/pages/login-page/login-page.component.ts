@@ -16,29 +16,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './login-page.component.css'
 })
 
-export class LoginPageComponent {  
+export class LoginPageComponent {
   form: FormGroup;
-  snackbar: MatSnackBar    
+  snackbar: MatSnackBar
   router: Router = new Router;
-  loginForm!: FormGroup 
-  
-  
+  loginForm!: FormGroup
+
   constructor(
     private _formBuilder: FormBuilder,
     private _snackbar: MatSnackBar,
     private userService: UserService,
     private authenticationService: AuthenticationService,
   ) {
-
     //sign up form builder
-
     this.form = this._formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(4)]],
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}/)]]
 
     })
-
+    
     // sign in form builder
 
     this.loginForm = this._formBuilder.group({
@@ -93,9 +90,11 @@ export class LoginPageComponent {
   signup() {
     const user = this.form.value;
     this.userService.create(user).subscribe(
-      response => {if(response){
-        alert('sign up successfull, now yo can login')
-      }})
+      response => {
+        if (response) {
+          alert('sign up successfull, now yo can login')
+        }
+      })
     this.form.reset()
     this.router.navigateByUrl('/dashboard');
   }
@@ -105,9 +104,11 @@ export class LoginPageComponent {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
     this.authenticationService.login(email, password).subscribe(
-      response => {if(response){
-        this.router.navigateByUrl('/dashboard');
-      }}
+      response => {
+        if (response) {
+          this.router.navigateByUrl('/dashboard');
+        }
+      }
     )
   }
 

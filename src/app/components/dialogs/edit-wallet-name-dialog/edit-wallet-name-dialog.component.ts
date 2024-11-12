@@ -16,17 +16,17 @@ import { RouterModule } from '@angular/router';
 })
 export class EditWalletNameDialogComponent {
   wallet: Wallet;
-  newName: string ="";
+  newName: string = "";
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     @Inject(WalletService) private _walletService: WalletService,
-    
+
   ) {
     this.wallet = this.data.wallet
-   }
+  }
 
-  editWalletName(){              
+  editWalletName() {
     let newWallet = {
       _id: this.wallet._id,
       name: this.newName.toUpperCase()
@@ -34,8 +34,8 @@ export class EditWalletNameDialogComponent {
     this._walletService.edit(newWallet).subscribe(
       response => response
     )
-    
-}
+
+  }
 
 
 }

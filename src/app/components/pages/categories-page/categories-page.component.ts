@@ -5,8 +5,6 @@ import { RouterModule, Router } from '@angular/router';
 import { CategoryService } from '../../../services/category.service';
 import { CategoriesDialogComponent } from '../../dialogs/categories-dialog/categories-dialog.component';
 import { Category } from '../../../interfaces/category';;
-
-// Material Design
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,14 +19,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   templateUrl: './categories-page.component.html',
   styleUrl: './categories-page.component.css'
 })
-export class CategoriesPageComponent implements OnInit {  
+export class CategoriesPageComponent implements OnInit {
   dataSource!: any;
   router: Router = new Router
   deleteFlag: boolean = true
 
   constructor(
     private _categoryService: CategoryService,
-    public dialog: MatDialog    
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +57,7 @@ export class CategoriesPageComponent implements OnInit {
       (response) => {
         if (response) {
           this.getAllCategories()
-          console.log('DATASOURCE: ',this.dataSource)          
+          console.log('DATASOURCE: ', this.dataSource)
           console.log("categories changes saved ok: ", response)
           alert("categories changes saved ok: ")
         }

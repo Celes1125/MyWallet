@@ -8,11 +8,14 @@ import { User } from '../interfaces/user';
 })
 export class UserService {
   localStorage!: Storage
-    
-  constructor(private httpClient: HttpClient) { }
 
-  url = "http://localhost:3000/users/"
+  constructor(
+    private httpClient: HttpClient
+  ) { }
 
+  url = "https://losportafoglio.onrender.com/users/"
+
+  //create user
   public create(user: User) {
     return this.httpClient.post(this.url, user).pipe(
       tap(response => console.log('create user ok: ')),
@@ -22,16 +25,8 @@ export class UserService {
 
   }
 
+  //login
   public login(email: string, password: string): Observable<any> {
     return this.httpClient.post(this.url + 'login', { email: email, password: password })
-
   }
-
-  
-
-
-
-
-
-
 }

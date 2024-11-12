@@ -12,20 +12,20 @@ import { Observable } from 'rxjs';
   templateUrl: './vendors-dialog.component.html',
   styleUrl: './vendors-dialog.component.css'
 })
-export class VendorsDialogComponent implements OnInit{
+export class VendorsDialogComponent implements OnInit {
   vendor?: Vendor | undefined
   deleteFlag?: boolean | undefined
   form!: FormGroup
   editForm!: FormGroup
-  vendors:Vendor[]=[]
-  vendors$:Observable<Vendor[]> = this._vendorService.getAll()
+  vendors: Vendor[] = []
+  vendors$: Observable<Vendor[]> = this._vendorService.getAll()
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _vendorService: VendorService,
     private _formBuilder: FormBuilder
   ) {
-    this.vendor = this.data.vendor    
+    this.vendor = this.data.vendor
     this.deleteFlag = this.data.deleteFlag
     this.form = this._formBuilder.group({
       name: ["", [Validators.required]]
@@ -35,11 +35,11 @@ export class VendorsDialogComponent implements OnInit{
       this.editForm = this._formBuilder.group({
         editname: this.vendor.name
       })
-    } 
-    
-  } 
+    }
+
+  }
   ngOnInit(): void {
-    this.vendors$.subscribe( (response) => {
+    this.vendors$.subscribe((response) => {
       this.vendors = response;
       console.log('vendors on dialog: ', this.vendors)
     });
@@ -64,17 +64,17 @@ export class VendorsDialogComponent implements OnInit{
           alert("An unexpected error occurred.");
         }
       },
-      
+
     });
-          
-  }  
+
+  }
 
   editVendor() {
     if (this.vendor !== undefined) {
       const vendor = {
         _id: this.vendor._id,
         name: this.editForm.value.editname,
-        
+
       }
       this._vendorService.edit(vendor).subscribe(
         (response: any) => response
@@ -93,4 +93,5 @@ export class VendorsDialogComponent implements OnInit{
     }
 
   }
+  
 }

@@ -19,13 +19,13 @@ import { PocketsDialogComponent } from '../../dialogs/pockets-dialog/pockets-dia
     templateUrl: './manage-page.component.html',
     styleUrl: './manage-page.component.css',
 })
-export class ManagePageComponent{   
+export class ManagePageComponent {
     router: Router = new Router()
-    constructor(        
+    constructor(
         public dialog: MatDialog
-    ) {   }  
+    ) { }
 
-   openAddPocketDialog(wallet: any) {
+    openAddPocketDialog(wallet: any) {
         const dialogRef = this.dialog.open(PocketsDialogComponent, {
             data: {
                 wallet: wallet
@@ -41,47 +41,17 @@ export class ManagePageComponent{
             });
     }
 
-    /*openEditWalletDialog(wallet: any) {
-        const dialogRef = this.dialog.open(WalletsDialogComponent, {
-            data: {
-                walletToEdit: wallet
-            }
-        })
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("wallet edited ok")
-                }
-            });
-    }
-    openAddWalletDialog() {
-        const dialogRef = this.dialog.open(WalletsDialogComponent, {
-            data: {
-
-            }
-        })
-        dialogRef.afterClosed().subscribe(
-            response => {
-                if (response) {
-                    alert("wallet created ok")
-                }
-            }
-        )
-    }*/
-
-
     openWalletsPage() {
         const dialogRef = this.dialog.open(WalletsPageComponent, {})
 
-        dialogRef.afterClosed().subscribe( ()=> {
+        dialogRef.afterClosed().subscribe(() => {
             alert("wallets changes saved ok")
-                
-        }            
-                    
-            
+
+        }
+
+
         )
     }
-
 
     openVendorsPage() {
         const dialogRef = this.dialog.open(VendorsPageComponent, {})

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MovementService } from '../../../services/movement.service';
 
 
@@ -12,14 +12,14 @@ import { MovementService } from '../../../services/movement.service';
 })
 export class DeleteAllMovementsDialogComponent {
 
-  constructor (
+  constructor(
     private _movementService: MovementService
-  ){}
+  ) { }
 
   //WARNING!!!fisic delete of all movements of the user!
-  deleteAllMovements(){
+  deleteAllMovements() {
     this._movementService.deleteMovementsByUser().subscribe(
-      response=>response
+      response => response
     )
   }
 

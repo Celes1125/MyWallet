@@ -1,18 +1,17 @@
 import { SharedService } from './../../../services/shared.service';
 import { FormsModule } from '@angular/forms';
-import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { WalletComponent } from '../wallet/wallet.component';
 import { WalletService } from '../../../services/wallet.service';
 import { MovementsDialogComponent } from '../../dialogs/movements-dialog/movements-dialog.component';
 import { WalletsPageComponent } from '../../pages/wallets-page/wallets-page.component';
-//Material Design
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
-import { EmptyError, firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
+import { EmptyError, lastValueFrom, of } from 'rxjs';
 import { CreateWalletDialogComponent } from '../../dialogs/create-wallet-dialog/create-wallet-dialog.component';
 
 @Component({
@@ -34,19 +33,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
         public dialog: MatDialog,
         public walletService: WalletService,
         public sharedService: SharedService
-    ) { 
-        
-    }
+    ) { }
 
     async ngOnInit(): Promise<any> {
         console.log('OnInit')
         try {
            this.wallets = await lastValueFrom(this.walletService.getAll());
-            console.log('Wallets cargadas en ngOnInit:', this.wallets);
+            console.log('Wallets on ngOnInit:', this.wallets);
 
         } catch (error) {
             if (error instanceof EmptyError) {
-                console.warn('No hay elementos en la secuencia.');
+                console.warn('no elements in the sequence');
                 return of([]); // O cualquier valor predeterminado que desees
             }
             return console.error('Error with ngOnInit promises:', error);
@@ -59,8 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 this.selectWalletElement.nativeElement.style = "display:none"
             }
         })
-    }                
-        
+    }
 
     ngAfterViewInit(): void {
         console.log('afterViewInit')

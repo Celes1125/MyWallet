@@ -10,8 +10,6 @@ import { Vendor } from '../../../interfaces/vendor';
 import { WalletService } from '../../../services/wallet.service';
 import { Pocket } from '../../../interfaces/pocket';
 import { MovementService } from '../../../services/movement.service';
-
-//Material Design
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './movements-dialog.component.css'
 })
 
-export class MovementsDialogComponent implements OnInit, OnChanges {
+export class MovementsDialogComponent implements OnChanges {
 
   wallet!: any
   walletId!: any
@@ -89,24 +87,19 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
     this.getPockets()
   }
 
-  ngOnInit(): void {
-
-
-
-  }
-
   getCategories() {
     this._categoriesService.getAll().subscribe(
       (response: Category[]) => {
         if (response) {
           this.categories = response
-        }         
+        }
       }
     )
   }
+
   getVendors() {
     this._vendorsService.getAll().subscribe(
-      (response : any) => {
+      (response: any) => {
         if (response) {
           this.vendors = response
         } else {
@@ -115,6 +108,7 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
       }
     )
   }
+
   getPockets() {
     this._walletService.getPocketsOfWallet(this.walletId).subscribe(
       response => {
@@ -177,7 +171,7 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
         };
         console.log("TRANSFER MOVEMENT: ", movement);
 
-        this._movementsService.create(movement).subscribe(response => response)        
+        this._movementsService.create(movement).subscribe(response => response)
         this._pocketService.refreshPocketsOfTransfers(movement)
         break;
 
@@ -186,11 +180,7 @@ export class MovementsDialogComponent implements OnInit, OnChanges {
         break;
     }
   }
-
-
-
-
-
+  
 }
 
 

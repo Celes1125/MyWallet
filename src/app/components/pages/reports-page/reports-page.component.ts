@@ -16,8 +16,8 @@ export class ReportsPageComponent implements OnInit {
 
   constructor(private renderer: Renderer2) { }
   ngOnInit(): void {
-     // Escuchamos los clics en los botones
-     this.renderer.listen(document.getElementById('movementsBtn'), 'click', () => {
+    // Escuchamos los clics en los botones
+    this.renderer.listen(document.getElementById('movementsBtn'), 'click', () => {
       this.showSection('movements');
     });
 

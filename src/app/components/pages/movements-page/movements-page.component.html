@@ -6,7 +6,7 @@
 
   <!-- Creator Column -->
   <ng-container matColumnDef="user">
-    <th mat-header-cell *matHeaderCellDef>user     
+    <th mat-header-cell *matHeaderCellDef>user
       <button mat-icon-button [matMenuTriggerFor]="userMenu">
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
@@ -27,7 +27,8 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #typeMenu="matMenu">
-        <button mat-menu-item *ngFor="let movementType of movementsType" (click)="applyMovementTypeFilter(movementType)">
+        <button mat-menu-item *ngFor="let movementType of movementsType"
+          (click)="applyMovementTypeFilter(movementType)">
           {{ movementType }}
         </button>
       </mat-menu>
@@ -38,7 +39,7 @@
 
   <!-- Category Column -->
   <ng-container matColumnDef="category">
-    <th mat-header-cell *matHeaderCellDef> Category 
+    <th mat-header-cell *matHeaderCellDef> Category
       <button mat-icon-button [matMenuTriggerFor]="categoryMenu">
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
@@ -54,7 +55,7 @@
 
   <!-- Vendor Column -->
   <ng-container matColumnDef="vendor">
-    <th mat-header-cell *matHeaderCellDef> vendor 
+    <th mat-header-cell *matHeaderCellDef> vendor
       <button mat-icon-button [matMenuTriggerFor]="vendorMenu">
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
@@ -79,35 +80,35 @@
     <td mat-cell *matCellDef="let movement">{{movement.amount}}</td>
   </ng-container>
 
- <!-- Year Column -->    
- <ng-container matColumnDef="year">
-  <th mat-header-cell *matHeaderCellDef>year
-    <button mat-icon-button [matMenuTriggerFor]="yearMenu">
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    <mat-menu #yearMenu="matMenu">
-      <button mat-menu-item *ngFor="let year of years" (click)="applyYearFilter(year)">
-        {{ year }}
+  <!-- Year Column -->
+  <ng-container matColumnDef="year">
+    <th mat-header-cell *matHeaderCellDef>year
+      <button mat-icon-button [matMenuTriggerFor]="yearMenu">
+        <mat-icon>arrow_drop_down</mat-icon>
       </button>
-    </mat-menu>
-  </th>
-  <td mat-cell *matCellDef="let movement">{{movement.date}}</td>
-</ng-container> 
+      <mat-menu #yearMenu="matMenu">
+        <button mat-menu-item *ngFor="let year of years" (click)="applyYearFilter(year)">
+          {{ year }}
+        </button>
+      </mat-menu>
+    </th>
+    <td mat-cell *matCellDef="let movement">{{movement.date}}</td>
+  </ng-container>
 
- <!-- Month Column -->
-<ng-container matColumnDef="month">
-  <th mat-header-cell *matHeaderCellDef>month
-    <button mat-icon-button [matMenuTriggerFor]="monthMenu">
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    <mat-menu #monthMenu="matMenu">
-      <button mat-menu-item *ngFor="let month of months" (click)="applyMonthFilter(month)">
-        {{ month }}
+  <!-- Month Column -->
+  <ng-container matColumnDef="month">
+    <th mat-header-cell *matHeaderCellDef>month
+      <button mat-icon-button [matMenuTriggerFor]="monthMenu">
+        <mat-icon>arrow_drop_down</mat-icon>
       </button>
-    </mat-menu>
-  </th>
-  <td mat-cell *matCellDef="let movement">{{movement.date}}</td>
-</ng-container>  
+      <mat-menu #monthMenu="matMenu">
+        <button mat-menu-item *ngFor="let month of months" (click)="applyMonthFilter(month)">
+          {{ month }}
+        </button>
+      </mat-menu>
+    </th>
+    <td mat-cell *matCellDef="let movement">{{movement.date}}</td>
+  </ng-container>
 
   <!-- Date Column -->
   <!-- <ng-container matColumnDef="date">
@@ -158,7 +159,7 @@
   <!-- Notes Column -->
   <ng-container matColumnDef="notes">
     <th mat-header-cell *matHeaderCellDef>notes</th>
-    <td mat-cell *matCellDef="let movement " >{{movement.notes || '-'}}</td>
+    <td mat-cell *matCellDef="let movement ">{{movement.notes || '-'}}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -174,6 +175,3 @@
 <button id="deleteAllMovements" (click)="openDeleteAllMovementsDialog()">delete all movements</button>
 <button (click)="generatePdfFromFrontend()">download pdf from frontend</button>
 <button (click)="generatePdfFromBackend()">download pdf from backend</button>
-
-
-

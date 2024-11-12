@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Category } from '../../../interfaces/category';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { response } from 'express';
 
 @Component({
   selector: 'app-categories-dialog',
@@ -49,7 +48,6 @@ export class CategoriesDialogComponent implements OnInit {
     })
   }
 
-
   createNewCategory() {
     const newCategory = {
       name: this.form.value.name,
@@ -57,7 +55,7 @@ export class CategoriesDialogComponent implements OnInit {
     }
     return this._categoryService.create(newCategory).subscribe({
       next: (response: any) => {
-        console.log("cateogiry created successfully:", response);
+        console.log("cateogory created successfully:", response);
         alert("Category created successfully!");
       },
       error: (error: { status: number; error: { message: string; }; }) => {
@@ -70,7 +68,7 @@ export class CategoriesDialogComponent implements OnInit {
           alert("An unexpected error occurred.");
         }
       },
-      
+
     });
 
   }

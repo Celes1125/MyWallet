@@ -17,14 +17,14 @@ export class DeleteWalletDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _walletService: WalletService    
+    private _walletService: WalletService
   ) {
     this.wallet = this.data.wallet;
   }
 
   // making a logic delete of the wallets, so movements items keep the wallet data
   logic_delete(): any {
-    this._walletService.logic_delete(this.wallet._id).subscribe((response: any)=>response)
+    this._walletService.logic_delete(this.wallet._id).subscribe((response: any) => response)
   }
 }
 

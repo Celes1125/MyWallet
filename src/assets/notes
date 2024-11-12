@@ -12,4 +12,15 @@
 -actualizar...
 -produccion
 
-
+//WHEN I DONT REMEMBER CONCAT MAP SINTAX AND FLOW:
+/*Observable1.pipe(
+  tap(retornoDelObservable1 => console.log(retornoDelObservable1)),
+  concatMap(retornoDelObservable1 => {
+    return Observable2(retornoDelObservable1); // Debes retornar el observable
+  }),
+  concatMap(retornoDelObservable2 => {
+    return Observable3(retornoDelObservable2); // Igualmente, retornas el observable
+  })
+).subscribe(finalResult => {
+  // Aquí puedes manejar el resultado final después de que todo se complete
+});*/

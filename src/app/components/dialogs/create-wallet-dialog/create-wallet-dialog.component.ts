@@ -1,9 +1,9 @@
-import { catchError, EmptyError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WalletComponent } from '../../../components/main/wallet/wallet.component';
 import { WalletService } from '../../../services/wallet.service';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Wallet } from '../../../interfaces/wallet';
@@ -18,7 +18,7 @@ import { Wallet } from '../../../interfaces/wallet';
 export class CreateWalletDialogComponent implements OnInit {
   walletForm: FormGroup
   userWallets!: Wallet[]
-  wallets$:Observable<Wallet[]> = this._walletService.getAll()
+  wallets$: Observable<Wallet[]> = this._walletService.getAll()
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -29,26 +29,25 @@ export class CreateWalletDialogComponent implements OnInit {
       walletName: ["", [Validators.required]],
     })
 
-    
   }
   ngOnInit() {
-    this.wallets$.subscribe( response => this.userWallets = response)
-    console.log('OnInit user wallets list: ',this.userWallets);
+    this.wallets$.subscribe(response => this.userWallets = response)
+    console.log('OnInit user wallets list: ', this.userWallets);
 
   }
   addWallet() {
     let newWallet = { name: this.walletForm.value.walletName.toUpperCase() }
-    const checkName: boolean = this.userWallets.some((wallet) => wallet.name?.toUpperCase()==newWallet.name.toUpperCase())
+    const checkName: boolean = this.userWallets.some((wallet) => wallet.name?.toUpperCase() == newWallet.name.toUpperCase())
     if (checkName) {
       alert('that name is already in use')
-      return of (null)
+      return of(null)
     } else {
-      return  this._walletService.create(newWallet).subscribe(response => console.log('new wallet: ', response))
+      return this._walletService.create(newWallet).subscribe(response => console.log('new wallet: ', response))
     }
   }
-  
 
- 
+
+
 }
 
 

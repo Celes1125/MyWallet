@@ -5,49 +5,42 @@ import { catchError, finalize, map, tap, switchMap, of, Observable, filter, fork
 import { PocketService } from './pocket.service';
 import { Pocket } from '../interfaces/pocket';
 import { AuthenticationService } from './authentication.service';
-import { Wallet } from '../interfaces/wallet';
-import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovementService {
-
   income: any;
-  userId!:string;
-  url = "http://localhost:3000/movements/"
+  userId!: string;
+  url = "https://losportafoglio.onrender.com/movements/"
 
-  constructor(private http: HttpClient, 
-              private _pocketService: PocketService,
-              private _authService: AuthenticationService) {
-                this.getUser()
-               }
-
-  getUser(){
-    this._authService.getUserId().subscribe(
-      (      response: string) => this.userId = response
-    )
+  constructor(private http: HttpClient,
+    private _pocketService: PocketService,
+    private _authService: AuthenticationService) {
+    this.getUser()
   }
 
+  // get user
+  getUser() {
+    this._authService.getUserId().subscribe(
+      (response: string) => this.userId = response
+    )
+  }
   //get all movements of the user
-
   getAll(): Observable<any> {
-    let movesUrl = this.url+'userMovements/'+this.userId;
-    console.log('MOVESURL: ',movesUrl)
+    let movesUrl = this.url + 'userMovements/' + this.userId;
+    console.log('MOVESURL: ', movesUrl)
     return this.http.get<Movement[]>(movesUrl).pipe(
-      // Filter movements based on userId      
-      //filter((movements: Movement[]) => movements.some(movement => movement.user._id === this.userId)),
-      // Tap the filtered movements for logging
-      tap((filteredMovements: any) => console.log("MOVEMENTS DE CELE: ", filteredMovements)),
+      tap((filteredMovements: any) => console.log("filtered movements: ", filteredMovements)),
       // Catch and handle errors (optional: provide meaningful logging or UI feedback)
       catchError(error => error),
       // Finalize with a message (optional)
       finalize(() => console.log('get movements subscription ended'))
     );
-  } 
-
-  create(movement: any) : Observable<any> {
-    const newMovement = {...movement, user:this.userId}
+  }
+  //create movement
+  create(movement: any): Observable<any> {
+    const newMovement = { ...movement, user: this.userId }
     return this.http.post(this.url, newMovement).pipe(
       tap(response => response),
       catchError(error => error),
@@ -56,7 +49,7 @@ export class MovementService {
       })
     )
   }
-
+  //add an income or a expense 
   addIncomeOrExpense(movement: any) {
     return this.create(movement).pipe(
       tap((createdMovement) => console.log('created movement: ', createdMovement)),
@@ -66,18 +59,18 @@ export class MovementService {
         return amount
       }),
       catchError(error => {
-        console.error('Error al obtener el bolsillo:', error);
+        console.error('getting pocket error:', error);
         return of(null)
-      }),     
-      map((amount:any) => {
-        if (amount !== null && amount !== undefined) {  // Añade esta comprobación
-          const newAmount = (movement.type === 'in') ? amount + movement.amount : amount-movement.amount;
+      }),
+      map((amount: any) => {
+        if (amount !== null && amount !== undefined) { // checking if amount is null or undefined
+          const newAmount = (movement.type === 'in') ? amount + movement.amount : amount - movement.amount;
           return { amount, newAmount };
         } else {
-          // Manejar el caso en que amount es null (por ejemplo, lanzar un error o devolver un valor predeterminado)
-          return { amount: null, newAmount: null }; // Ejemplo de retorno con valores nulos
+          // Handle cases where amount is null (either throw an error or return a default value)
+          return { amount: null, newAmount: null }; // null values return example
         }
-      }),      
+      }),
       switchMap(({ newAmount }) => {
         return this._pocketService.edit({
           _id: movement.pocket,
@@ -89,18 +82,17 @@ export class MovementService {
     )
 
   }
-
+  //delete movements by pocket
   deleteMovementsByPocket(id: string) {
     const url = this.url + "byPocketId/" + id
     return this.http.delete(url).pipe(
       tap(response => response),
       catchError(error => error),
       finalize(() => console.log('delete movements by pocket subscription ended'))
-
     )
   }
-
-  deleteMovementsByUser(){
+  //delete movements by user
+  deleteMovementsByUser() {
     let id = this.userId
     const url = this.url + "byUserId/" + id
     return this.http.delete(url).pipe(
@@ -110,69 +102,63 @@ export class MovementService {
 
     )
   }
-
+  //edit movement
   edit(movement: any): Observable<any> {
     const url = this.url + movement._id
     return this.http.put<any>(url, movement)
   }
-
-  getMovementsOfWallet(walletId:any): Observable<any> {
+  //get movements of a wallet
+  getMovementsOfWallet(walletId: any): Observable<any> {
     return this.http.get<Movement[]>(this.url).pipe(
       // Filter movements based on userId      
       filter((movements: Movement[]) => movements.some(movement => movement.wallet._id === walletId)),
       // Tap the filtered movements for logging
-      tap((filteredMovements: any) => console.log("MOVEMENTS OF WALLET: ", filteredMovements)),
+      tap((filteredMovements: any) => console.log("filtered movements of wallet: ", filteredMovements)),
       // Catch and handle errors (optional: provide meaningful logging or UI feedback)
       catchError(error => error),
       // Finalize with a message (optional)
       finalize(() => console.log('get movements of wallet subscription ended'))
     );
-  } 
+  }
+  // get pdf of complete all movements table !!!WARNING!!! be carefull, could be a big request  
+  getPdfMovementsTable(): Observable<Blob> {
+    // get token (from local storage or an authentication service)    
+    const token = localStorage.getItem('token');
 
-  getPdfMovementsTable(): Observable<Blob>  {
-    // Obtener el token (ejemplo: desde localStorage o un servicio de autenticación)
-    const token = localStorage.getItem('token'); // O desde un servicio
-   
-  
-    // Configurar las cabeceras, incluyendo el token
+    // set headers, including the token
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,  // Cabecera para el token
-      'Content-Type': 'application/json'   // Puedes ajustar el Content-Type según lo necesites
+      'Authorization': `Bearer ${token}`,  // header for the token, using bearer
+      'Content-Type': 'application/json'   // content type header
     });
-  
-    return this.http.get(`${this.url}getTable/${this.userId}`, { 
-      headers: headers,                    // Incluir cabeceras
-      responseType: 'blob'                 // La respuesta es un blob (PDF)
+
+    return this.http.get(`${this.url}getTable/${this.userId}`, {
+      headers: headers,                    // including headers
+      responseType: 'blob'                 // The answer will be a blob (PDF)
     }).pipe(
       catchError(error => {
-        console.error('Error en la solicitud del PDF', error);
-        return of(error);  // Manejo de error
+        console.error('PDF request error', error);
+        return of(error);  // handling error
       })
     );
   }
-
-
-  getPdfMovementsTableWithFilters(filters:any): Observable<Blob>  {
-    // Obtener el token (ejemplo: desde localStorage o un servicio de autenticación)
-    const token = localStorage.getItem('token'); // O desde un servicio
-   
-  
-    // Configurar las cabeceras, incluyendo el token
+  // get pdf of filtered movements table !!!WARNING!!! be carefull, also could be a big request 
+  getPdfMovementsTableWithFilters(filters: any): Observable<Blob> {
+    // get token (from local storage or an authentication service) 
+    const token = localStorage.getItem('token');
+    // set headers, including the token
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,  // Cabecera para el token
-      'Content-Type': 'application/json'   // Puedes ajustar el Content-Type según lo necesites
+      'Authorization': `Bearer ${token}`,  // header for the token, using bearer
+      'Content-Type': 'application/json'   // content type header
     });
-  
-    return this.http.post(`${this.url}getTable/${this.userId}`, filters, { 
-      headers: headers,                    // Incluir cabeceras
-      responseType: 'blob'                 // La respuesta es un blob (PDF)
+    return this.http.post(`${this.url}getTable/${this.userId}`, filters, {
+      headers: headers,                    // including headers
+      responseType: 'blob'                  // The answer will be a blob (PDF)
     }).pipe(
       catchError(error => {
         console.error('Error en la solicitud del PDF', error);
-        return of(error);  // Manejo de error
+        return of(error);  // handling error
       })
     );
   }
-
 
 }

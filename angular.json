@@ -7,15 +7,15 @@
       "projectType": "application",
       "schematics": {},
       "root": "",
-      "sourceRoot": "src",//PRODUCTION
+      "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",//PRODUCTION
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/my_wallet",//PRODUCTION
-            "index": "src/index.html",//PRODUCTION
-            "main": "src/main.ts",//PRODUCTION
+            "outputPath": "dist/my_wallet",
+            "index": "src/index.html",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -41,8 +41,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",//PRODUCTION
-                  "maximumError": "3mb"//PRODUCTION
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
